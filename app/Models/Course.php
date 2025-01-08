@@ -19,9 +19,9 @@ class Course extends Model implements HasMedia
         $this->attributes['slug'] = Str::slug($value);
     }
 
-    public function mentor()
+    public function mentors()
     {
-        return $this->belongsTo(User::class, 'mentor_id');
+        return $this->belongsToMany(User::class, 'course_mentors', 'course_id', 'mentor_id')->withPivot('id');
     }
 
     public function courseChapters()
