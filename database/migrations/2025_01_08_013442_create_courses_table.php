@@ -12,6 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('courses', function (Blueprint $table) {
+            $table->id();
             $table->unsignedBigInteger('mentor_id');
             $table->enum('kategori', ['Programming', 'Cyber Security', 'Design', 'Digital Marketing']);
             $table->string('judul')->unique();
@@ -22,6 +23,7 @@ return new class extends Migration
             $table->longText('konten');
             $table->boolean('is_draft')->default(true);
             $table->text('drive_url')->nullable();
+            $table->timestamps();
 
             $table->foreign('mentor_id')->references('id')->on('users')->onDelete('cascade');
         });

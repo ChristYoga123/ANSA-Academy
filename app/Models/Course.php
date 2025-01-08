@@ -19,6 +19,16 @@ class Course extends Model implements HasMedia
         $this->attributes['slug'] = Str::slug($value);
     }
 
+    public function mentor()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function courseChapters()
+    {
+        return $this->hasMany(CourseChapter::class);
+    }
+
     public function registerMediaCollections(): void
     {
         $this->addMediaCollection('course-thumbnail')
