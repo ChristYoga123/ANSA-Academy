@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('course_chapter_lesson')->constrained()->cascadeOnDelete();
             $table->string('judul');
-            $table->string('youtube_id');
+            $table->enum('tipe', ['video', 'quiz', 'text']);
+            $table->json('konten');
             $table->boolean('is_terkunci')->default(true);
             $table->timestamps();
         });
