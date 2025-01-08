@@ -21,7 +21,7 @@ class Course extends Model implements HasMedia
 
     public function mentor()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'mentor_id');
     }
 
     public function courseChapters()
