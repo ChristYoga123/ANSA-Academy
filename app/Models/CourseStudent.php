@@ -17,4 +17,9 @@ class CourseStudent extends Model
     {
         return $this->belongsTo(User::class, 'murid_id');
     }
+
+    public function transactions()
+    {
+        return $this->hasOne(Transaction::class);
+    }
 }
