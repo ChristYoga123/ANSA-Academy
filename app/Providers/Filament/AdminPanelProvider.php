@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Admin\Resources\DivisionResource;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -38,7 +39,7 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->login()
             ->colors([
-                'primary' => Color::Amber,
+                'primary' => Color::Green,
             ])
             ->discoverResources(in: app_path('Filament/Admin/Resources'), for: 'App\\Filament\\Admin\\Resources')
             ->discoverPages(in: app_path('Filament/Admin/Pages'), for: 'App\\Filament\\Admin\\Pages')
@@ -101,7 +102,14 @@ class AdminPanelProvider extends PanelProvider
                             // ...CategoryResource::getNavigationItems(),
                             // ...HomePageSettings::getNavigationItems(),
                         ]),
-                    NavigationGroup::make('Master Data')
+                    NavigationGroup::make('Company Profile')
+                        ->items([
+                            ...DivisionResource::getNavigationItems(),
+                            // ...PageResource::getNavigationItems(),
+                            // ...CategoryResource::getNavigationItems(),
+                            // ...HomePageSettings::getNavigationItems(),
+                        ]),
+                    NavigationGroup::make('LAOS Course')
                         ->items([
                             // ...PageResource::getNavigationItems(),
                             // ...CategoryResource::getNavigationItems(),

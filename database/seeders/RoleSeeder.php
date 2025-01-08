@@ -14,5 +14,6 @@ class RoleSeeder extends Seeder
     public function run(): void
     {
         Role::findOrCreate('super_admin');
+        Role::findOrCreate('mentor');
     }
 }
