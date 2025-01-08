@@ -29,6 +29,11 @@ class Course extends Model implements HasMedia
         return $this->hasMany(CourseChapter::class);
     }
 
+    public function technologies()
+    {
+        return $this->belongsToMany(Technology::class, 'course_technologies', 'course_id', 'technology_id')->withPivot('id');
+    }
+
     public function registerMediaCollections(): void
     {
         $this->addMediaCollection('course-thumbnail')
