@@ -2,6 +2,7 @@
 
 namespace App\Filament\Admin\Resources;
 
+use Carbon\Carbon;
 use Filament\Forms;
 use Filament\Tables;
 use App\Models\Program;
@@ -11,10 +12,13 @@ use Filament\Tables\Table;
 use Filament\Resources\Resource;
 use Dotswan\MapPicker\Fields\Map;
 use Filament\Forms\Components\Grid;
+use Filament\Tables\Filters\Filter;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Wizard;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Repeater;
+use Filament\Tables\Enums\FiltersLayout;
+use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Forms\Components\Wizard\Step;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -193,15 +197,40 @@ class ProgramResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('division.nama')
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('judul_program')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('judul_kegiatan')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('division.nama')
-                    ->searchable(),
                 SpatieMediaLibraryImageColumn::make('program-thumbnail')
                     ->collection('program-thumbnail')
                     ->label('Thumbnail'),
+                    Tables\Columns\TextColumn::make('status')
+                    ->searchable()
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        'Berjalan' => 'success',
+                        'Selesai' => 'danger',
+                    })
+                    ->getStateUsing(function (Program $program) {
+                        $jadwal = $program->jadwal_kegiatan;
+                        // dd($jadwal[array_key_last($jadwal)]['waktu_mulai']);
+                        if (empty($jadwal)) {
+                            return 'Selesai';
+                        }
+                
+                        // Set timezone ke Asia/Jakarta
+                        $waktuMulaiPertama = Carbon::parse($jadwal[0]['waktu_mulai'])->setTimezone('Asia/Jakarta');
+                        $waktuSelesaiTerakhir = Carbon::parse($jadwal[array_key_last($jadwal)]['waktu_selesai'])->setTimezone('Asia/Jakarta');
+                        $now = now()->setTimezone('Asia/Jakarta');
+                
+                        if ($now->between($waktuMulaiPertama, $waktuSelesaiTerakhir)) {
+                            return 'Berjalan';
+                        }
+                
+                        return 'Selesai';
+                    }),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -212,8 +241,71 @@ class ProgramResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
-            ])
+                SelectFilter::make('division_id')
+                    ->label('Divisi')
+                    ->relationship('division', 'nama'),
+                    Filter::make('status')
+                    ->label('Status')
+                    ->form([
+                        Select::make('availability')
+                            ->options([
+                                'Berjalan' => 'Berjalan',
+                                'Selesai' => 'Selesai',
+                            ])
+                    ])
+                    ->query(function (Builder $query, array $data) {
+                        return $query
+                            ->when(
+                                $data['availability'],
+                                function (Builder $query, string $status) {
+                                    $now = now()->setTimezone('Asia/Jakarta')->format('Y-m-d H:i:s');
+                                    
+                                    if ($status === 'Berjalan') {
+                                        return $query->whereRaw("
+                                            JSON_UNQUOTE(
+                                                JSON_EXTRACT(
+                                                    jadwal_kegiatan, 
+                                                    '$[0].waktu_mulai'
+                                                )
+                                            ) <= ? 
+                                            AND 
+                                            (
+                                                SELECT 
+                                                    JSON_UNQUOTE(
+                                                        JSON_EXTRACT(
+                                                            jadwal_kegiatan,
+                                                            CONCAT('$[', JSON_LENGTH(jadwal_kegiatan) - 1, '].waktu_selesai')
+                                                        )
+                                                    )
+                                            ) >= ?
+                                        ", [$now, $now]);
+                                    }
+                                    
+                                    if ($status === 'Selesai') {
+                                        return $query->whereRaw("
+                                            (
+                                                SELECT 
+                                                    JSON_UNQUOTE(
+                                                        JSON_EXTRACT(
+                                                            jadwal_kegiatan,
+                                                            CONCAT('$[', JSON_LENGTH(jadwal_kegiatan) - 1, '].waktu_selesai')
+                                                        )
+                                                    )
+                                            ) < ?
+                                        ", [$now]);
+                                    }
+                                }
+                            );
+                    })
+                    ->indicateUsing(function(array $data)
+                    {
+                        if(!$data['availability']) {
+                            return null;
+                        }
+
+                        return 'Status: ' . $data['availability'];
+                    }),
+            ], layout: FiltersLayout::AboveContent)
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
