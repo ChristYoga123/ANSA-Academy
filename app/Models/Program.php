@@ -13,14 +13,25 @@ class Program extends Model implements HasMedia
 
     protected $guarded = ['id'];
 
-    public function setJudulAttribute($value)
+    protected $casts = [
+        'jadwal_kegiatan' => 'array'
+    ];
+
+    public function setJudulProgramAttribute($value)
     {
-        $this->attributes['judul'] = ucwords($value);
+        $this->attributes['judul_program'] = ucwords($value);
         $this->attributes['slug'] = Str::slug($value);
     }
 
     public function division()
     {
         return $this->belongsTo(Division::class);
+    }
+
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('program-thumbnail')
+            ->singleFile();
+        $this->addMediaCollection('program-gallery');
     }
 }

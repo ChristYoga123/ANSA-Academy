@@ -16,6 +16,7 @@ use Filament\Navigation\NavigationBuilder;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use App\Filament\Admin\Resources\ArticleResource;
+use App\Filament\Admin\Resources\ProgramResource;
 use App\Filament\Admin\Resources\DivisionResource;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use FilipFonal\FilamentLogManager\FilamentLogManager;
@@ -107,6 +108,7 @@ class AdminPanelProvider extends PanelProvider
                         ->items([
                             ...DivisionResource::getNavigationItems(),
                             ...ArticleResource::getNavigationItems(),
+                            ...ProgramResource::getNavigationItems(),
                             // ...PageResource::getNavigationItems(),
                             // ...CategoryResource::getNavigationItems(),
                             // ...HomePageSettings::getNavigationItems(),
@@ -138,6 +140,6 @@ class AdminPanelProvider extends PanelProvider
 
                 ]);
             })
-            ;
+            ->spa();
     }
 }

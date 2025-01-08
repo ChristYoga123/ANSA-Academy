@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Filament\Forms\Components\Wizard\Step;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Admin\Resources\ArticleResource\Pages;
+use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use App\Filament\Admin\Resources\ArticleResource\RelationManagers;
 
@@ -80,6 +81,8 @@ class ArticleResource extends Resource
                 Tables\Columns\TextColumn::make('judul')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('kategori'),
+                SpatieMediaLibraryImageColumn::make('thumbnail')
+                    ->collection('article-thumbnail'),
                 Tables\Columns\ToggleColumn::make('is_unggulan')
                     ->label('Unggulan'),
                 Tables\Columns\TextColumn::make('created_at')
