@@ -17,10 +17,13 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Wizard;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\TextInput;
 use Filament\Tables\Enums\FiltersLayout;
+use Filament\Forms\Components\DatePicker;
 use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Forms\Components\Wizard\Step;
+use Filament\Forms\Components\DateTimePicker;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Admin\Resources\ProgramResource\Pages;
 use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
@@ -73,10 +76,10 @@ class ProgramResource extends Resource
                             $set('lat', $state['lat']);
                             $set('long', $state['lng']);
                         })
-                        ->afterStateHydrated(function ($state, $record, Set $set): void {
+                        ->afterStateHydrated(function ($record, Set $set): void {
                             $set('location', [
-                                    'lat'     => $record->lat,
-                                    'lng'     => $record->long,
+                                    'lat'     => $record->lat ?? -8.165516031480806,
+                                    'lng'     => $record->long ?? 113.71727423131937,
                                     // 'geojson' => json_decode(strip_tags($record->description))
                                 ]
                             );
@@ -102,73 +105,71 @@ class ProgramResource extends Resource
                             Forms\Components\TextInput::make('lat')
                                 ->required()
                                 ->label('Latitude')
-                                ->readOnly()
+                                ->default(-8.165516031480806)
                                 ->numeric(),
                             Forms\Components\TextInput::make('long')
                                 ->required()
                                 ->label('Longitude')
-                                ->readOnly()
+                                ->default(113.71727423131937)
                                 ->numeric(),
-                        ])
-                ]);
-
-        $registrasi = Step::make('Registrasi')
-                ->schema([
+                        ]),
                     Section::make('Registrasi Panitia')
                         ->schema([
-                            Forms\Components\TextInput::make('gform_panitia')
+                            TextInput::make('gform_panitia')
                                 ->required()
                                 ->label('Google Form Registrasi Panitia')
-                                ->placeholder('https://docs.google.com/forms/xxxxxx'),
+                                ->url()
+                                ->columnSpanFull(),
                             Grid::make()
                                 ->columns(2)
                                 ->schema([
-                                    Forms\Components\DateTimePicker::make('open_regis_panitia')
-                                        ->label('Waktu Buka Registrasi Panitia')
-                                        ->required(),
-                                    Forms\Components\DateTimePicker::make('close_regis_panitia')
-                                        ->label('Waktu Tutup Registrasi Panitia')
-                                        ->required(),
-                                ]),
-                    ]),
+                                    DateTimePicker::make('open_regis_panitia')
+                                        ->required()
+                                        ->label('Buka Registrasi Panitia'),
+                                    DateTimePicker::make('close_regis_panitia')
+                                        ->required()
+                                        ->label('Tutup Registrasi Panitia'),
+                                ])
 
+                        ]),
                     Section::make('Registrasi Peserta')
                         ->schema([
-                            Forms\Components\TextInput::make('gform_peserta')
+                            TextInput::make('gform_peserta')
                                 ->required()
                                 ->label('Google Form Registrasi Peserta')
-                                ->placeholder('https://docs.google.com/forms/xxxxxx'),
+                                ->url()
+                                ->columnSpanFull(),
                             Grid::make()
                                 ->columns(2)
                                 ->schema([
-                                    Forms\Components\DateTimePicker::make('open_regis_peserta')
+                                    DateTimePicker::make('open_regis_peserta')
                                         ->required()
-                                        ->label('Waktu Buka Registrasi Peserta'),
-                                    Forms\Components\DateTimePicker::make('close_regis_peserta')
+                                        ->label('Buka Registrasi Peserta'),
+                                    DateTimePicker::make('close_regis_peserta')
                                         ->required()
-                                        ->label('Waktu Tutup Registrasi Peserta'),
+                                        ->label('Tutup Registrasi Peserta'),
+                                ])
+                        ]),
+                    Section::make('Jadwal Kegiatan')
+                        ->schema([
+                            Repeater::make('jadwal_kegiatan')
+                                ->schema([
+                                    TextInput::make('nama_kegiatan')
+                                        ->required()
+                                        ->label('Nama Kegiatan'),
+                                    Grid::make()
+                                        ->columns(2)
+                                        ->schema([
+                                            DatePicker::make('waktu_mulai')
+                                                ->required()
+                                                ->label('Waktu Mulai'),
+                                            DatePicker::make('waktu_selesai')
+                                                ->required()
+                                                ->label('Waktu Selesai'),
+                                        ]),
                                 ]),
-                    ]),
-
-            ]);
-
-        $jadwal = Step::make('Jadwal Kegiatan')
-            ->schema([
-                Repeater::make('jadwal_kegiatan')
-                    ->required()
-                    ->schema([
-                        Forms\Components\TextInput::make('jadwal')
-                            ->required(),
-                        Grid::make()
-                            ->columns(2)
-                            ->schema([
-                                Forms\Components\DateTimePicker::make('waktu_mulai')
-                                    ->required(),
-                                Forms\Components\DateTimePicker::make('waktu_selesai')
-                                    ->required(),
-                            ])
-                    ])
-            ]);
+                        ]),
+                ]);
         
         $dokumentasi = Step::make('Dokumentasi (Optional)')
             ->schema([
@@ -187,7 +188,7 @@ class ProgramResource extends Resource
                     ->columns(1)
                     ->schema([
                         Wizard::make(['Author', 'Metadata', 'Waktu & Tempat', 'Registrasi', 'Jadwal Kegiatan', 'Dokumentasi'])
-                            ->steps([$author, $metaData, $waktuTempat, $registrasi, $jadwal, $dokumentasi])
+                            ->steps([$author, $metaData, $waktuTempat, $dokumentasi])
                             ->skippable(fn(string $operation) => $operation === 'edit' || $operation === 'view')
                     ])
             ]);
@@ -248,6 +249,7 @@ class ProgramResource extends Resource
                     ->label('Status')
                     ->form([
                         Select::make('availability')
+                            ->label('Status')
                             ->options([
                                 'Berjalan' => 'Berjalan',
                                 'Selesai' => 'Selesai',
@@ -307,7 +309,7 @@ class ProgramResource extends Resource
                     }),
             ], layout: FiltersLayout::AboveContent)
             ->actions([
-                Tables\Actions\ViewAction::make(),
+                // Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])

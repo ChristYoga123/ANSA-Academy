@@ -15,5 +15,6 @@ class RoleSeeder extends Seeder
     {
         Role::findOrCreate('super_admin');
         Role::findOrCreate('mentor');
+        Role::findOrCreate('student');
     }
 }

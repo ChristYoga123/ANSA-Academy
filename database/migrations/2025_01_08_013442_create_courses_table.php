@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('courses', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('mentor_id');
             $table->enum('kategori', ['Programming', 'Cyber Security', 'Design', 'Digital Marketing']);
             $table->string('judul')->unique();
             $table->string('slug')->unique();
@@ -24,8 +23,6 @@ return new class extends Migration
             $table->boolean('is_draft')->default(true);
             $table->text('drive_url')->nullable();
             $table->timestamps();
-
-            $table->foreign('mentor_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

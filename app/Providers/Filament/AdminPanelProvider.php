@@ -14,6 +14,7 @@ use Filament\Navigation\NavigationGroup;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Navigation\NavigationBuilder;
 use Illuminate\Session\Middleware\StartSession;
+use App\Filament\Admin\Resources\CourseResource;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use App\Filament\Admin\Resources\ArticleResource;
 use App\Filament\Admin\Resources\ProgramResource;
@@ -115,6 +116,7 @@ class AdminPanelProvider extends PanelProvider
                         ]),
                     NavigationGroup::make('LAOS Course')
                         ->items([
+                            // ...CourseResource::getNavigationItems(),
                             // ...PageResource::getNavigationItems(),
                             // ...CategoryResource::getNavigationItems(),
                             // ...HomePageSettings::getNavigationItems(),
