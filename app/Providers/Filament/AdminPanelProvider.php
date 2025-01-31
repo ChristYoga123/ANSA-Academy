@@ -15,6 +15,8 @@ use Filament\Http\Middleware\Authenticate;
 use Filament\Navigation\NavigationBuilder;
 use App\Filament\Admin\Resources\LombaResource;
 use Illuminate\Session\Middleware\StartSession;
+use App\Filament\Admin\Resources\MenteeResource;
+use App\Filament\Admin\Resources\MentorResource;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use App\Filament\Admin\Resources\ArtikelResource;
 use App\Filament\Admin\Resources\LokerMentorResource;
@@ -116,6 +118,11 @@ class AdminPanelProvider extends PanelProvider
                             // ...PageResource::getNavigationItems(),
                             // ...CategoryResource::getNavigationItems(),
                             // ...HomePageSettings::getNavigationItems(),
+                        ]),
+                    NavigationGroup::make('Master Data')
+                        ->items([
+                            ...MentorResource::getNavigationItems(),
+                            ...MenteeResource::getNavigationItems(),
                         ]),
                     NavigationGroup::make('Settings')
                         ->items([
