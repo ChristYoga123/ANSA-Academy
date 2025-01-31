@@ -28,4 +28,9 @@ class Event extends Model implements HasMedia
     {
         return $this->hasMany(EventJadwal::class);
     }
+
+    public function transaksi()
+    {
+        return $this->morphMany(Transaksi::class, 'transaksiable');
+    }
 }

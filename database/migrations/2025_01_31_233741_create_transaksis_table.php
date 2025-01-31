@@ -11,10 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('program_mentees', function (Blueprint $table) {
+        Schema::create('transaksis', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('program_id')->constrained()->cascadeOnDelete();
+            $table->string('order_id')->unique();
             $table->foreignId('mentee_id')->constrained('users')->cascadeOnDelete();
+            $table->string('transaksiable_type');
+            $table->unsignedBigInteger('transaksiable_id');
+            $table->string('referral_code')->nullable();
+            $table->unsignedBigInteger('total_harga');
+            $table->enum('status', ['Menunggu', 'Sukses', 'Dibatalkan'])->default('Menunggu');
             $table->timestamps();
         });
     }
@@ -24,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('program_mentees');
+        Schema::dropIfExists('transaksis');
     }
 };

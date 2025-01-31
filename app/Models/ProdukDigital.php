@@ -18,4 +18,9 @@ class ProdukDigital extends Model implements HasMedia
         $this->attributes['judul'] = ucwords($value);
         $this->attributes['slug'] = Str::slug($value);
     }
+
+    public function transaksi()
+    {
+        return $this->morphMany(Transaksi::class, 'transaksiable');
+    }
 }
