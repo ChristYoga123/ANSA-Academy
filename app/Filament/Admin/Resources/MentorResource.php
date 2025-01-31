@@ -12,6 +12,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class MentorResource extends Resource
@@ -20,6 +21,21 @@ class MentorResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?string $navigationLabel = 'Mentor';
+
+    public static function canCreate(): bool
+    {
+        return false;
+    }
+
+    public static function canDelete(Model $model): bool
+    {
+        return false;
+    }
+
+    // public static function canEdit(Model $record): bool
+    // {
+    //     return false;
+    // }
 
     public static function form(Form $form): Form
     {
