@@ -17,6 +17,7 @@ use App\Filament\Admin\Resources\LombaResource;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use App\Filament\Admin\Resources\ArtikelResource;
+use App\Filament\Admin\Resources\ProdukDigitalResource;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use FilipFonal\FilamentLogManager\FilamentLogManager;
 use GeoSot\FilamentEnvEditor\FilamentEnvEditorPlugin;
@@ -101,6 +102,7 @@ class AdminPanelProvider extends PanelProvider
                             ...Dashboard::getNavigationItems(),
                             ...ArtikelResource::getNavigationItems(),
                             ...LombaResource::getNavigationItems(),
+                            ...ProdukDigitalResource::getNavigationItems(),
                             // ...PageResource::getNavigationItems(),
                             // ...CategoryResource::getNavigationItems(),
                             // ...HomePageSettings::getNavigationItems(),
