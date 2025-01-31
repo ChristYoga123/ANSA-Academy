@@ -30,6 +30,9 @@ class LokerMentorBidangResource extends Resource
                         Forms\Components\TextInput::make('nama')
                             ->required()
                             ->unique(ignoreRecord: true),
+                        Forms\Components\Toggle::make('is_buka')
+                            ->label('Sedang Dibuka')
+                            ->default(false),
                         Forms\Components\Repeater::make('kualifikasi')
                             ->label('Kualifikasi Bidang')
                             ->relationship('lokerMentorBidangKualifikasi')
@@ -48,6 +51,8 @@ class LokerMentorBidangResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('nama')
                     ->searchable(),
+                Tables\Columns\ToggleColumn::make('is_buka')
+                    ->label('Sedang Dibuka'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

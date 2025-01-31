@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('loker_mentor_bidangs', function (Blueprint $table) {
             $table->id();
             $table->string('nama')->unique();
+            $table->boolean('is_buka')->default(false);
             $table->timestamps();
         });
     }
