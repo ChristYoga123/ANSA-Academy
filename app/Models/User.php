@@ -69,9 +69,19 @@ class User extends Authenticatable implements HasAvatar, FilamentUser, HasMedia
         return $this->hasOne(LokerMentor::class);
     }
 
-    public function event()
+    public function events()
     {
         return $this->belongsToMany(Event::class, 'event_mentors', 'mentor_id', 'event_id');
+    }
+
+    public function programMentees()
+    {
+        return $this->belongsToMany(Program::class, 'program_mentors', 'mentee_id', 'program_id');
+    }
+
+    public function programMentors()
+    {
+        return $this->belongsToMany(Program::class, 'program_mentees', 'mentor_id', 'program_id');
     }
 
     public function canAccessPanel(Panel $panel): bool
