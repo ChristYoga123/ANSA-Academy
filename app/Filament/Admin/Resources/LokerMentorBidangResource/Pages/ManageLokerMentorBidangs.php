@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Filament\Admin\Resources\ProdukDigitalResource\Pages;
+namespace App\Filament\Admin\Resources\LokerMentorBidangResource\Pages;
 
-use App\Filament\Admin\Resources\ProdukDigitalResource;
+use App\Filament\Admin\Resources\LokerMentorBidangResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ManageRecords;
 use Illuminate\Contracts\Support\Htmlable;
 
-class ManageProdukDigitals extends ManageRecords
+class ManageLokerMentorBidangs extends ManageRecords
 {
-    protected static string $resource = ProdukDigitalResource::class;
+    protected static string $resource = LokerMentorBidangResource::class;
 
     protected function getHeaderActions(): array
     {
@@ -21,6 +21,6 @@ class ManageProdukDigitals extends ManageRecords
 
     public function getTitle(): string|Htmlable
     {
-        return 'Produk Digital';
+        return 'Bidang Loker Mentor';
     }
 }
