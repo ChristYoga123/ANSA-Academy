@@ -15,7 +15,7 @@ class Program extends Model implements HasMedia
 
     public function setJudulAttribute($value)
     {
-        $this->attributes['judul'] = $this->attributes['program'] === 'Mentoring' ? '[Mentoring] ' . ucwords($value) : ( $this->attributes['program'] === 'Kelas ANSA' ? '[Kelas ANSA] ' . ucwords($value) : '[Proofreading] ' . ucwords($value) );
+        $this->attributes['judul'] = ucwords($value);
         $this->attributes['slug'] = Str::slug($value);
     }
 
@@ -44,8 +44,5 @@ class Program extends Model implements HasMedia
         return $this->hasMany(KelasAnsaPaket::class, 'kelas_ansa_id');
     }
 
-    public function proofreadingPakets()
-    {
-        return $this->hasMany(ProofreadingPaket::class, 'proofreading_id');
-    }
+    
 }

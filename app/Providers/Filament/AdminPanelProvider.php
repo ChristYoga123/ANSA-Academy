@@ -32,6 +32,7 @@ use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use App\Filament\Admin\Resources\LokerMentorBidangResource;
+use App\Filament\Admin\Resources\MentoringResource;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Joaopaulolndev\FilamentEditProfile\Pages\EditProfilePage;
 use Joaopaulolndev\FilamentEditProfile\FilamentEditProfilePlugin;
@@ -117,6 +118,13 @@ class AdminPanelProvider extends PanelProvider
                         ->items([
                             ...LokerMentorBidangResource::getNavigationItems(),
                             ...LokerMentorResource::getNavigationItems(),
+                            // ...PageResource::getNavigationItems(),
+                            // ...CategoryResource::getNavigationItems(),
+                            // ...HomePageSettings::getNavigationItems(),
+                        ]),
+                    NavigationGroup::make('Karir')
+                        ->items([
+                            ...MentoringResource::getNavigationItems(),
                             // ...PageResource::getNavigationItems(),
                             // ...CategoryResource::getNavigationItems(),
                             // ...HomePageSettings::getNavigationItems(),
