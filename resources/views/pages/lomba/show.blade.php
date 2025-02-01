@@ -34,8 +34,7 @@
                             <!-- Pendaftaran -->
                             <div class="event-details__content-text-1" style="margin-bottom: 25px;">
                                 <h4 style="font-size: 20px; margin-bottom: 15px;">
-                                    <span class="icon-calendar"
-                                        style="margin-right: 10px; color: var(--thm-primary);"></span>
+                                    <span class="icon-calendar" style="margin-right: 10px; color: #687EFF;"></span>
                                     Pendaftaran
                                 </h4>
                                 <div style="padding-left: 35px;">
@@ -60,7 +59,7 @@
                             <!-- Pelaksanaan -->
                             <div class="event-details__content-text-1">
                                 <h4 style="font-size: 20px; margin-bottom: 15px;">
-                                    <span class="icon-clock" style="margin-right: 10px; color: var(--thm-primary);"></span>
+                                    <span class="icon-clock" style="margin-right: 10px; color: #687EFF;"></span>
                                     Pelaksanaan Acara
                                 </h4>
                                 <div style="padding-left: 35px;">
