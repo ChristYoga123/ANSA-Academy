@@ -59,10 +59,14 @@
     <link rel="stylesheet" href="{{ asset('assets/css/module-css/courses-search.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/css/module-css/page-header.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/css/module-css/shop.css') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/css/module-css/become-a-teacher.css') }}" />
+
 
     <!-- Template Styles -->
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/css/responsive.css') }}" />
+
+    <link rel="stylesheet" href="{{ asset('toastr/build/toastr.css') }}">
 </head>
 
 <body class="custom-cursor">
@@ -140,6 +144,9 @@
 
     <!-- Template JS -->
     <script src="{{ asset('assets/js/script.js') }}"></script>
+    <script src="{{ asset('toastr/build/toastr.min.js') }}"></script>
+
+    @stack('scripts')
 </body>
 
 </html>

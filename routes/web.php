@@ -1,11 +1,12 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProdukDigital;
 use App\Http\Controllers\BlogController;
+use App\Http\Controllers\EventController;
+use App\Http\Controllers\KarirController;
 use App\Http\Controllers\LombaController;
 use App\Http\Controllers\BerandaController;
-use App\Http\Controllers\EventController;
-use App\Http\Controllers\ProdukDigital;
 use App\Http\Controllers\ProdukDigitalController;
 
 // Route::get('/', function () {
@@ -39,6 +40,13 @@ Route::prefix('event')->name('event.')->group(function()
 {
     Route::get('/', [EventController::class, 'index'])->name('index');
     Route::get('/{slug}', [EventController::class, 'show'])->name('show');
+});
+
+Route::prefix('karir')->name('karir.')->group(function()
+{
+    Route::get('/', [KarirController::class, 'index'])->name('index');
+    Route::get('/{id}', [KarirController::class, 'show'])->name('show');
+    Route::post('/{id}', [KarirController::class, 'store'])->name('store');
 });
 
 Route::get('/symlink', function()
