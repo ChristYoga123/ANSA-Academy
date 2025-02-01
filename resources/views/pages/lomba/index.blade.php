@@ -35,7 +35,8 @@
                                     -
                                     {{ Carbon\Carbon::parse($lomba->waktu_selesai)->locale('id')->isoFormat('D MMMM YYYY') }}
                                 </p>
-                                <h4 class="event-one__title"><a href="event-details.html">{{ $lomba->judul }}</a></h4>
+                                <h4 class="event-one__title"><a
+                                        href="{{ route('lomba.show', $lomba->slug) }}">{{ $lomba->judul }}</a></h4>
                                 <p class="blog-list__text"
                                     style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; max-height: 3.6em;">
                                     {!! $lomba->deskripsi !!}

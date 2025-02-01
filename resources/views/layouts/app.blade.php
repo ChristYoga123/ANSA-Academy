@@ -58,6 +58,7 @@
     <link rel="stylesheet" href="{{ asset('assets/css/module-css/event.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/css/module-css/courses-search.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/css/module-css/page-header.css') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/css/module-css/shop.css') }}" />
 
     <!-- Template Styles -->
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}" />

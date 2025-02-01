@@ -25,7 +25,7 @@ return [
     ],
     [
         'text' => 'Produk',
-        'url' => '/produk',
+        'url' => '/produk-digital',
     ],
     [
         'text' => 'Event',

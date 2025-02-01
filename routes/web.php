@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\LombaController;
 use App\Http\Controllers\BerandaController;
+use App\Http\Controllers\ProdukDigital;
+use App\Http\Controllers\ProdukDigitalController;
 
 // Route::get('/', function () {
 //     return view('welcome');
@@ -23,6 +25,13 @@ Route::prefix('lomba')->name('lomba.')->group(function()
 {
     Route::get('/', [LombaController::class, 'index'])->name('index');
     Route::get('/{slug}', [LombaController::class, 'show'])->name('show');
+});
+
+Route::prefix('produk-digital')->name('produk-digital.')->group(function()
+{
+    Route::get('/', [ProdukDigitalController::class, 'index'])->name('index');
+    Route::get('/{slug}', [ProdukDigitalController::class, 'show'])->name('show');
+    Route::post('/search', [ProdukDigitalController::class, 'search'])->name('search');
 });
 
 Route::get('/symlink', function()

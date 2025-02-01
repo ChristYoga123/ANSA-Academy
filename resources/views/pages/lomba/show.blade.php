@@ -27,6 +27,62 @@
                         <div class="event-details__content-left">
                             <h3 class="event-details__content-title">Tentang Lomba</h3>
                             <p class="event-details__content-text-1">{!! $lomba->deskripsi !!}</p>
+
+                            <!-- Jadwal Section -->
+                            <h3 class="event-details__content-title" style="margin-top: 40px;">Jadwal Kegiatan</h3>
+
+                            <!-- Pendaftaran -->
+                            <div class="event-details__content-text-1" style="margin-bottom: 25px;">
+                                <h4 style="font-size: 20px; margin-bottom: 15px;">
+                                    <span class="icon-calendar"
+                                        style="margin-right: 10px; color: var(--thm-primary);"></span>
+                                    Pendaftaran
+                                </h4>
+                                <div style="padding-left: 35px;">
+                                    <p style="margin-bottom: 5px;">
+                                        <strong>Mulai:</strong>
+                                        {{ Carbon\Carbon::parse($lomba->waktu_open_registrasi)->locale('id')->isoFormat('D MMMM Y, HH:mm') }}
+                                    </p>
+                                    <p style="margin-bottom: 10px;">
+                                        <strong>Selesai:</strong>
+                                        {{ Carbon\Carbon::parse($lomba->waktu_close_registrasi)->locale('id')->isoFormat('D MMMM Y, HH:mm') }}
+                                    </p>
+                                    @if (Carbon\Carbon::now()->between($lomba->waktu_open_registrasi, $lomba->waktu_close_registrasi))
+                                        <span style="color: #28a745; font-weight: 500;">Sedang Berlangsung</span>
+                                    @elseif(Carbon\Carbon::now()->lt($lomba->waktu_open_registrasi))
+                                        <span style="color: #ffc107; font-weight: 500;">Belum Dibuka</span>
+                                    @else
+                                        <span style="color: #dc3545; font-weight: 500;">Sudah Ditutup</span>
+                                    @endif
+                                </div>
+                            </div>
+
+                            <!-- Pelaksanaan -->
+                            <div class="event-details__content-text-1">
+                                <h4 style="font-size: 20px; margin-bottom: 15px;">
+                                    <span class="icon-clock" style="margin-right: 10px; color: var(--thm-primary);"></span>
+                                    Pelaksanaan Acara
+                                </h4>
+                                <div style="padding-left: 35px;">
+                                    <p style="margin-bottom: 5px;">
+                                        <strong>Mulai:</strong>
+                                        {{ Carbon\Carbon::parse($lomba->waktu_mulai)->locale('id')->isoFormat('D MMMM Y, HH:mm') }}
+                                    </p>
+                                    @if ($lomba->waktu_selesai)
+                                        <p style="margin-bottom: 10px;">
+                                            <strong>Selesai:</strong>
+                                            {{ Carbon\Carbon::parse($lomba->waktu_selesai)->locale('id')->isoFormat('D MMMM Y, HH:mm') }}
+                                        </p>
+                                    @endif
+                                    @if (Carbon\Carbon::now()->between($lomba->waktu_mulai, $lomba->waktu_selesai ?? ''))
+                                        <span style="color: #28a745; font-weight: 500;">Sedang Berlangsung</span>
+                                    @elseif(Carbon\Carbon::now()->lt($lomba->waktu_mulai))
+                                        <span style="color: #ffc107; font-weight: 500;">Belum Dimulai</span>
+                                    @else
+                                        <span style="color: #dc3545; font-weight: 500;">Sudah Selesai</span>
+                                    @endif
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="col-xl-4 col-lg-5">
@@ -41,7 +97,6 @@
                                         <p class="event-details__list-text">Registrasi :</p>
                                     </div>
                                     <div class="event-details__list-right">
-                                        {{-- jika waktu seakrang di antara waktu open regis dan close regis --}}
                                         @if (Carbon\Carbon::now()->between($lomba->waktu_open_registrasi, $lomba->waktu_close_registrasi))
                                             <p class="text-success badge">Sedang Berlangsung</p>
                                         @elseif(Carbon\Carbon::now()->lt($lomba->waktu_open_registrasi))
@@ -59,7 +114,6 @@
                                         <p class="event-details__list-text">Acara :</p>
                                     </div>
                                     <div class="event-details__list-right">
-                                        {{-- jika waktu seakrang di antara waktu open regis dan close regis --}}
                                         @if (Carbon\Carbon::now()->between($lomba->waktu_mulai, $lomba->waktu_selesai ?? ''))
                                             <p class="text-success badge">Sedang Berlangsung</p>
                                         @elseif(Carbon\Carbon::now()->lt($lomba->waktu_mulai))
@@ -86,10 +140,10 @@
                                     <a href="{{ $lomba->link_pendaftaran }}" target="_blank" class="thm-btn"><span
                                             class="icon-angles-right"></span>Daftar Sekarang</a>
                                 @elseif(Carbon\Carbon::now()->lt($lomba->waktu_open_registrasi))
-                                    <a href="#" class="thm-btn" disabled><span class="icon-angles-right"></span>Belum
+                                    <a class="thm-btn" disabled><span class="icon-angles-right"></span>Belum
                                         Dibuka</a>
                                 @elseif(Carbon\Carbon::now()->gt($lomba->waktu_close_registrasi))
-                                    <a href="#" class="thm-btn" disabled><span class="icon-angles-right"></span>Sudah
+                                    <a class="thm-btn" disabled><span class="icon-angles-right"></span>Sudah
                                         Ditutup</a>
                                 @endif
                             </div>
