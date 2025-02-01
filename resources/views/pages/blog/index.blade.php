@@ -2,7 +2,6 @@
 
 @section('content')
     @PageHeader([
-    'bgImage' => asset('assets/images/shapes/page-header-bg-shape.png'),
     'pageTitle' => 'Artikel',
     'breadcrumb' => [
     [

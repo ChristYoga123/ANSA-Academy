@@ -33,7 +33,7 @@ return [
     ],
     [
         'text' => 'Lomba',
-        'url' => '/Lomba',
+        'url' => '/lomba',
     ],
     [
         'text' => 'Blog',
