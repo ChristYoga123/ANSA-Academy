@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Filament\Admin\Resources\MentoringResource\Pages;
+namespace App\Filament\Admin\Resources\ProofreadingResource\Pages;
 
-use App\Filament\Admin\Resources\MentoringResource;
+use App\Filament\Admin\Resources\ProofreadingResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ManageRecords;
 use Illuminate\Contracts\Support\Htmlable;
 
-class ManageMentorings extends ManageRecords
+class ManageProofreadings extends ManageRecords
 {
-    protected static string $resource = MentoringResource::class;
+    protected static string $resource = ProofreadingResource::class;
 
     protected function getHeaderActions(): array
     {
@@ -18,7 +18,8 @@ class ManageMentorings extends ManageRecords
                 ->closeModalByClickingAway(false)
                 ->mutateFormDataUsing(function(array $data)
                 {
-                    $data['program'] = 'Mentoring';
+                    $data['program'] = 'Proofreading';
+
                     return $data;
                 }),
         ];
@@ -26,6 +27,6 @@ class ManageMentorings extends ManageRecords
 
     public function getTitle(): string|Htmlable
     {
-        return 'Mentoring';
+        return 'Proofreading';
     }
 }

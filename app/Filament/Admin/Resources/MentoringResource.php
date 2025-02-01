@@ -32,8 +32,7 @@ class MentoringResource extends Resource
                         Forms\Components\TextInput::make('judul')
                             ->required()
                             ->unique(ignoreRecord: true)
-                            ->maxLength(191)
-                            ->formatStateUsing(fn(Model $record) => $record->judul ? str_replace('[MENTORING] ', '', $record->judul) : null),
+                            ->maxLength(191),
                         Forms\Components\SpatieMediaLibraryFileUpload::make('thumbnail')
                             ->required()
                             ->maxFiles(1)
@@ -106,13 +105,7 @@ class MentoringResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make()
-                    ->mutateFormDataUsing(function(array $data, Program $record)
-                    {
-                        $data['judul'] = "[MENTORING] " . $data['judul'];
-
-                        return $data;
-                    }),
+                Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([

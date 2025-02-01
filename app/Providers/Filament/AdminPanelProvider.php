@@ -33,6 +33,7 @@ use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use App\Filament\Admin\Resources\LokerMentorBidangResource;
 use App\Filament\Admin\Resources\MentoringResource;
+use App\Filament\Admin\Resources\ProofreadingResource;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Joaopaulolndev\FilamentEditProfile\Pages\EditProfilePage;
 use Joaopaulolndev\FilamentEditProfile\FilamentEditProfilePlugin;
@@ -122,9 +123,10 @@ class AdminPanelProvider extends PanelProvider
                             // ...CategoryResource::getNavigationItems(),
                             // ...HomePageSettings::getNavigationItems(),
                         ]),
-                    NavigationGroup::make('Karir')
+                    NavigationGroup::make('Program')
                         ->items([
                             ...MentoringResource::getNavigationItems(),
+                            ...ProofreadingResource::getNavigationItems(),
                             // ...PageResource::getNavigationItems(),
                             // ...CategoryResource::getNavigationItems(),
                             // ...HomePageSettings::getNavigationItems(),

@@ -44,5 +44,8 @@ class Program extends Model implements HasMedia
         return $this->hasMany(KelasAnsaPaket::class, 'kelas_ansa_id');
     }
 
-    
+    public function proofreadingPakets()
+    {
+        return $this->hasMany(ProofreadingPaket::class, 'proofreading_id');
+    }
 }
