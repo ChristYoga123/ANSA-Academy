@@ -16,8 +16,8 @@ return new class extends Migration
             $table->foreignId('kelas_ansa_id')->constrained('programs')->cascadeOnDelete();
             $table->dateTime('waktu_open_registrasi');
             $table->dateTime('waktu_close_registrasi');
-            $table->dateTime('waktu_mulai');
-            $table->dateTime('waktu_selesai');
+            $table->date('waktu_mulai');
+            $table->date('waktu_selesai');
             $table->text('link_meet');
             $table->unsignedInteger('kuota');
             $table->timestamps();
