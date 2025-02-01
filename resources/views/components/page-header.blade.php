@@ -17,7 +17,7 @@
     <div class="container">
         <div class="page-header__inner">
             <div class="page-header__img">
-                <img src="{{ $pageHeaderImg }}" alt="" width="450" height="378">
+                <img src="{{ $pageHeaderImg }}" alt="" width="450px" height="378px">
                 <div class="page-header__shape-1">
                     <img src="{{ asset('assets/images/shapes/page-header-shape-1.png') }}" alt="">
                 </div>

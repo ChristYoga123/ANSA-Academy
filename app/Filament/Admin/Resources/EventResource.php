@@ -80,6 +80,14 @@ class EventResource extends Resource
                         Forms\Components\TextInput::make('kuota')
                             ->required()
                             ->numeric(),
+                        Forms\Components\Grid::make()
+                            ->columns(2)
+                            ->schema([
+                                Forms\Components\DateTimePicker::make('waktu_open_registrasi')
+                                    ->required(),
+                                Forms\Components\DateTimePicker::make('waktu_close_registrasi')
+                                    ->required(),
+                            ]),
                         Forms\Components\Checkbox::make('is_ready_asset')
                             ->label('Apakah terdapat asset digital sebagai benefit?')
                             ->live()

@@ -21,6 +21,8 @@ return new class extends Migration
             $table->enum('tipe', ['online', 'offline']);
             $table->text('link_meet')->nullable();
             $table->string('venue')->nullable();
+            $table->dateTime('waktu_open_registrasi');
+            $table->dateTime('waktu_close_registrasi');
             $table->unsignedBigInteger('kuota');
             $table->text('link_resource')->nullable();
             $table->timestamps();

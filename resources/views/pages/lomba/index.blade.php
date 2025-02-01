@@ -25,15 +25,14 @@
                                     </p>
                                     <span>
                                         {{-- ambil Bulan --}}
-                                        {{ Carbon\Carbon::parse($lomba->waktu_mulai)->locale('id')->isoFormat('MMMM') }}
+                                        {{ Carbon\Carbon::parse($lomba->waktu_mulai)->locale('id')->format('M') }}
                                     </span>
                                 </div>
                             </div>
                             <div class="event-one__content">
                                 <p class="event-one__time"> <span class="icon-clock"></span>
                                     {{ Carbon\Carbon::parse($lomba->waktu_mulai)->locale('id')->isoFormat('D MMMM YYYY') }}
-                                    -
-                                    {{ Carbon\Carbon::parse($lomba->waktu_selesai)->locale('id')->isoFormat('D MMMM YYYY') }}
+                                    {{ $lomba->waktu_selesai ? '- ' . Carbon\Carbon::parse($lomba->waktu_selesai)->locale('id')->isoFormat('D MMMM YYYY') : '' }}
                                 </p>
                                 <h4 class="event-one__title"><a
                                         href="{{ route('lomba.show', $lomba->slug) }}">{{ $lomba->judul }}</a></h4>

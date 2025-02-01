@@ -19,7 +19,8 @@
                 <div class="col-lg-6 col-xl-6">
                     <div class="product-details__img">
                         <img src="{{ $produkDigital->getFirstMediaUrl('produk-digital-thumbnail') }}"
-                            alt="{{ $produkDigital->judul }}" style="mix-blend-mode: normal !important;">
+                            alt="{{ $produkDigital->judul }}" style="mix-blend-mode: normal !important;" width="630px"
+                            height="625px">
                     </div>
                 </div>
 
@@ -46,7 +47,7 @@
                     </div>
 
                     <div class="product-details__buttons">
-                        <div class="product-details__buttons-2">
+                        <div class="product-details__buttons-1">
                             <a class="thm-btn" href="cart.html">Beli Sekarang</a>
                         </div>
                     </div>

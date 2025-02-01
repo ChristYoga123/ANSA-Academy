@@ -17,8 +17,9 @@
                 <div class="col-xl-3 col-lg-12">
                     <div class="product__sidebar">
                         <div class="shop-search product__sidebar-single">
-                            <form action="#">
-                                <input type="text" placeholder="Search">
+                            <form action="{{ route('produk-digital.search') }}" method="POST">
+                                @csrf
+                                <input type="text" placeholder="Search" name="search">
                                 <button type="submit"><i class="fa fa-search"></i></button>
                             </form>
                         </div>
@@ -76,6 +77,7 @@
                                         </div>
                                     </div>
                                 @endforelse
+                                {{ $produkDigitals->links('vendor.pagination.custom') }}
                             </div>
                         </div>
                     </div>

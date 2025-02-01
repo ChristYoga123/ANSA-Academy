@@ -29,7 +29,7 @@ class ProdukDigitalController extends Controller
 
     public function search(Request $request)
     {
-        $produkDigitals = ProdukDigital::where('title', 'like', '%' . $request->search . '%')->latest()->paginate(6);
+        $produkDigitals = ProdukDigital::where('judul', 'like', '%' . $request->search . '%')->latest()->paginate(6);
 
         return view('pages.produk-digital.index', [
             'title' => $this->title,
