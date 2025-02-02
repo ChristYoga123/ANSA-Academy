@@ -11,6 +11,7 @@ use App\Models\ProgramMentee;
 use App\Models\MentoringPaket;
 use Illuminate\Support\Facades\DB;
 use App\Contracts\PaymentServiceInterface;
+use App\Models\User;
 
 class MentoringController extends Controller
 {
@@ -43,7 +44,7 @@ class MentoringController extends Controller
     {
         return view('pages.mentoring.show', [
             'title' => $this->title,
-            'mentoring' => Program::with(['media', 'mentoringPakets', 'mentors'])->withCount(['mentoringPakets', 'mentors'])->whereProgram('Mentoring')->where('slug', $slug)->first()
+            'mentoring' => Program::with(['media', 'mentoringPakets', 'mentors'])->withCount(['mentoringPakets', 'mentors'])->whereProgram('Mentoring')->where('slug', $slug)->first(),
         ]);
     }
 

@@ -66,11 +66,13 @@
                                                     </div>
                                                 </div>
                                                 <h3 class="courses-two__title">
-                                                    <a href="#">{{ $proofreading->judul }}</a>
+                                                    <a
+                                                        href="{{ route('proofreading.show', $proofreading->slug) }}">{{ $proofreading->judul }}</a>
                                                 </h3>
                                                 <div class="courses-two__btn-and-client-box">
                                                     <div class="courses-two__btn-box">
-                                                        <a href="#" class="thm-btn-two">
+                                                        <a href="{{ route('proofreading.show', $proofreading->slug) }}"
+                                                            class="thm-btn-two">
                                                             <span>Daftar Sekarang</span>
                                                             <i class="icon-angles-right"></i>
                                                         </a>

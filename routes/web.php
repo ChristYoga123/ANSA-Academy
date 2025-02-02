@@ -66,6 +66,8 @@ Route::prefix('program')->group(function()
     {
         Route::get('/', [ProofreadingController::class, 'index'])->name('index');
         Route::post('/search', [ProofreadingController::class, 'search'])->name('search');
+        Route::get('/{slug}', [ProofreadingController::class, 'show'])->name('show');
+        Route::post('/beli/{slug}', [ProofreadingController::class, 'beli'])->name('beli');
     });
 
     Route::prefix('kelas-ansa')->name('kelas-ansa.')->group(function()
