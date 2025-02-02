@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Admin\Pages\WebResourcePage;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\Widgets;
@@ -137,6 +138,7 @@ class AdminPanelProvider extends PanelProvider
                         ->items([
                             ...MentorResource::getNavigationItems(),
                             ...MenteeResource::getNavigationItems(),
+                            ...WebResourcePage::getNavigationItems(),
                         ]),
                     NavigationGroup::make('Settings')
                         ->items([

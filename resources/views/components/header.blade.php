@@ -5,8 +5,8 @@
                 <div class="main-menu__wrapper-inner">
                     <div class="main-menu__left">
                         <div class="main-menu__logo">
-                            <a href="index.html"><img src="{{ asset('assets/images/resources/logo-1.png') }}"
-                                    alt=""></a>
+                            <a href="{{ route('index') }}"><img src="{{ $webResource->getFirstMediaUrl('logo-website') }}"
+                                    alt="logo" width="50px"></a>
                         </div>
                     </div>
                     <div class="main-menu__main-menu-box">
@@ -40,7 +40,13 @@
                     <div class="main-menu__right">
                         <div class="main-menu__btn-boxes">
                             <div class="main-menu__btn-box-2">
-                                <a href="#" class="thm-btn">Masuk</a>
+                                @auth
+                                    <a href="#" class="thm-btn">Hi, {{ Auth::user()->name }}</a>
+                                @endauth
+
+                                @guest
+                                    <a href="#" class="thm-btn">Login</a>
+                                @endguest
                             </div>
                         </div>
                     </div>

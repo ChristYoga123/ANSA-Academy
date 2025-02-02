@@ -63,13 +63,13 @@ class KelasAnsaController extends Controller
             'referral_code.exists' => 'Referral code tidak valid.'
         ]);
 
-        // if(!validateUserToBuy())
-        // {
-        //     return response()->json([
-        //         'status' => 'error',
-        //         'message' => 'Anda tidak bisa membeli kelas ini.'
-        //     ], 403);
-        // }
+        if(!validateUserToBuy())
+        {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Anda tidak bisa membeli kelas ini.'
+            ], 403);
+        }
 
         if($request->referral_code)
         {

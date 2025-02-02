@@ -46,8 +46,13 @@ class ProdukDigitalController extends Controller
         ]);
     }
 
-    public function beli($slug)
+    public function beli(Request $request, $slug)
     {
+        $request->validate([
+            'referral_code' => 'nullable|exists:users,referral_code'
+        ], [
+            'referral_code.exists' => 'Referral code tidak valid'
+        ]);
         // cek jika user admin/mentor
         if(!validateUserToBuy())
         {
@@ -55,6 +60,18 @@ class ProdukDigitalController extends Controller
                 'status' => 'error',
                 'message' => 'Anda tidak bisa membeli produk digital'
             ], 403);
+        }
+
+        // cek validasi referral code
+        if($request->referral_code)
+        {
+            if(!validateReferralCode($request->referral_code))
+            {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Referral code tidak valid'
+                ], 422);
+            } 
         }
 
         // hapus transaksi yang belum dibayar

@@ -45,7 +45,12 @@
                             </span>
                         </p>
                     </div>
-
+                    <!-- Add Referral Code Input -->
+                    <div class="product-details__buttons mt-4" style="margin-bottom: -40px; width: 100%;">
+                        <div class="course-details__search-form">
+                            <input type="text" placeholder="Masukkan referral code" name="referral_code">
+                        </div>
+                    </div>
                     <div class="product-details__buttons">
                         <div class="product-details__buttons-1">
                             <button onclick="beli()" class="thm-btn">Beli Sekarang</button>
@@ -66,7 +71,8 @@
                 url: `{{ route('produk-digital.beli', $produkDigital->slug) }}`,
                 method: 'POST',
                 data: {
-                    _token: '{{ csrf_token() }}'
+                    _token: '{{ csrf_token() }}',
+                    referral_code: $('input[name="referral_code"]').val()
                 },
                 beforeSend: function() {
                     $('button[onclick="beli()"]').attr('disabled', true);

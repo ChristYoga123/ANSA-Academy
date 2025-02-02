@@ -4,75 +4,52 @@
     <!-- Main Slider Start -->
     <section class="main-slider">
         <div class="main-slider__carousel owl-carousel owl-theme">
-            <div class="item">
-                <div class="main-slider__bg" style="background-image: url(assets/images/backgrounds/slider-1-1.jpg);">
-                </div>
-                <div class="container">
-                    <div class="main-slider__content">
-                        <div class="main-slider__sub-title-box">
-                            <div class="main-slider__sub-title-shape"></div>
-                            <h5 class="main-slider__sub-title">Best Online Platform</h5>
-                        </div>
-                        <h2 class="main-slider__title">Hey! Grow Your Career <br> With Follow Fistudy</h2>
-                        <p class="main-slider__text">Enhance your educational journey with our cutting-edge
-                            course platform. <br> Convenience of online education, allowing learners to acquire new
-                            <br>
-                            skills at their own pace and from any location.
-                        </p>
-                        <div class="main-slider__btn-box">
-                            <a href="contact.html" class="thm-btn"><span class="icon-angles-right"></span>Get
-                                Started</a>
+            @forelse ($webAds as $item)
+                <div class="item">
+                    <div class="main-slider__bg"
+                        style="background-image: url({{ $item->getFirstMediaUrl('ad-background') }});">
+                    </div>
+                    <div class="container">
+                        <div class="main-slider__content">
+                            <div class="main-slider__sub-title-box">
+                                <div class="main-slider__sub-title-shape"></div>
+                                <h5 class="main-slider__sub-title">{{ $item->headline }}</h5>
+                            </div>
+                            <h2 class="main-slider__title">{{ $item->judul }}</h2>
+                            <p class="main-slider__text">
+                                {{ $item->deskripsi }}
+                            </p>
+                            <div class="main-slider__btn-box">
+                                <a href="{{ $item->url }}" class="thm-btn"><span class="icon-angles-right"></span>Lebih
+                                    Detail</a>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="item">
-                <div class="main-slider__bg" style="background-image: url(assets/images/backgrounds/slider-1-2.jpg);">
-                </div>
-                <div class="container">
-                    <div class="main-slider__content">
-                        <div class="main-slider__sub-title-box">
-                            <div class="main-slider__sub-title-shape"></div>
-                            <h5 class="main-slider__sub-title">Best Online Platform</h5>
-                        </div>
-                        <h2 class="main-slider__title">Hey! Grow Your Career <br> With Follow Fistudy</h2>
-                        <p class="main-slider__text">Enhance your educational journey with our cutting-edge
-                            course platform. <br> Convenience of online education, allowing learners to acquire new
-                            <br>
-                            skills at their own pace and from any location.
-                        </p>
-                        <div class="main-slider__btn-box">
-                            <a href="contact.html" class="thm-btn"><span class="icon-angles-right"></span>Get
-                                Started</a>
+            @empty
+                <div class="item">
+                    <div class="main-slider__bg" style="background-image: url(assets/images/backgrounds/slider-1-1.jpg);">
+                    </div>
+                    <div class="container">
+                        <div class="main-slider__content">
+                            <div class="main-slider__sub-title-box">
+                                <div class="main-slider__sub-title-shape"></div>
+                                <h5 class="main-slider__sub-title">Best Online Platform</h5>
+                            </div>
+                            <h2 class="main-slider__title">Kembangkan Karirmu <br> Bersama Fistudy</h2>
+                            <p class="main-slider__text">Tingkatkan perjalanan pendidikanmu dengan platform kursus
+                                modern kami. <br> Nikmati kenyamanan belajar online, yang memungkinkan kamu menguasai
+                                keterampilan baru <br> dengan kecepatan sendiri dan dari mana saja.
+                            </p>
+                            <div class="main-slider__btn-box">
+                                <a href="contact.html" class="thm-btn"><span class="icon-angles-right"></span>Mulai
+                                    Sekarang</a>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-
-            <div class="item">
-                <div class="main-slider__bg" style="background-image: url(assets/images/backgrounds/slider-1-3.jpg);">
-                </div>
-                <div class="container">
-                    <div class="main-slider__content">
-                        <div class="main-slider__sub-title-box">
-                            <div class="main-slider__sub-title-shape"></div>
-                            <h5 class="main-slider__sub-title">Best Online Platform</h5>
-                        </div>
-                        <h2 class="main-slider__title">Hey! Grow Your Career <br> With Follow Fistudy</h2>
-                        <p class="main-slider__text">Enhance your educational journey with our cutting-edge
-                            course platform. <br> Convenience of online education, allowing learners to acquire new
-                            <br>
-                            skills at their own pace and from any location.
-                        </p>
-                        <div class="main-slider__btn-box">
-                            <a href="contact.html" class="thm-btn"><span class="icon-angles-right"></span>Get
-                                Started</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
+            @endforelse
         </div>
     </section>
     <!--Main Slider Start -->
@@ -85,9 +62,9 @@
                     <div class="section-title-two__tagline-shape">
                         <img src="assets/images/shapes/section-title-two-shape-1.png" alt="">
                     </div>
-                    <span class="section-title-two__tagline">Our Vision</span>
+                    <span class="section-title-two__tagline">Visi Kami</span>
                 </div>
-                <h2 class="section-title-two__title title-animation">Empowering Through <span>Education</span></h2>
+                <h2 class="section-title-two__title title-animation">Memberdayakan Melalui <span>Pendidikan</span></h2>
             </div>
 
             <div class="row justify-content-center">
@@ -95,10 +72,7 @@
                     <div class="vision-section__content">
                         <p class="vision-section__text"
                             style="font-size: 18px; line-height: 1.8; margin-bottom: 30px; font-style: italic">
-                            Our vision is to create a world where quality education is accessible to everyone, regardless of
-                            their location or circumstances. We strive to transform lives through innovative learning
-                            experiences, build a global community of lifelong learners, and foster innovation and excellence
-                            in education.
+                            {!! $webResource->visi !!}
                         </p>
                         {{-- quote by text center --}}
                         <div class="vision-section__quote-box">
@@ -121,9 +95,9 @@
                     <div class="section-title-two__tagline-shape">
                         <img src="assets/images/shapes/section-title-two-shape-1.png" alt="">
                     </div>
-                    <span class="section-title-two__tagline">Our Services</span>
+                    <span class="section-title-two__tagline">Layanan Kami</span>
                 </div>
-                <h2 class="section-title-two__title title-animation">What We <span>Offer</span></h2>
+                <h2 class="section-title-two__title title-animation">Yang Kami <span>Tawarkan</span></h2>
             </div>
 
             <div class="row">
@@ -131,16 +105,19 @@
                     <div class="services-section__single text-center"
                         style="padding: 40px 30px; background: #fff; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); margin-bottom: 30px;">
                         <div class="services-section__icon" style="margin-bottom: 25px;">
-                            <svg width="80" height="80" viewBox="0 0 24 24" fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path
-                                    d="M12 14C13.6569 14 15 12.6569 15 11C15 9.34315 13.6569 8 12 8C10.3431 8 9 9.34315 9 11C9 12.6569 10.3431 14 12 14Z"
-                                    stroke="#4A6CF7" stroke-width="1.5" />
-                                <path
-                                    d="M16 4C18.8284 4 20.2426 4 21.1213 4.87868C22 5.75736 22 7.17157 22 10V14C22 16.8284 22 18.2426 21.1213 19.1213C20.2426 20 18.8284 20 16 20H8C5.17157 20 3.75736 20 2.87868 19.1213C2 18.2426 2 16.8284 2 14V10C2 7.17157 2 5.75736 2.87868 4.87868C3.75736 4 5.17157 4 8 4"
-                                    stroke="#4A6CF7" stroke-width="1.5" />
-                                <path d="M19 12H19.01M4.99995 12H5.00995" stroke="#4A6CF7" stroke-width="2"
-                                    stroke-linecap="round" />
+                            <svg width="80" height="80" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg"
+                                fill="#000000">
+                                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                                <g id="SVGRepo_iconCarrier">
+                                    <path fill="none" stroke="#687EFF" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round" stroke-miterlimit="10" d="M1 2h16v11H1z"></path>
+                                    <path fill="none" stroke="#687EFF" stroke-linecap="round" stroke-linejoin="round"
+                                        stroke-miterlimit="10"
+                                        d="M4 5.5v5s3-1 5 0v-5s-2-2-5 0zM9 5.5v5s3-1 5 0v-5s-2-2-5 0z"></path>
+                                    <path fill="#687EFF" stroke="#687EFF" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round" stroke-miterlimit="10" d="M8.5 14l-3 3h7l-3-3z"></path>
+                                </g>
                             </svg>
                         </div>
                         <h3 class="services-section__title" style="font-size: 24px; margin-bottom: 15px;">Mentoring</h3>
@@ -153,16 +130,41 @@
                     <div class="services-section__single text-center"
                         style="padding: 40px 30px; background: #fff; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); margin-bottom: 30px;">
                         <div class="services-section__icon" style="margin-bottom: 25px;">
-                            <svg width="80" height="80" viewBox="0 0 24 24" fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path d="M4 19V5C4 3.89543 4.89543 3 6 3H19.4C19.7314 3 20 3.26863 20 3.6V16.7143"
-                                    stroke="#4A6CF7" stroke-width="1.5" />
-                                <path d="M6 17L20 17" stroke="#4A6CF7" stroke-width="1.5" />
-                                <path d="M6 21L20 21" stroke="#4A6CF7" stroke-width="1.5" />
-                                <path d="M6 21C4.89543 21 4 20.1046 4 19C4 17.8954 4.89543 17 6 17" stroke="#4A6CF7"
-                                    stroke-width="1.5" />
-                                <path d="M20 21C21.1046 21 22 20.1046 22 19C22 17.8954 21.1046 17 20 17" stroke="#4A6CF7"
-                                    stroke-width="1.5" />
+                            <svg height="80" width="80" version="1.1" id="_x32_"
+                                xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                                viewBox="0 0 512 512" xml:space="preserve" fill="#687EFF">
+                                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                                <g id="SVGRepo_iconCarrier">
+                                    <style type="text/css">
+                                        .st0 {
+                                            fill: #687EFF;
+                                        }
+                                    </style>
+                                    <g>
+                                        <path class="st0"
+                                            d="M81.44,116.972c23.206,0,42.007-18.817,42.007-42.008c0-23.215-18.801-42.016-42.007-42.016 c-23.216,0-42.016,18.801-42.016,42.016C39.424,98.155,58.224,116.972,81.44,116.972z">
+                                        </path>
+                                        <path class="st0"
+                                            d="M224.166,245.037c0-0.856-0.142-1.673-0.251-2.498l62.748-45.541c3.942-2.867,4.83-8.411,1.963-12.362 c-1.664-2.285-4.342-3.652-7.17-3.652c-1.877,0-3.667,0.589-5.191,1.689l-62.874,45.636c-2.341-1.068-4.909-1.704-7.65-1.704 h-34.178l-8.294-47.222c-4.555-23.811-14.112-42.51-34.468-42.51h-86.3C22.146,136.873,0,159.019,0,179.383v141.203 c0,10.178,8.246,18.432,18.424,18.432c5.011,0,0,0,12.864,0l7.005,120.424c0,10.83,8.788,19.61,19.618,19.61 c8.12,0,28.398,0,39.228,0c10.83,0,19.61-8.78,19.61-19.61l9.204-238.53h0.463l5.27,23.269c1.744,11.097,11.293,19.28,22.524,19.28 h51.534C215.92,263.461,224.166,255.215,224.166,245.037z M68.026,218.861v-67.123h24.126v67.123l-12.817,15.118L68.026,218.861z">
+                                        </path>
+                                        <polygon class="st0"
+                                            points="190.326,47.47 190.326,200.869 214.452,200.869 214.452,71.595 487.874,71.595 487.874,302.131 214.452,302.131 214.452,273.113 190.326,273.113 190.326,326.256 512,326.256 512,47.47 ">
+                                        </polygon>
+                                        <path class="st0"
+                                            d="M311.81,388.597c0-18.801-15.235-34.029-34.028-34.029c-18.801,0-34.036,15.228-34.036,34.029 c0,18.785,15.235,34.028,34.036,34.028C296.574,422.625,311.81,407.381,311.81,388.597z">
+                                        </path>
+                                        <path class="st0"
+                                            d="M277.781,440.853c-24.259,0-44.866,15.919-52.782,38.199h105.565 C322.648,456.771,302.04,440.853,277.781,440.853z">
+                                        </path>
+                                        <path class="st0"
+                                            d="M458.573,388.597c0-18.801-15.235-34.029-34.028-34.029c-18.801,0-34.036,15.228-34.036,34.029 c0,18.785,15.235,34.028,34.036,34.028C443.338,422.625,458.573,407.381,458.573,388.597z">
+                                        </path>
+                                        <path class="st0"
+                                            d="M424.545,440.853c-24.259,0-44.866,15.919-52.783,38.199h105.565 C469.411,456.771,448.804,440.853,424.545,440.853z">
+                                        </path>
+                                    </g>
+                                </g>
                             </svg>
                         </div>
                         <h3 class="services-section__title" style="font-size: 24px; margin-bottom: 15px;">Kelas ANSA</h3>
@@ -175,11 +177,24 @@
                     <div class="services-section__single text-center"
                         style="padding: 40px 30px; background: #fff; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); margin-bottom: 30px;">
                         <div class="services-section__icon" style="margin-bottom: 25px;">
-                            <svg width="80" height="80" viewBox="0 0 24 24" fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path
-                                    d="M12 20L4 15M12 20L20 15M12 20V11M4 15L12 10M4 15V9L12 4M20 15L12 10M20 15V9L12 4M12 10V11M12 4V11"
-                                    stroke="#4A6CF7" stroke-width="1.5" />
+                            <svg width="80" height="80" viewBox="0 0 192 192" xmlns="http://www.w3.org/2000/svg"
+                                xml:space="preserve" fill="none">
+                                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                                <g id="SVGRepo_iconCarrier">
+                                    <g style="display:inline;stroke-width:9.40549;stroke-dasharray:none">
+                                        <path
+                                            d="M38 137h48c2.828 0 7.173 2.935 10 3 2.7.062 7.3-3 10-3h48V49h-48c-3 0-7 3-9.704 3C93 52 89 49 86 49H38Zm58-82v85"
+                                            style="fill:none;stroke:#687EFF;stroke-width:9.40549;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:5;stroke-dasharray:none;stroke-opacity:1"
+                                            transform="translate(-26.483 -24.57) scale(1.27586)"></path>
+                                    </g>
+                                    <g style="stroke-width:6.27027;stroke-dasharray:none">
+                                        <path
+                                            d="M51.869 65.116h30.297M51.869 80.088h30.297M51.869 95.06h30.297m27.668-29.944h30.297m-30.297 14.972h30.297"
+                                            style="fill:none;fill-opacity:1;stroke:#687EFF;stroke-width:9.40541;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:5;stroke-dasharray:none;stroke-opacity:1"
+                                            transform="translate(-26.483 -24.57) scale(1.27586)"></path>
+                                    </g>
+                                </g>
                             </svg>
                         </div>
                         <h3 class="services-section__title" style="font-size: 24px; margin-bottom: 15px;">Proofreading
@@ -196,10 +211,10 @@
     <!-- About One Start -->
     <section class="about-one">
         <div class="about-one__shape-1">
-            <img src="assets/images/shapes/about-one-shape-1.png" alt="">
+            <img src="{{ asset('assets/images/shapes/about-one-shape-1.png') }}" alt="">
         </div>
         <div class="about-one__shape-2">
-            <img src="assets/images/shapes/about-one-shape-2.png" alt="">
+            <img src="{{ asset('assets/images/shapes/about-one-shape-2.png') }}" alt="">
         </div>
         <div class="container">
             <div class="row">
@@ -255,17 +270,14 @@
                         <div class="section-title text-left sec-title-animation animation-style2">
                             <div class="section-title__tagline-box">
                                 <div class="section-title__tagline-shape"></div>
-                                <span class="section-title__tagline">About Us</span>
+                                <span class="section-title__tagline">Tentang Kami</span>
                             </div>
-                            <h2 class="section-title__title title-animation">Our Story: Built On Values, Driven By
-                                <span>Innovation <img src="assets/images/shapes/section-title-shape-1.png"
+                            <h2 class="section-title__title title-animation">Cerita Kami: Dibangun dengan Nilai,
+                                Digerakkan oleh <span>Inovasi <img src="assets/images/shapes/section-title-shape-1.png"
                                         alt=""></span>
                             </h2>
                         </div>
-                        <p class="about-one__text">We are dedicated to transforming education through digital
-                            innovation, making learning more accessible, engaging, and effective for everyone. By
-                            integrating cutting-edge technology, we aim to create an inclusive and dynamic learning
-                            environment</p>
+                        <p class="about-one__text">{!! $webResource->tentang !!}</p>
                     </div>
                 </div>
             </div>
@@ -281,10 +293,10 @@
                     <div class="section-title-two__tagline-shape">
                         <img src="assets/images/shapes/section-title-two-shape-1.png" alt="">
                     </div>
-                    <span class="section-title-two__tagline">Our Courses</span>
+                    <span class="section-title-two__tagline">Program Kami</span>
                 </div>
-                <h2 class="section-title-two__title title-animation">Explore Our Comprehensive<br> Course
-                    <span>Offerings</span>
+                <h2 class="section-title-two__title title-animation">Jelajahi Program<br> yang Kami
+                    <span>Tawarkan</span>
                 </h2>
             </div>
             <div class="courses-two__inner">
@@ -315,7 +327,7 @@
                                     </div>
                                     <div class="courses-two__img">
                                         <img src="{{ $program->getFirstMediaUrl('program-thumbnail') ?? 'assets/images/default.jpg' }}"
-                                            alt="{{ $program->judul }}">
+                                            alt="{{ $program->judul }}" width="368px" height="230px">
                                     </div>
                                     <div class="courses-two__heart">
                                         <a href="#"><span class="icon-heart"></span></a>
@@ -371,7 +383,7 @@
                                     </div>
                                     <div class="courses-two__img">
                                         <img src="{{ $program->getFirstMediaUrl('program-thumbnail') ?? 'assets/images/default.jpg' }}"
-                                            alt="{{ $program->judul }}">
+                                            alt="{{ $program->judul }}" width="368px" height="230px">
                                     </div>
                                     <div class="courses-two__heart">
                                         <a href="#"><span class="icon-heart"></span></a>
@@ -439,7 +451,7 @@
                                     </div>
                                     <div class="courses-two__img">
                                         <img src="{{ $program->getFirstMediaUrl('program-thumbnail') ?? 'assets/images/default.jpg' }}"
-                                            alt="{{ $program->judul }}">
+                                            alt="{{ $program->judul }}" width="368px" height="230px">
                                     </div>
                                     <div class="courses-two__heart">
                                         <a href="#"><span class="icon-heart"></span></a>
@@ -512,6 +524,24 @@
                     </div>
                 </div>
             </div>
+
+            {{-- buatkan quote author --}}
+            <div class="row justify-content-center" style="margin-top: 50px">
+                <div class="col-xl-8 text-center">
+                    <div class="vision-section__content">
+                        <p class="vision-section__text"
+                            style="font-size: 18px; line-height: 1.8; margin-bottom: 30px; font-style: italic">
+                            {!! $webResource->quote !!}
+                        </p>
+                        {{-- quote by text center --}}
+                        <div class="vision-section__quote-box">
+                            <div class="vision-section__quote-shape" style="font: italic">
+                                -CEO ANSA Academy-
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -523,10 +553,10 @@
                     <div class="section-title-two__tagline-shape">
                         <img src="assets/images/shapes/section-title-two-shape-1.png" alt="">
                     </div>
-                    <span class="section-title-two__tagline">Our Testimonial</span>
+                    <span class="section-title-two__tagline">Testimoni</span>
                 </div>
-                <h2 class="section-title-two__title title-animation">Our Students
-                    <span>Feedback</span>
+                <h2 class="section-title-two__title title-animation">Apa Kata
+                    <span>Mentee Kami</span>
                 </h2>
             </div>
             <ul class="list-unstyled testimonial-three__list marquee_mode-3">
@@ -737,69 +767,35 @@
                 <div class="section-title-two__tagline-shape">
                     <img src="assets/images/shapes/section-title-two-shape-1.png" alt="">
                 </div>
-                <span class="section-title-two__tagline">Have a Question?</span>
+                <span class="section-title-two__tagline">Ada Pertanyaan?</span>
             </div>
             <h2 class="section-title-two__title title-animation">
-                Here's Our <span>FAQs</span>
+                Pertanyaan yang Sering <span>Diajukan</span>
             </h2>
         </div>
         <div class="container">
             <div class="row">
-                <div class="col-xl-6 col-lg-6">
+                <div class="col-xl-12 col-lg-6">
                     <div class="faq-page__left">
                         <div class="accrodion-grp faq-one-accrodion" data-grp-name="faq-one-accrodion-1">
-                            <div class="accrodion">
-                                <div class="accrodion-title">
-                                    <h4>What services do you offer for development ?</h4>
+                            @forelse ($webResource->faqs as $uuid => $value)
+                                <div class="accrodion {{ $loop->first ? 'active' : '' }}">
+                                    <div class="accrodion-title">
+                                        <h4>{{ $value['pertanyaan'] }}</h4>
+                                    </div>
+                                    <div class="accrodion-content">
+                                        <div class="inner">
+                                            <p>{{ $value['jawaban'] }}</p>
+                                        </div><!-- /.inner -->
+                                    </div>
                                 </div>
-                                <div class="accrodion-content">
-                                    <div class="inner">
-                                        <p>We provide a range of services designed to help your business grow and
-                                            succeed. Our services include market research and analysis, strategic
-                                            planning, sales and marketing strategy development</p>
-                                    </div><!-- /.inner -->
-                                </div>
-                            </div>
-                            <div class="accrodion  active">
-                                <div class="accrodion-title">
-                                    <h4>How can your consultancy help my business grow?</h4>
-                                </div>
-                                <div class="accrodion-content">
-                                    <div class="inner">
-                                        <p>We provide a range of services designed to help your business grow and
-                                            succeed. Our services include market research and analysis, strategic
-                                            planning, sales and marketing strategy development</p>
-                                    </div><!-- /.inner -->
-                                </div>
-                            </div>
-                            <div class="accrodion">
-                                <div class="accrodion-title">
-                                    <h4>What types of businesses do you work with?</h4>
-                                </div>
-                                <div class="accrodion-content">
-                                    <div class="inner">
-                                        <p>We provide a range of services designed to help your business grow and
-                                            succeed. Our services include market research and analysis, strategic
-                                            planning, sales and marketing strategy development</p>
-                                    </div><!-- /.inner -->
-                                </div>
-                            </div>
-                            <div class="accrodion">
-                                <div class="accrodion-title">
-                                    <h4>How do you tailor your services to my business’s needs?</h4>
-                                </div>
-                                <div class="accrodion-content">
-                                    <div class="inner">
-                                        <p>We provide a range of services designed to help your business grow and
-                                            succeed. Our services include market research and analysis, strategic
-                                            planning, sales and marketing strategy development</p>
-                                    </div><!-- /.inner -->
-                                </div>
-                            </div>
+                            @empty
+                                <p>Belum ada pertanyaan yang sering diajukan</p>
+                            @endforelse
                         </div>
                     </div>
                 </div>
-                <div class="col-xl-6 col-lg-6">
+                {{-- <div class="col-xl-6 col-lg-6">
                     <div class="faq-page__right">
                         <div class="accrodion-grp faq-one-accrodion" data-grp-name="faq-one-accrodion-1">
                             <div class="accrodion">
@@ -852,7 +848,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> --}}
             </div>
         </div>
     </section>
