@@ -7,6 +7,9 @@ use App\Http\Controllers\EventController;
 use App\Http\Controllers\KarirController;
 use App\Http\Controllers\LombaController;
 use App\Http\Controllers\BerandaController;
+use App\Http\Controllers\KelasAnsaController;
+use App\Http\Controllers\MentoringController;
+use App\Http\Controllers\ProofreadingController;
 use App\Http\Controllers\ProdukDigitalController;
 
 // Route::get('/', function () {
@@ -47,6 +50,29 @@ Route::prefix('karir')->name('karir.')->group(function()
     Route::get('/', [KarirController::class, 'index'])->name('index');
     Route::get('/{id}', [KarirController::class, 'show'])->name('show');
     Route::post('/{id}', [KarirController::class, 'store'])->name('store');
+});
+
+Route::prefix('program')->group(function()
+{
+    Route::prefix('mentoring')->name('mentoring.')->group(function()
+    {
+        Route::get('/', [MentoringController::class, 'index'])->name('index');
+        Route::get('/{slug}', [MentoringController::class, 'show'])->name('show');
+        Route::post('/search', [MentoringController::class, 'search'])->name('search');
+        Route::post('/beli/{slug}', [MentoringController::class, 'beli'])->name('beli');
+    });
+
+    Route::prefix('proofreading')->name('proofreading.')->group(function()
+    {
+        Route::get('/', [ProofreadingController::class, 'index'])->name('index');
+        Route::post('/search', [ProofreadingController::class, 'search'])->name('search');
+    });
+
+    Route::prefix('kelas-ansa')->name('kelas-ansa.')->group(function()
+    {
+        Route::get('/', [KelasAnsaController::class, 'index'])->name('index');
+        Route::post('/search', [KelasAnsaController::class, 'search'])->name('search');
+    });
 });
 
 Route::get('/symlink', function()

@@ -12,4 +12,9 @@ class MentoringPaket extends Model
     {
         return $this->belongsTo(Program::class, 'mentoring_id');
     }
+
+    public function programMenteePakets()
+    {
+        return $this->morphMany(ProgramMentee::class, 'paketable');
+    }
 }

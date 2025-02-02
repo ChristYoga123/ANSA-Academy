@@ -12,4 +12,9 @@ class KelasAnsaPaket extends Model
     {
         return $this->belongsTo(Program::class, 'kelas_ansa_id');
     }
+
+    public function programMenteePakets()
+    {
+        return $this->morphMany(ProgramMentee::class, 'paketable');
+    }
 }

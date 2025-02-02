@@ -192,13 +192,9 @@ class LokerMentorResource extends Resource
                 Tables\Actions\Action::make('Diterima')
                     ->icon('heroicon-o-check-circle')
                     ->color('success')
-                    ->form([
-                        Forms\Components\RichEditor::make('catatan')
-                            ->label('Catatan (bisa melampirkan file tambahan)')
-                            ->required(),
-                    ])
+                    ->requiresConfirmation()
                     ->label('Terima')
-                    ->action(function(LokerMentor $lokerMentor, array $data){
+                    ->action(function(LokerMentor $lokerMentor){
                         DB::beginTransaction();
                         try
                         {
@@ -248,11 +244,11 @@ class LokerMentorResource extends Resource
                                 ->danger()
                                 ->send();
                         }
-                    })
-                    ->visible(fn(LokerMentor $lokerMentor) => $lokerMentor->status_penerimaan === 'Lolos Microteaching'),
+                    }),
                 Tables\Actions\Action::make('tolak')
                     ->icon('heroicon-o-x-circle')
                     ->color('danger')
+                    ->requiresConfirmation()
                     ->label('Tolak')
                     ->visible(fn(LokerMentor $lokerMentor) => $lokerMentor->status_penerimaan === 'Menunggu')
                     ->form([

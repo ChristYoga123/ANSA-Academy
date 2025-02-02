@@ -74,12 +74,17 @@ class User extends Authenticatable implements HasAvatar, FilamentUser, HasMedia
         return $this->belongsToMany(Event::class, 'event_mentors', 'mentor_id', 'event_id');
     }
 
-    public function programMentees()
+    public function programMentors()
     {
-        return $this->belongsToMany(Program::class, 'program_mentors', 'mentee_id', 'program_id');
+        return $this->belongsToMany(Program::class, 'program_mentors', 'mentor_id', 'program_id');
     }
 
-    public function programMentors()
+    public function programMentees()
+    {
+        return $this->belongsToMany(Program::class, 'program_mentees', 'mentee_id', 'program_id');
+    }
+
+    public function programMenteeMentors()
     {
         return $this->belongsToMany(Program::class, 'program_mentees', 'mentor_id', 'program_id');
     }

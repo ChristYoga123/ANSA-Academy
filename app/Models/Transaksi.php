@@ -12,4 +12,9 @@ class Transaksi extends Model
     {
         return $this->morphTo();
     }
+
+    public function mentee()
+    {
+        return $this->belongsTo(User::class, 'mentee_id');
+    }
 }

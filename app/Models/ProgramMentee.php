@@ -18,7 +18,17 @@ class ProgramMentee extends Model
         return $this->belongsTo(User::class, 'mentee_id');
     }
 
-    public function transaksi()
+    public function mentor()
+    {
+        return $this->belongsTo(User::class, 'mentor_id');
+    }
+
+    public function paketable()
+    {
+        return $this->morphTo('paketable');
+    }
+
+    public function transaksis()
     {
         return $this->morphMany(Transaksi::class, 'transaksiable');
     }

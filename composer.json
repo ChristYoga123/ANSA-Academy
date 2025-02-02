@@ -13,7 +13,9 @@
         "geo-sot/filament-env-editor": "^0.0.5",
         "joaopaulolndev/filament-edit-profile": "^1.0",
         "laravel/framework": "^11.9",
+        "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.9",
+        "midtrans/midtrans-php": "^2.6",
         "spatie/laravel-medialibrary": "^11.9",
         "spatie/laravel-permission": "^6.9"
     },
@@ -37,7 +39,10 @@
     "autoload-dev": {
         "psr-4": {
             "Tests\\": "tests/"
-        }
+        },
+        "files": [
+            "app/helpers.php"
+        ]
     },
     "scripts": {
         "post-autoload-dump": [

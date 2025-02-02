@@ -9,7 +9,7 @@
             </div>
 
             <div class="row g-4">
-                @foreach ($bidangLokerMentor as $bidang)
+                @forelse ($bidangLokerMentor as $bidang)
                     <a href="{{ route('karir.show', $bidang->id) }}" class="col-lg-4 col-md-6 card-bidang">
                         <div class="card h-100 position-card">
                             <div class="card-body">
@@ -41,7 +41,13 @@
                             </div>
                         </div>
                     </a>
-                @endforeach
+                @empty
+                    <div class="col-12">
+                        <div class="alert alert-warning text-center" role="alert">
+                            <strong>Maaf!</strong> Belum ada lowongan yang tersedia.
+                        </div>
+                    </div>
+                @endforelse
             </div>
         </div>
     </section>
@@ -65,3 +71,11 @@
         }
     </style>
 @endsection
+
+@push('scripts')
+    @if (session('error'))
+        <script>
+            toastr.error('{{ session('error') }}', 'Error')
+        </script>
+    @endif
+@endpush

@@ -23,7 +23,10 @@ class KarirController extends Controller
 
     public function show($id)
     {
-        $lokerMentorBidang = LokerMentorBidang::with('lokerMentorBidangKualifikasi')->whereId($id)->first();
+        $lokerMentorBidang = LokerMentorBidang::with('lokerMentorBidangKualifikasi')->whereId($id)->whereIsBuka(true)->first();
+        if(!$lokerMentorBidang) {
+            return redirect()->route('karir.index')->with('error', 'Data tidak ditemukan');
+        }
         return view('pages.karir.show', [
             'title' => $this->title,
             'lokerMentorBidang' => $lokerMentorBidang

@@ -12,4 +12,9 @@ class ProofreadingPaket extends Model
     {
         return $this->belongsTo(Program::class, 'proofreading_id');
     }
+
+    public function programMenteePakets()
+    {
+        return $this->morphMany(ProgramMentee::class, 'paketable');
+    }
 }
