@@ -48,15 +48,37 @@ class ProdukDigitalController extends Controller
 
     public function beli($slug)
     {
+        // cek jika user admin/mentor
+        if(!validateUserToBuy())
+        {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Anda tidak bisa membeli produk digital'
+            ], 403);
+        }
+
+        // hapus transaksi yang belum dibayar
+        deleteUnpaidTransaction(ProdukDigital::class);
         DB::beginTransaction();
         try
         {
+            $produkDigital = ProdukDigital::where('slug', $slug)->firstOrFail();
+            
+            // cek jika produk memiliki qty dan qty <= 0
+            if(!$produkDigital->is_unlimited && $produkDigital->qty === 0)
+            {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Produk digital tidak tersedia'
+                ], 404);
+            }
+
             $transaksi = Transaksi::create([
                 'order_id' => 'ANSA-PD-' . Str::random(6),
                 'mentee_id' => auth()->id(),
-                'transaksiable_id' => ProdukDigital::where('slug', $slug)->firstOrFail()->id,
+                'transaksiable_id' => $produkDigital->id,
                 'transaksiable_type' => ProdukDigital::class,
-                'total_harga' => ProdukDigital::where('slug', $slug)->firstOrFail()->harga,
+                'total_harga' => $produkDigital->harga,
             ]);
 
             $snapToken = $this->paymentServiceInterface->processPayment($transaksi);
