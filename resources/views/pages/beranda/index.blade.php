@@ -72,7 +72,7 @@
                     <div class="vision-section__content">
                         <p class="vision-section__text"
                             style="font-size: 18px; line-height: 1.8; margin-bottom: 30px; font-style: italic">
-                            {!! $webResource->visi !!}
+                            {!! $webResource->visi ?? 'Visi kami belum tersedia' !!}
                         </p>
                         {{-- quote by text center --}}
                         <div class="vision-section__quote-box">
@@ -277,7 +277,7 @@
                                         alt=""></span>
                             </h2>
                         </div>
-                        <p class="about-one__text">{!! $webResource->tentang !!}</p>
+                        <p class="about-one__text">{!! $webResource->tentang ?? 'Tentang kami belum tersedia' !!}</p>
                     </div>
                 </div>
             </div>
@@ -531,7 +531,7 @@
                     <div class="vision-section__content">
                         <p class="vision-section__text"
                             style="font-size: 18px; line-height: 1.8; margin-bottom: 30px; font-style: italic">
-                            {!! $webResource->quote !!}
+                            {!! $webResource->quote ?? 'Quote belum tersedia' !!}
                         </p>
                         {{-- quote by text center --}}
                         <div class="vision-section__quote-box">
