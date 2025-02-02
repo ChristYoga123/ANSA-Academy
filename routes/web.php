@@ -76,6 +76,8 @@ Route::prefix('program')->group(function()
     {
         Route::get('/', [KelasAnsaController::class, 'index'])->name('index');
         Route::post('/search', [KelasAnsaController::class, 'search'])->name('search');
+        Route::get('/{slug}', [KelasAnsaController::class, 'show'])->name('show');
+        Route::post('/beli/{slug}', [KelasAnsaController::class, 'beli'])->name('beli');
     });
 });
 

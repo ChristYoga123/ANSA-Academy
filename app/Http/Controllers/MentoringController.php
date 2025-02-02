@@ -117,7 +117,7 @@ class MentoringController extends Controller
             }
 
             $transaksi = Transaksi::create([
-                'order_id' => "ANSA-MENTORING-" . Str::random(6),
+                'order_id' => "ANSA-MNTR-" . Str::random(6),
                 'mentee_id' => auth()->id(),
                 'transaksiable_type' => ProgramMentee::class,
                 'transaksiable_id' => $programMentee->id,

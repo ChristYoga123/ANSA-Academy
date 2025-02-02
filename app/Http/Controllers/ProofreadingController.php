@@ -72,13 +72,13 @@ class ProofreadingController extends Controller
         }
 
         // cek bukan admin/mentor
-        // if(!validateUserToBuy())
-        // {
-        //     return response()->json([
-        //         'status' => 'error',
-        //         'message' => 'Anda tidak bisa membeli program ini'
-        //     ], 422);
-        // }
+        if(!validateUserToBuy())
+        {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Anda tidak bisa membeli program ini'
+            ], 422);
+        }
 
         // delete transaksi yang belum dibayar
         deleteUnpaidTransaction(ProgramMentee::class);
@@ -96,7 +96,7 @@ class ProofreadingController extends Controller
             ]);
 
             $transaksi = Transaksi::create([
-                'order_id' => "ANSA-MENTORING-" . Str::random(6),
+                'order_id' => "ANSA-PR-" . Str::random(6),
                 'mentee_id' => auth()->id(),
                 'transaksiable_type' => ProgramMentee::class,
                 'transaksiable_id' => $programMentee->id,

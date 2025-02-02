@@ -251,7 +251,7 @@
                                             ) {
                                                 $status = 'Dibuka';
                                                 $badgeClass = 'bg-success text-white';
-                                            } elseif ($now->lt($event->waktu_open_regis)) {
+                                            } elseif ($now->lt($event->waktu_open_registrasi)) {
                                                 $status = 'Segera Dibuka';
                                                 $badgeClass = 'bg-warning text-white';
                                             }
