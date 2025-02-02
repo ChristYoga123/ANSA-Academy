@@ -44,6 +44,7 @@ Route::prefix('event')->name('event.')->group(function()
 {
     Route::get('/', [EventController::class, 'index'])->name('index');
     Route::get('/{slug}', [EventController::class, 'show'])->name('show');
+    Route::post('/beli/{slug}', [EventController::class, 'beli'])->name('beli');
 });
 
 Route::prefix('karir')->name('karir.')->group(function()
