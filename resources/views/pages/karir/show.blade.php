@@ -132,10 +132,10 @@
                                         </div>
                                     </div>
                                     <div class="col-xl-6 col-lg-6">
-                                        <h4 class="contact-three__input-title">No. HP*</h4>
+                                        <h4 class="contact-three__input-title">No. HP (Mulai dari 628xxxxxx)*</h4>
                                         <div class="contact-three__input-box">
                                             <input type="text" name="no_hp" value="{{ old('no_hp') }}" required
-                                                class="@error('no_hp') is-invalid @enderror">
+                                                class="@error('no_hp') is-invalid @enderror" placeholder="628xxxxxx">
                                             @error('no_hp')
                                                 <span class="invalid-feedback">{{ $message }}</span>
                                             @enderror

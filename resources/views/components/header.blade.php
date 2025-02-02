@@ -41,11 +41,14 @@
                         <div class="main-menu__btn-boxes">
                             <div class="main-menu__btn-box-2">
                                 @auth
-                                    <a href="#" class="thm-btn">Hi, {{ Auth::user()->name }}</a>
+                                    <a href="
+                                    {{ Auth::user()->hasRole(['super_admin', 'mentor']) ? route('filament.mentor.pages.dashboard') : route('filament.mentee.pages.dashboard') }}
+                                    "
+                                        class="thm-btn">Hi, {{ Auth::user()->name }}</a>
                                 @endauth
 
                                 @guest
-                                    <a href="#" class="thm-btn">Login</a>
+                                    <a href="{{ route('filament.mentee.auth.login') }}" class="thm-btn">Login</a>
                                 @endguest
                             </div>
                         </div>

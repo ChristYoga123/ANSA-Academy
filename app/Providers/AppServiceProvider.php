@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Contracts\PaymentServiceInterface;
+use App\Models\WebResource;
 use App\Services\MidtransPaymentService;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\View;
@@ -36,6 +37,11 @@ class AppServiceProvider extends ServiceProvider
         View::composer('components.header', function($query)
         {
             $query->with('menus', config('menus')); 
+        });
+
+        View::composer('layouts.app', function($query)
+        {
+            $query->with('webResource', WebResource::with('media')->first()); 
         });
     }
 }
