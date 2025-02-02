@@ -3,16 +3,6 @@
 @section('content')
     <section class="become-a-teacher">
         <div class="container">
-            @if ($errors->any())
-                <div class="alert alert-danger mb-4">
-                    <ul class="mb-0">
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
-
             <div class="become-a-teacher__top">
                 <div class="section-title-two text-center sec-title-animation animation-style1">
                     <div class="section-title-two__tagline-box">
@@ -167,10 +157,10 @@
                                             <select name="semester" required
                                                 class="form-select @error('semester') is-invalid @enderror">
                                                 <option value="">Pilih Semester</option>
-                                                @foreach (['6', '7', '8', '9', 'Fresh Graduate'] as $sem)
-                                                    <option value="{{ $sem }}"
-                                                        {{ old('semester') == $sem ? 'selected' : '' }}>
-                                                        {{ $sem == 'Fresh Graduate' ? $sem : 'Semester ' . $sem }}
+                                                @foreach (['6', '7', '8', '9', 'Fresh Graduate'] as $semester)
+                                                    <option value="{{ $semester }}"
+                                                        {{ old('semester') == $semester ? 'selected' : '' }}>
+                                                        {{ $semester }}
                                                     </option>
                                                 @endforeach
                                             </select>
@@ -319,14 +309,22 @@
 
 @push('scripts')
     <script>
-        // Add this after your existing scripts
         $(document).ready(function() {
             const form = $('.contact-form-validated');
             const submitBtn = form.find('button[type="submit"]');
             const originalBtnText = submitBtn.html();
 
-            form.on('submit', function(e) {
-                e.preventDefault();
+            // Remove the contact-form-validated class to prevent potential duplicate handlers
+            form.removeClass('contact-form-validated');
+
+            // Single form submission handler
+            form.off('submit').on('submit', function(e) {
+                e.preventDefault(); // Prevent default form submission
+
+                // Prevent double submission
+                if (submitBtn.prop('disabled')) {
+                    return false;
+                }
 
                 // Disable form and show loading state
                 submitBtn.prop('disabled', true);
@@ -344,10 +342,9 @@
                     success: function(response) {
                         if (response.status === 'success') {
                             toastr.success(response.message, 'Success');
-
-                            // Reset form only on success
                             form[0].reset();
-
+                            // reset select input
+                            form.find('select').val('');
                             // Clear validation states
                             $('.invalid-feedback').remove();
                             $('.is-invalid').removeClass('is-invalid');
@@ -356,10 +353,6 @@
                         }
                     },
                     error: function(xhr) {
-                        // reset button
-                        submitBtn.prop('disabled', false);
-                        submitBtn.html(originalBtnText);
-                        // Handle validation errors
                         if (xhr.status === 422) {
                             const errors = xhr.responseJSON.errors;
 
@@ -372,7 +365,6 @@
                                 const input = $(`[name="${field}"]`);
                                 input.addClass('is-invalid');
 
-                                // Handle array inputs like pencapaian[]
                                 if (field.includes('pencapaian.')) {
                                     const index = field.split('.')[1];
                                     input.after(
@@ -388,11 +380,9 @@
                             toastr.error(
                                 'Terdapat kesalahan saat mengisi form. Harap periksa kembali!',
                                 'Error');
-                            return;
+                        } else {
+                            toastr.error('Data gagal disimpan', 'Error');
                         }
-
-                        // Show error message
-                        toastr.error('Data gagal disimpan', 'Error');
                     },
                     complete: function() {
                         // Re-enable form
@@ -400,6 +390,8 @@
                         submitBtn.html(originalBtnText);
                     }
                 });
+
+                return false; // Extra measure to prevent form submission
             });
         });
     </script>
