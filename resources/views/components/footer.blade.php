@@ -17,8 +17,8 @@
                             <div class="footer-widget-two__about">
                                 <div class="footer-widget-two__about-logo">
                                     <a href="{{ route('index') }}"><img
-                                            src="{{ $webResource->getFirstMediaUrl('logo-website') }}" alt="logo"
-                                            width="200px"></a>
+                                            src="{{ $webResource->getFirstMediaUrl('logo-website') ?? '' }}"
+                                            alt="logo" width="200px"></a>
                                 </div>
                                 <div class="site-footer-two__social">
                                     <a href="{{ $webResource->media_sosial['linkedin'] }}"><span
