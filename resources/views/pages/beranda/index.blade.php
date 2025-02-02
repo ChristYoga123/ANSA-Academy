@@ -778,7 +778,7 @@
                 <div class="col-xl-12 col-lg-6">
                     <div class="faq-page__left">
                         <div class="accrodion-grp faq-one-accrodion" data-grp-name="faq-one-accrodion-1">
-                            @forelse ($webResource->faqs as $uuid => $value)
+                            @forelse ($webResource->faqs ?? [] as $uuid => $value)
                                 <div class="accrodion {{ $loop->first ? 'active' : '' }}">
                                     <div class="accrodion-title">
                                         <h4>{{ $value['pertanyaan'] }}</h4>
