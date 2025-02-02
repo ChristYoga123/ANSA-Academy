@@ -131,6 +131,7 @@ class MentoringController extends Controller
 
             if(!$snapToken)
             {
+                DB::rollBack();
                 return response()->json([
                     'status' => 'error',
                     'message' => 'Gagal membuat snap token'

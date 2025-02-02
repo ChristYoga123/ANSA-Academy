@@ -37,6 +37,7 @@ Route::prefix('produk-digital')->name('produk-digital.')->group(function()
     Route::get('/', [ProdukDigitalController::class, 'index'])->name('index');
     Route::get('/{slug}', [ProdukDigitalController::class, 'show'])->name('show');
     Route::post('/search', [ProdukDigitalController::class, 'search'])->name('search');
+    Route::post('/beli/{slug}', [ProdukDigitalController::class, 'beli'])->name('beli');
 });
 
 Route::prefix('event')->name('event.')->group(function()

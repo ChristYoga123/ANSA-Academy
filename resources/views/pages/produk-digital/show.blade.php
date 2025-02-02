@@ -48,7 +48,7 @@
 
                     <div class="product-details__buttons">
                         <div class="product-details__buttons-1">
-                            <a class="thm-btn" href="cart.html">Beli Sekarang</a>
+                            <button onclick="beli()" class="thm-btn">Beli Sekarang</button>
                         </div>
                     </div>
                 </div>
@@ -57,3 +57,58 @@
     </section>
     <!--End Product Details-->
 @endsection
+
+@push('scripts')
+    <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ env('MIDTRANS_CLIENT_KEY') }}"></script>
+    <script>
+        function beli() {
+            $.ajax({
+                url: `{{ route('produk-digital.beli', $produkDigital->slug) }}`,
+                method: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}'
+                },
+                beforeSend: function() {
+                    $('button[onclick="beli()"]').attr('disabled', true);
+                },
+                success: function(response) {
+                    $('button[onclick="beli()"]').attr('disabled', false);
+
+                    if (response.status === 'success' && response.snap_token) {
+                        snap.pay(response.snap_token, {
+                            onSuccess: function(result) {
+                                console.log('success');
+                                console.log(result);
+                            },
+                            onPending: function(result) {
+                                console.log('pending');
+                                console.log(result);
+                            },
+                            onError: function(result) {
+                                console.log('error');
+                                console.log(result);
+                            }
+                        });
+                    } else {
+                        toastr.error(response.message);
+                    }
+                },
+                error: function(xhr) {
+                    $('button[onclick="beli()"]').attr('disabled', false);
+
+                    let errorMessage = 'Terjadi kesalahan. Mohon coba lagi.';
+                    try {
+                        const response = xhr.responseJSON;
+                        if (response && response.message) {
+                            errorMessage = response.message;
+                        }
+                    } catch (e) {
+                        console.error('Error parsing response:', e);
+                    }
+
+                    toastr.error(errorMessage);
+                }
+            })
+        }
+    </script>
+@endpush
