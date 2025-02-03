@@ -12,11 +12,15 @@ use App\Models\LokerMentor;
 use Illuminate\Support\Str;
 use Filament\Resources\Resource;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\LokerMentor\RejectionMail;
 use Filament\Forms\Components\Textarea;
 use Filament\Infolists\Components\Grid;
 use Illuminate\Database\Eloquent\Model;
+use App\Mail\LokerMentor\AcceptanceMail;
 use Filament\Notifications\Notification;
 use Illuminate\Database\Eloquent\Builder;
+use App\Mail\LokerMentor\LolosTahapanMail;
 use Filament\Infolists\Components\Fieldset;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Components\Actions\Action;
@@ -102,7 +106,7 @@ class LokerMentorResource extends Resource
                         {
                             $lokerMentor->update(['status_penerimaan' => 'Lolos Berkas']);
 
-                            // Mail::to($lokerMentor->email)->queue(new AcceptanceMail($lokerMentor));
+                            Mail::to($lokerMentor->email)->queue(new LolosTahapanMail($lokerMentor, $lokerMentor->status_penerimaan, $data['catatan']));
                             
                             DB::commit();
                             Notification::make()
@@ -136,7 +140,7 @@ class LokerMentorResource extends Resource
                         {
                             $lokerMentor->update(['status_penerimaan' => 'Lolos Wawancara']);
 
-                            // Mail::to($lokerMentor->email)->queue(new AcceptanceMail($lokerMentor));
+                            Mail::to($lokerMentor->email)->queue(new LolosTahapanMail($lokerMentor, $lokerMentor->status_penerimaan, $data['catatan']));
                             
                             DB::commit();
                             Notification::make()
@@ -170,7 +174,7 @@ class LokerMentorResource extends Resource
                             {
                                 $lokerMentor->update(['status_penerimaan' => 'Lolos Microteaching']);
 
-                                // Mail::to($lokerMentor->email)->queue(new AcceptanceMail($lokerMentor));
+                                Mail::to($lokerMentor->email)->queue(new LolosTahapanMail($lokerMentor, $lokerMentor->status_penerimaan, $data['catatan']));
                                 
                                 DB::commit();
                                 Notification::make()
@@ -199,8 +203,6 @@ class LokerMentorResource extends Resource
                         try
                         {
                             $lokerMentor->update(['status_penerimaan' => 'Diterima']);
-                            
-                            // Mail::to($lokerMentor->email)->queue(new AcceptanceMail($lokerMentor));
 
                             $password = strtolower(Str::random(8));
 
@@ -227,7 +229,7 @@ class LokerMentorResource extends Resource
 
                             $user->assignRole('mentor');
 
-                            // Mail::to($lokerMentor->email)->queue(new AcceptanceMail($lokerMentor, $password));
+                            Mail::to($lokerMentor->email)->queue(new AcceptanceMail($user, $password));
                             
                             DB::commit();
                             Notification::make()
@@ -262,7 +264,7 @@ class LokerMentorResource extends Resource
                             $lokerMentor->update(['status_penerimaan' => 'Ditolak']);
                             $lokerMentor->update(['alasan_ditolak' => $data['alasan_ditolak']]);
 
-                            // Mail::to($lokerMentor->email)->queue(new RejectionMail($lokerMentor));
+                            Mail::to($lokerMentor->email)->queue(new RejectionMail($lokerMentor));
                             
                             DB::commit();
                             Notification::make()
