@@ -198,6 +198,7 @@ class LokerMentorResource extends Resource
                     ->color('success')
                     ->requiresConfirmation()
                     ->label('Terima')
+                    ->hidden(fn(LokerMentor $lokerMentor) => $lokerMentor->status_penerimaan === 'Diterima')
                     ->action(function(LokerMentor $lokerMentor){
                         DB::beginTransaction();
                         try
