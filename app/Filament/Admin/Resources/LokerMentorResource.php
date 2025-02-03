@@ -362,6 +362,7 @@ class LokerMentorResource extends Resource
                                                 'Diterima' => 'success',
                                                 'Ditolak' => 'danger',
                                                 'Menunggu' => 'warning',
+                                                default => 'info',
                                             }),
                                         TextEntry::make('alasan_ditolak')
                                             ->getStateUsing(fn(LokerMentor $record) => $record->alasan_ditolak ? $record->alasan_ditolak : 'Belum ada balasan')
