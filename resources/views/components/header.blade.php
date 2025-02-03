@@ -19,7 +19,7 @@
                                 @endphp
 
                                 <li class="{{ $hasSubmenu ? 'dropdown' : '' }} {{ $isActive ? 'current' : '' }}">
-                                    <a href="{{ $menu['url'] }}">{{ $menu['text'] }}</a>
+                                    <a href="{{ !isset($menu['sub']) ? $menu['url'] : '#' }}">{{ $menu['text'] }}</a>
 
                                     @if ($hasSubmenu)
                                         <ul class="shadow-box">
