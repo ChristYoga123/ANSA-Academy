@@ -43,7 +43,8 @@
                                 keterampilan baru <br> dengan kecepatan sendiri dan dari mana saja.
                             </p>
                             <div class="main-slider__btn-box">
-                                <a href="contact.html" class="thm-btn"><span class="icon-angles-right"></span>Mulai
+                                <a href="{{ route('mentoring.index') }}" class="thm-btn"><span
+                                        class="icon-angles-right"></span>Mulai
                                     Sekarang</a>
                             </div>
                         </div>
