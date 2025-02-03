@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use App\Contracts\PaymentServiceInterface;
 use App\Mail\Transaksi\UserNotificationMail;
+use App\Mail\Transaksi\MentorNotificationMail;
 
 class MidtransPaymentService implements PaymentServiceInterface
 {
@@ -101,6 +102,8 @@ class MidtransPaymentService implements PaymentServiceInterface
                     $mentoringMentee = ProgramMentee::find($checkout->transaksiable_id);
                     $mentoringMentee->is_aktif = true;
                     $mentoringMentee->save();
+
+                    Mail::to($mentoringMentee->mentor->email)->queue(new MentorNotificationMail($checkout));
                 }
 
                 // Only send email when status is successful
