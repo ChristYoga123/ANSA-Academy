@@ -288,53 +288,57 @@
     <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ env('MIDTRANS_CLIENTKEY') }}"></script>
     <script>
         function beli() {
-            $.ajax({
-                url: `{{ route('event.beli', $event->slug) }}`,
-                method: 'POST',
-                data: {
-                    _token: `{{ csrf_token() }}`,
-                },
-                beforeSend: function() {
-                    $('button[onclick="beli()"]').attr('disabled', true);
-                },
-                success: function(response) {
-                    $('button[onclick="beli()"]').attr('disabled', false);
+            @guest
+            window.location.href = `{{ route('filament.mentee.auth.login') }}`
+            return;
+        @endguest
+        $.ajax({
+            url: `{{ route('event.beli', $event->slug) }}`,
+            method: 'POST',
+            data: {
+                _token: `{{ csrf_token() }}`,
+            },
+            beforeSend: function() {
+                $('button[onclick="beli()"]').attr('disabled', true);
+            },
+            success: function(response) {
+                $('button[onclick="beli()"]').attr('disabled', false);
 
-                    if (response.status === 'success' && response.snap_token) {
-                        snap.pay(response.snap_token, {
-                            onSuccess: function(result) {
-                                console.log('success');
-                                console.log(result);
-                            },
-                            onPending: function(result) {
-                                console.log('pending');
-                                console.log(result);
-                            },
-                            onError: function(result) {
-                                console.log('error');
-                                console.log(result);
-                            }
-                        });
-                    } else {
-                        toastr.error(response.message);
-                    }
-                },
-                error: function(xhr) {
-                    $('button[onclick="beli()"]').attr('disabled', false);
-
-                    let errorMessage = 'Terjadi kesalahan. Mohon coba lagi.';
-                    try {
-                        const response = xhr.responseJSON;
-                        if (response && response.message) {
-                            errorMessage = response.message;
+                if (response.status === 'success' && response.snap_token) {
+                    snap.pay(response.snap_token, {
+                        onSuccess: function(result) {
+                            console.log('success');
+                            console.log(result);
+                        },
+                        onPending: function(result) {
+                            console.log('pending');
+                            console.log(result);
+                        },
+                        onError: function(result) {
+                            console.log('error');
+                            console.log(result);
                         }
-                    } catch (e) {
-                        console.error('Error parsing response:', e);
-                    }
-
-                    toastr.error(errorMessage);
+                    });
+                } else {
+                    toastr.error(response.message);
                 }
-            })
+            },
+            error: function(xhr) {
+                $('button[onclick="beli()"]').attr('disabled', false);
+
+                let errorMessage = 'Terjadi kesalahan. Mohon coba lagi.';
+                try {
+                    const response = xhr.responseJSON;
+                    if (response && response.message) {
+                        errorMessage = response.message;
+                    }
+                } catch (e) {
+                    console.error('Error parsing response:', e);
+                }
+
+                toastr.error(errorMessage);
+            }
+        })
         }
     </script>
 @endpush
