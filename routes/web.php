@@ -11,6 +11,7 @@ use App\Http\Controllers\KelasAnsaController;
 use App\Http\Controllers\MentoringController;
 use App\Http\Controllers\ProofreadingController;
 use App\Http\Controllers\ProdukDigitalController;
+use Illuminate\Support\Facades\Artisan;
 
 // Route::get('/', function () {
 //     return view('welcome');
@@ -83,9 +84,7 @@ Route::prefix('program')->group(function()
 
 Route::get('/symlink', function()
 {
-    $target = storage_path('app/public');
-    $link = $_SERVER['DOCUMENT_ROOT'] . '/storage';
-    symlink($target, $link);
+    Artisan::call('storage:link');
 
     echo 'ok';
 });
