@@ -66,8 +66,8 @@
                                                     </div>
                                                 </div>
                                                 <h3 class="courses-two__title">
-                                                    <a
-                                                        href="{{ route('proofreading.show', $proofreading->slug) }}">{{ $proofreading->judul }}</a>
+                                                    <a href="{{ route('proofreading.show', $proofreading->slug) }}">[Proofreading]
+                                                        {{ $proofreading->judul }}</a>
                                                 </h3>
                                                 <div class="courses-two__btn-and-client-box">
                                                     <div class="courses-two__btn-box">

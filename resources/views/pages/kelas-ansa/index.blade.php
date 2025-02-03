@@ -65,8 +65,8 @@
                                                     </div>
                                                 </div>
                                                 <h3 class="courses-two__title">
-                                                    <a
-                                                        href="{{ route('kelas-ansa.show', $kel->slug) }}">{{ $kel->judul }}</a>
+                                                    <a href="{{ route('kelas-ansa.show', $kel->slug) }}">[Kelas]
+                                                        {{ $kel->judul }}</a>
                                                 </h3>
                                                 <div class="courses-two__btn-and-client-box">
                                                     <div class="courses-two__btn-box">
