@@ -10,13 +10,15 @@ use Midtrans\Transaction;
 use Midtrans\Notification;
 use Illuminate\Http\Request;
 use App\Models\ProdukDigital;
+use App\Models\ProgramMentee;
 use App\Models\KelasAnsaMentee;
 use App\Models\MentoringMentee;
 use App\Models\ProofreadingMentee;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use App\Contracts\PaymentServiceInterface;
-use App\Models\ProgramMentee;
+use App\Mail\Transaksi\UserNotificationMail;
 
 class MidtransPaymentService implements PaymentServiceInterface
 {
@@ -73,7 +75,6 @@ class MidtransPaymentService implements PaymentServiceInterface
 
     public function midtransCallback(Request $request)
     {
-        
         DB::beginTransaction();
         try {
             $notif = $request->method() == 'POST' 
@@ -87,17 +88,23 @@ class MidtransPaymentService implements PaymentServiceInterface
                 $status = self::STATUS_MAPPING[$notif->transaction_status][$notif->fraud_status] ?? 'failed';
             }
 
-            
             $checkout->status = $status;
-            // Kusus Produk Digital, jika status transaksi sukses, maka update stok produk berkurang 1
-            if($checkout->transaksiable_type === ProdukDigital::class && $checkout->status === 'Sukses') {
-                $produk = ProdukDigital::find($checkout->transaksiable_id);
-                $produk->decrement('qty');
-                $produk->save();
-            }elseif($checkout->transaksiable_type === ProgramMentee::class && $checkout->status === 'Sukses') {
-                $mentoringMentee = ProgramMentee::find($checkout->transaksiable_id);
-                $mentoringMentee->is_aktif = true;
-                $mentoringMentee->save();
+            
+            // Only process and send email if status is successful
+            if ($checkout->status === 'Sukses') {
+                // Khusus Produk Digital, jika status transaksi sukses, maka update stok produk berkurang 1
+                if($checkout->transaksiable_type === ProdukDigital::class) {
+                    $produk = ProdukDigital::find($checkout->transaksiable_id);
+                    $produk->decrement('qty');
+                    $produk->save();
+                } elseif($checkout->transaksiable_type === ProgramMentee::class) {
+                    $mentoringMentee = ProgramMentee::find($checkout->transaksiable_id);
+                    $mentoringMentee->is_aktif = true;
+                    $mentoringMentee->save();
+                }
+
+                // Only send email when status is successful
+                Mail::to($checkout->mentee->email)->queue(new UserNotificationMail($checkout));
             }
 
             $checkout->save();

@@ -91,19 +91,11 @@ class MentoringController extends Controller
         DB::beginTransaction();
         try {
             $program = Program::where('slug', $slug)->first();
-            
-            $programMentee = ProgramMentee::create([
-                'program_id' => $program->id,
-                'paketable_type' => MentoringPaket::class,
-                'paketable_id' => $request->paket,
-                'mentor_id' => $request->mentor,
-                'mentee_id' => auth()->id(),
-            ]);
 
             // cek jika mentee memilih mentoring dengan paket atau jenis mentoring yang sama
             $cekKeaktifanMentoring = ProgramMentee::where('mentee_id', auth()->id())
                 ->wherePaketableType(MentoringPaket::class)
-                ->orWhere("program_id", $program->id)
+                ->whereProgramId($program->id)
                 ->where('is_aktif', true)
                 ->first();
 
@@ -112,9 +104,17 @@ class MentoringController extends Controller
                 DB::rollBack();
                 return response()->json([
                     'status' => 'error',
-                    'message' => 'Anda masih aktif di mentoring ini. Harap selesaikan program mentoring terkait bila ingin membeli paket program dengan jenis yang lain.'
+                    'message' => 'Anda masih aktif di mentoring ini. Harap selesaikan program dengan paket terkait kecuali Anda membeli progam mentoring baru'
                 ], 422);
             }
+            
+            $programMentee = ProgramMentee::create([
+                'program_id' => $program->id,
+                'paketable_type' => MentoringPaket::class,
+                'paketable_id' => $request->paket,
+                'mentor_id' => $request->mentor,
+                'mentee_id' => auth()->id(),
+            ]);
 
             $transaksi = Transaksi::create([
                 'order_id' => "ANSA-MNTR-" . Str::random(6),

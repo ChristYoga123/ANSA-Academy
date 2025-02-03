@@ -27,7 +27,7 @@ class KelasAnsaController extends Controller
     {
         return view('pages.kelas-ansa.index', [
             'title' => $this->title,
-            'kelas' => Program::with(['media', 'kelasAnsaPakets', 'kelasAnsaDetail'])->withCount(['kelasAnsaPakets', 'mentors'])->whereProgram('Kelas Ansa')->paginate(6)
+            'kelas' => Program::with(['media', 'kelasAnsaPakets', 'kelasAnsaDetail'])->withCount(['kelasAnsaPakets', 'mentors'])->whereProgram('Kelas Ansa')->latest()->paginate(6)
         ]);
     }
 
@@ -109,16 +109,35 @@ class KelasAnsaController extends Controller
                 ], 403);
             }
 
-            // cek apakah mentee sudah terdaftar di program ini
-            if(ProgramMentee::where('mentee_id', auth()->id())->where('paketable_id', $kelasAnsaPaket->id)->where('paketable_type', KelasAnsaPaket::class)->whereIsAktif(true)->exists())
-            {
-                DB::rollBack();
+            // cek apakah mentee sudah terdaftar di program ini dengan case program sama paket sama atau program sama paket beda
+            $existingRegistration = ProgramMentee::where('mentee_id', auth()->id())
+                ->where('program_id', $programMentee->program_id)
+                ->where('paketable_type', KelasAnsaPaket::class)
+                ->where(function($query) use ($kelasAnsaPaket) {
+                    $query->where('paketable_id', $kelasAnsaPaket->id)
+                        ->orWhereHas('program', function($subQuery) use ($kelasAnsaPaket) {
+                            $subQuery->where('id', $kelasAnsaPaket->kelas_ansa_id);
+                        });
+                })
+                ->whereIsAktif(true)
+                ->exists();
 
+            if ($existingRegistration) {
+                DB::rollBack();
                 return response()->json([
                     'status' => 'error',
                     'message' => 'Anda sudah terdaftar di paket ini.'
                 ], 403);
             }
+            // if(ProgramMentee::where('mentee_id', auth()->id())->where('paketable_id', $kelasAnsaPaket->id)->where('paketable_type', KelasAnsaPaket::class)->whereIsAktif(true)->exists())
+            // {
+            //     DB::rollBack();
+
+            //     return response()->json([
+            //         'status' => 'error',
+            //         'message' => 'Anda sudah terdaftar di paket ini.'
+            //     ], 403);
+            // }
 
             $transaksi = Transaksi::create([
                 'order_id' => 'ANSA-KLS-' . Str::random(6),

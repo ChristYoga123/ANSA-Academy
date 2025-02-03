@@ -73,8 +73,8 @@ class EventController extends Controller
                 ], 403);
             }
 
-            // cek jika slot sudah penuh
-            if($event->slot <= $event->transaksi_count)
+            // cek jika kuota sudah penuh
+            if($event->kuota <= $event->transaksi_count)
             {
                 DB::rollBack();
                 return response()->json([
@@ -89,7 +89,7 @@ class EventController extends Controller
                 'transaksiable_id' => Event::where('slug', $slug)->first()->id,
                 'transaksiable_type' => Event::class,
                 'total_harga' => $event->harga,
-                'status' => $event->pricing == 'gratis' ? 'Sukses' : 'Pending'
+                'status' => $event->pricing == 'gratis' ? 'Sukses' : 'Menunggu'
             ]);
 
             DB::commit();

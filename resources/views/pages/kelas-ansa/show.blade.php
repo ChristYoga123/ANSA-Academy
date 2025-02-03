@@ -26,7 +26,7 @@
                                 <div class="course-details__tag-shape"></div>
                                 <span class="course-details__tag">Kelas ANSA</span>
                             </div>
-                            <h3 class="course-details__title">[Kelas ANSA] - {{ $kelasAnsa->judul }}</h3>
+                            <h3 class="course-details__title">[Kelas] - {{ $kelasAnsa->judul }}</h3>
                             <div class="course-details__client-and-ratting-box">
                                 <div class="course-details__client-box">
                                     <div class="course-details__client-content">
