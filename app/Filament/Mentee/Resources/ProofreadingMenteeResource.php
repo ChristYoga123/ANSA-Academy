@@ -58,7 +58,7 @@ class ProofreadingMenteeResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->query(ProgramMentee::query()->with(['paketable', 'program', 'proofreadingMenteeSubmission'])->whereMenteeId(auth()->id())->whereHas('program', function($query)
+            ->query(ProgramMentee::query()->with(['paketable', 'program.media', 'proofreadingMenteeSubmission'])->whereMenteeId(auth()->id())->whereHas('program', function($query)
             {
                 $query->whereProgram('Proofreading');
             })
@@ -68,6 +68,9 @@ class ProofreadingMenteeResource extends Resource
                     ->label('Program')
                     ->weight(FontWeight::SemiBold)
                     ->getStateUsing(fn(ProgramMentee $programMentee) => $programMentee->program->judul . ' - ' . $programMentee->paketable->label),
+                Tables\Columns\ImageColumn::make('thumbnail')
+                    ->label('Thumbnail')
+                    ->getStateUsing(fn(ProgramMentee $programMentee) => $programMentee->program->getFirstMediaUrl('program-thumbnail')),
                 Tables\Columns\TextColumn::make('is_aktif')
                     ->label('Status')
                     ->badge()

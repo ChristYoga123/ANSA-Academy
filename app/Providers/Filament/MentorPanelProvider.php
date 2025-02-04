@@ -2,7 +2,7 @@
 
 namespace App\Providers\Filament;
 
-use App\Filament\Mentor\Resources\ProofreadingMentorResource;
+use App\Filament\Mentor\Resources\KelasAnsaMentorResource;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\Widgets;
@@ -10,6 +10,7 @@ use Filament\PanelProvider;
 use Filament\Pages\Dashboard;
 use Filament\Navigation\MenuItem;
 use Filament\Support\Colors\Color;
+use Filament\Navigation\NavigationItem;
 use Filament\Navigation\NavigationGroup;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Navigation\NavigationBuilder;
@@ -22,6 +23,7 @@ use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
+use App\Filament\Mentor\Resources\ProofreadingMentorResource;
 use Joaopaulolndev\FilamentEditProfile\Pages\EditProfilePage;
 use Joaopaulolndev\FilamentEditProfile\FilamentEditProfilePlugin;
 
@@ -87,7 +89,13 @@ class MentorPanelProvider extends PanelProvider
                         ]),
                     NavigationGroup::make('Program')
                         ->items([
-                            ...ProofreadingMentorResource::getNavigationItems(),
+                            ...KelasAnsaMentorResource::getNavigationItems(),
+                            NavigationItem::make()
+                                ->label(fn() => "Proofreading")
+                                ->url(fn (): string => ProofreadingMentorResource::getUrl())
+                                ->icon('heroicon-o-rectangle-stack')
+                                ->visible(fn() => auth()->user()->hasRole(['super_admin', 'mentor']))
+                                ->isActiveWhen(fn() => request()->routeIs('filament.mentor.resources.proofreading-mentors.index')),
                         ]),
                 ]);
             });
