@@ -259,7 +259,8 @@
 @endsection
 
 @push('scripts')
-    <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ env('MIDTRANS_CLIENTKEY') }}"></script>
+    <script src="{{ env('MIDTRANS_SCRIPT_URL') }}" data-client-key="{{ env('MIDTRANS_CLIENTKEY') }}"></script>
+
     <script>
         function ubahHarga() {
             const paket = document.querySelector('select[name="paket"]');
