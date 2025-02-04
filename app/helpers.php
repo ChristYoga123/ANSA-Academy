@@ -1,6 +1,7 @@
 <?php 
 use App\Models\Transaksi;
 use App\Models\ProgramMentee;
+use App\Models\ProofreadingPaket;
 use Illuminate\Support\Facades\Auth;
 
 if(!function_exists('deleteUnpaidTransaction'))
@@ -15,7 +16,11 @@ if(!function_exists('deleteUnpaidTransaction'))
         if($transaksi) {
             if($transaksi->transaksiable_type === ProgramMentee::class) {
                 $programMentee = ProgramMentee::find($transaksi->transaksiable_id);
-                $programMentee->delete();
+                if($programMentee->paketable_type === ProofreadingPaket::class && !$programMentee->proofreadingMenteeSubmission) {
+                    $programMentee->delete();
+                }else {
+                    $programMentee->delete();
+                }
             }
             $transaksi->delete();
         }

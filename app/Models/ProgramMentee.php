@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use Spatie\MediaLibrary\HasMedia;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
-class ProgramMentee extends Model
+class ProgramMentee extends Model implements HasMedia
 {
+    use InteractsWithMedia;
     protected $guarded = ['id'];
 
     protected $with = [
@@ -35,5 +38,10 @@ class ProgramMentee extends Model
     public function transaksis()
     {
         return $this->morphMany(Transaksi::class, 'transaksiable');
+    }
+
+    public function proofreadingMenteeSubmission()
+    {
+        return $this->hasOne(ProofreadingMenteeSubmission::class, 'proofreading_mentee_id');
     }
 }

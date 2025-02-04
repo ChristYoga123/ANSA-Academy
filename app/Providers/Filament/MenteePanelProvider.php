@@ -17,6 +17,7 @@ use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Filament\Http\Middleware\AuthenticateSession;
 use App\Filament\Mentee\Pages\Auth\CustomRegister;
+use App\Filament\Mentee\Resources\ProofreadingMenteeResource;
 use App\Filament\Mentee\Resources\TransaksiResource;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
@@ -91,6 +92,10 @@ class MenteePanelProvider extends PanelProvider
                             // ...PageResource::getNavigationItems(),
                             // ...CategoryResource::getNavigationItems(),
                             // ...HomePageSettings::getNavigationItems(),
+                        ]),
+                    NavigationGroup::make('Program Terdaftar')
+                        ->items([
+                            ...ProofreadingMenteeResource::getNavigationItems(),
                         ]),
                 ]);
             });
