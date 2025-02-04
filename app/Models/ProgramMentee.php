@@ -8,6 +8,10 @@ class ProgramMentee extends Model
 {
     protected $guarded = ['id'];
 
+    protected $with = [
+        'program'
+    ];
+
     public function program()
     {
         return $this->belongsTo(Program::class);

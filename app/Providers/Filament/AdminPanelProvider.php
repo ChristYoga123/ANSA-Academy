@@ -2,7 +2,6 @@
 
 namespace App\Providers\Filament;
 
-use App\Filament\Admin\Pages\WebResourcePage;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\Widgets;
@@ -14,6 +13,7 @@ use Filament\Navigation\NavigationItem;
 use Filament\Navigation\NavigationGroup;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Navigation\NavigationBuilder;
+use App\Filament\Admin\Pages\WebResourcePage;
 use App\Filament\Admin\Resources\EventResource;
 use App\Filament\Admin\Resources\LombaResource;
 use Illuminate\Session\Middleware\StartSession;
@@ -23,6 +23,7 @@ use Illuminate\Cookie\Middleware\EncryptCookies;
 use App\Filament\Admin\Resources\ArtikelResource;
 use App\Filament\Admin\Resources\KelasAnsaResource;
 use App\Filament\Admin\Resources\MentoringResource;
+use App\Filament\Admin\Resources\TransaksiResource;
 use App\Filament\Admin\Resources\LokerMentorResource;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use FilipFonal\FilamentLogManager\FilamentLogManager;
@@ -113,6 +114,7 @@ class AdminPanelProvider extends PanelProvider
                             ...LombaResource::getNavigationItems(),
                             ...ProdukDigitalResource::getNavigationItems(),
                             ...EventResource::getNavigationItems(),
+                            ...TransaksiResource::getNavigationItems(),
                             // ...PageResource::getNavigationItems(),
                             // ...CategoryResource::getNavigationItems(),
                             // ...HomePageSettings::getNavigationItems(),
