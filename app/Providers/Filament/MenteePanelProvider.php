@@ -6,20 +6,24 @@ use Filament\Pages;
 use Filament\Panel;
 use Filament\Widgets;
 use Filament\PanelProvider;
+use Filament\Pages\Dashboard;
 use Filament\Navigation\MenuItem;
 use Filament\Support\Colors\Color;
+use Illuminate\Support\Facades\Auth;
+use Filament\Navigation\NavigationGroup;
 use Filament\Http\Middleware\Authenticate;
+use Filament\Navigation\NavigationBuilder;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Filament\Http\Middleware\AuthenticateSession;
 use App\Filament\Mentee\Pages\Auth\CustomRegister;
+use App\Filament\Mentee\Resources\TransaksiResource;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
-use Illuminate\Support\Facades\Auth;
 use Joaopaulolndev\FilamentEditProfile\Pages\EditProfilePage;
 use Joaopaulolndev\FilamentEditProfile\FilamentEditProfilePlugin;
 
@@ -77,6 +81,18 @@ class MenteePanelProvider extends PanelProvider
                 MenuItem::make()
                     ->label(fn() => "Code : " . Auth::user()->referral_code)
                     ->icon('heroicon-m-link'),
-            ]);
+            ])
+            ->navigation(function (NavigationBuilder $builder): NavigationBuilder {
+                return $builder->groups([
+                    NavigationGroup::make('')
+                        ->items([
+                            ...Dashboard::getNavigationItems(),
+                            ...TransaksiResource::getNavigationItems(),
+                            // ...PageResource::getNavigationItems(),
+                            // ...CategoryResource::getNavigationItems(),
+                            // ...HomePageSettings::getNavigationItems(),
+                        ]),
+                ]);
+            });
     }
 }

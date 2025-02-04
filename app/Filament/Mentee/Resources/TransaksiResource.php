@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Admin\Resources;
+namespace App\Filament\Mentee\Resources;
 
 use Filament\Forms;
 use Filament\Tables;
@@ -15,8 +15,8 @@ use Filament\Support\Enums\FontWeight;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-use App\Filament\Admin\Resources\TransaksiResource\Pages;
-use App\Filament\Admin\Resources\TransaksiResource\RelationManagers;
+use App\Filament\Mentee\Resources\TransaksiResource\Pages;
+use App\Filament\Mentee\Resources\TransaksiResource\RelationManagers;
 
 class TransaksiResource extends Resource
 {
@@ -79,6 +79,7 @@ class TransaksiResource extends Resource
                         // ProofreadingMentee::class => ['proofreadingPaket.proofreading'],
                     ]);
                 }])
+                ->whereMenteeId(auth()->id())
                 ->latest();
             })
             ->columns([
