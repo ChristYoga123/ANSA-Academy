@@ -36,7 +36,7 @@ class MentoringController extends Controller
 
         return view('pages.mentoring.index', [
             'title' => $this->title,
-            'mentorings' => Program::with(['media', 'mentoringPakets', 'mentors.programMentors'])->withCount(['mentors', 'mentoringPakets', 'mentors.programMentors'])->whereProgram('Mentoring')->where('judul', 'like', '%' . $search . '%')->latest()->paginate(6)
+            'mentorings' => Program::with(['media', 'mentoringPakets'])->withCount(['mentors', 'mentoringPakets', 'mentors.programMentors'])->whereProgram('Mentoring')->where('judul', 'like', '%' . $search . '%')->latest()->paginate(6)
         ]);
     }
 
