@@ -28,7 +28,7 @@ class ProdukDigitalController extends Controller
 
     public function show($slug)
     {
-        $produkDigital = ProdukDigital::where('slug', $slug)->firstOrFail();
+        $produkDigital = ProdukDigital::where('slug', $slug)->first();
 
         return view('pages.produk-digital.show', [
             'title' => $this->title,

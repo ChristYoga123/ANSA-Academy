@@ -44,7 +44,7 @@ class KelasAnsaController extends Controller
 
     public function show($slug)
     {
-        $kelas = Program::with(['media', 'kelasAnsaPakets', 'kelasAnsaDetail', 'mentors'])->whereProgram('Kelas Ansa')->where('slug', $slug)->firstOrFail();
+        $kelas = Program::with(['media', 'kelasAnsaPakets', 'kelasAnsaDetail', 'mentors'])->whereProgram('Kelas Ansa')->where('slug', $slug)->first();
 
         return view('pages.kelas-ansa.show', [
             'title' => $this->title,

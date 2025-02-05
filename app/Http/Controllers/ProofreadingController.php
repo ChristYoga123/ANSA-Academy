@@ -43,7 +43,7 @@ class ProofreadingController extends Controller
     {
         return view('pages.proofreading.show', [
             'title' => $this->title,
-            'proofreading' => Program::with(['media', 'proofreadingPakets'])->withCount(['proofreadingPakets'])->whereProgram('Proofreading')->where('slug', $slug)->firstOrFail(),
+            'proofreading' => Program::with(['media', 'proofreadingPakets'])->withCount(['proofreadingPakets'])->whereProgram('Proofreading')->where('slug', $slug)->first(),
             'admin' => User::with('media')->role('super_admin')->first(),
         ]);
     }
