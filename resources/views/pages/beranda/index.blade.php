@@ -511,10 +511,17 @@
                     <img src="assets/images/resources/video-one-img-1.jpg" alt=""
                         style="width: 100%; height: auto; display: block;">
                     <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;">
-                        <a href="https://www.youtube.com/watch?v=rMfWdJ2qvtE" class="video-popup">
+                        <a href="{{ $webResource->youtube_url ?? 'https://www.youtube.com/watch?v=rMfWdJ2qvtE' }}"
+                            class="video-popup">
                             <div style="position: relative; width: 100%; height: 100%; overflow: hidden;">
-                                <img src="https://img.youtube.com/vi/rMfWdJ2qvtE/maxresdefault.jpg" alt=""
-                                    style="width: 100%; height: 100%; object-fit: cover;">
+                                @php
+                                    $youtube_id = explode(
+                                        '=',
+                                        $webResource->youtube_url ?? 'https://www.youtube.com/watch?v=rMfWdJ2qvtE',
+                                    )[1];
+                                @endphp
+                                <img src="https://img.youtube.com/vi/{{ $youtube_id }}/maxresdefault.jpg"
+                                    alt="" style="width: 100%; height: 100%; object-fit: cover;">
                             </div>
                             <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 2;"
                                 class="video-one__video-icon">
