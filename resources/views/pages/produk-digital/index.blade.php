@@ -3,6 +3,7 @@
 @section('content')
     @PageHeader([
     'pageTitle' => 'Produk Digital',
+    'pageHeaderImg' => $webResource->getFirstMediaUrl('produk_banner'),
     'breadcrumb' => [
     [
     'name' => 'Produk Digital',

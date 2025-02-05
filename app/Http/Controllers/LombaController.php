@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Lomba;
+use App\Models\WebResource;
 use Illuminate\Http\Request;
 
 class LombaController extends Controller
@@ -12,7 +13,8 @@ class LombaController extends Controller
     {
         return view('pages.lomba.index', [
             'title' => $this->title,
-            'lombas' => Lomba::with(['media'])->latest()->paginate(6)
+            'lombas' => Lomba::with(['media'])->latest()->paginate(6),
+            'webResource' => WebResource::with('media')->first()
         ]);
     }
 

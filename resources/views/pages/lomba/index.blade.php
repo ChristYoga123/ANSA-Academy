@@ -3,6 +3,7 @@
 @section('content')
     @PageHeader([
     'pageTitle' => 'Lomba',
+    'pageHeaderImg' => $webResource->getFirstMediaUrl('lomba_banner'),
     'breadcrumb' => [
     [
     'name' => 'Lomba',

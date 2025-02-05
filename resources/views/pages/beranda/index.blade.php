@@ -226,7 +226,8 @@
                             <div class="col-xl-6 col-lg-6 col-md-6">
                                 <div class="about-one__img-box">
                                     <div class="about-one__img">
-                                        <img src="assets/images/resources/abou-one-img-1.jpg" alt="">
+                                        <img src="{{ $webResource->getMedia('tentang_kami_banner')[0]->original_url ?? asset('assets/images/resources/abou-one-img-1.jpg') }}"
+                                            alt="" width="258" height="356">
                                     </div>
                                 </div>
                                 <div class="about-one__awards-box">
@@ -256,7 +257,8 @@
                                 </div>
                                 <div class="about-one__img-box-2">
                                     <div class="about-one__img-2">
-                                        <img src="assets/images/resources/abou-one-img-2.jpg" alt="">
+                                        <img src="{{ $webResource->getMedia('tentang_kami_banner')[1]->original_url ?? asset('assets/images/resources/abou-one-img-2.jpg') }}"
+                                            alt="" width="305" height="391">
                                     </div>
                                     <div class="about-one__img-shape-1 float-bob-y">
                                         <img src="assets/images/shapes/about-one-img-shape-1.png" alt="">

@@ -12,6 +12,7 @@ use App\Models\ProgramMentee;
 use App\Models\ProofreadingPaket;
 use Illuminate\Support\Facades\DB;
 use App\Contracts\PaymentServiceInterface;
+use App\Models\WebResource;
 
 class ProofreadingController extends Controller
 {
@@ -25,7 +26,8 @@ class ProofreadingController extends Controller
     {
         return view('pages.proofreading.index', [
             'title' => $this->title,
-            'proofreadings' => Program::with(['media', 'proofreadingPakets'])->withCount(['proofreadingPakets'])->whereProgram('Proofreading')->latest()->paginate(6)
+            'proofreadings' => Program::with(['media', 'proofreadingPakets'])->withCount(['proofreadingPakets'])->whereProgram('Proofreading')->latest()->paginate(6),
+            'webResource' => WebResource::with('media')->first(),
         ]);
     }
 

@@ -3,6 +3,7 @@
 @section('content')
     @PageHeader([
     'pageTitle' => 'Event',
+    'pageHeaderImg' => $webResource->getFirstMediaUrl('event_banner'),
     'breadcrumb' => [
     [
     'name' => 'Event',

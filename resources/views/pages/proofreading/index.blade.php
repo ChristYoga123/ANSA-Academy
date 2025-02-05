@@ -3,6 +3,7 @@
 @section('content')
     @PageHeader([
     'pageTitle' => 'Proofreading',
+    'pageHeaderImg' => $webResource->getFirstMediaUrl('proofreading_banner'),
     'breadcrumb' => [
     [
     'name' => 'Proofreading',

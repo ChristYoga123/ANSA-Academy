@@ -3,15 +3,16 @@
 namespace App\Http\Controllers;
 
 use Exception;
+use App\Models\User;
 use App\Models\Program;
 use App\Models\Transaksi;
+use App\Models\WebResource;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\ProgramMentee;
 use App\Models\MentoringPaket;
 use Illuminate\Support\Facades\DB;
 use App\Contracts\PaymentServiceInterface;
-use App\Models\User;
 
 class MentoringController extends Controller
 {
@@ -26,7 +27,8 @@ class MentoringController extends Controller
     {
         return view('pages.mentoring.index', [
             'title' => $this->title,
-            'mentorings' => Program::with(['media', 'mentoringPakets'])->withCount(['mentors', 'mentoringPakets'])->whereProgram('Mentoring')->latest()->paginate(6)
+            'mentorings' => Program::with(['media', 'mentoringPakets'])->withCount(['mentors', 'mentoringPakets'])->whereProgram('Mentoring')->latest()->paginate(6),
+            'webResource' => WebResource::with('media')->first()
         ]);
     }
 

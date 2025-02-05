@@ -6,7 +6,7 @@
                     <div class="main-menu__left">
                         <div class="main-menu__logo">
                             <a href="{{ route('index') }}"><img src="{{ $webResource->getFirstMediaUrl('logo-website') }}"
-                                    alt="logo" width="50px"></a>
+                                    alt="logo" width="100px"></a>
                         </div>
                     </div>
                     <div class="main-menu__main-menu-box">
@@ -71,7 +71,7 @@
 
         <div class="logo-box">
             <a href="{{ route('index') }}" aria-label="logo image"><img
-                    src="{{ $webResource->getFirstMediaUrl('logo-website') }}" width="105" alt="" /></a>
+                    src="{{ $webResource->getFirstMediaUrl('logo-website') }}" alt="Logo" /></a>
         </div>
         <!-- /.logo-box -->
         <div class="mobile-nav__container"></div>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Artikel;
+use App\Models\WebResource;
 use Illuminate\Http\Request;
 
 class BlogController extends Controller
@@ -13,7 +14,8 @@ class BlogController extends Controller
     {
         return view('pages.blog.index', [
             'title' => $this->title,
-            'artikels' => Artikel::latest()->paginate(6)
+            'artikels' => Artikel::latest()->paginate(6),
+            'webResource' => WebResource::with('media')->first()
         ]);
     }
 

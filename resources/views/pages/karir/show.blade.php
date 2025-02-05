@@ -98,7 +98,8 @@
                     <div class="col-xl-4">
                         <div class="become-a-teacher__img-box">
                             <div class="become-a-teacher__img">
-                                <img src="{{ asset('assets/images/resources/become-a-teacher-img-1.jpg') }}" alt="">
+                                <img src="{{ $webResource->getFirstMediaUrl('karir_banner') }}" alt=""
+                                    width="414px" height="823px">
                             </div>
                         </div>
                     </div>

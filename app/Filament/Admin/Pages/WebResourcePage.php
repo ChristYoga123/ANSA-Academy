@@ -10,6 +10,7 @@ use App\Models\WebResource;
 use Filament\Actions\Action;
 use Filament\Actions\CreateAction;
 use Illuminate\Support\Facades\DB;
+use Filament\Forms\Components\Grid;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\Repeater;
@@ -47,7 +48,7 @@ class WebResourcePage extends Page implements HasForms, HasTable, HasActions
 
     public function mount()
     {
-        $resourceWeb = WebResource::first();
+        $resourceWeb = WebResource::with('media')->first();
         
         if ($resourceWeb) {
             $data = [
@@ -154,7 +155,71 @@ class WebResourcePage extends Page implements HasForms, HasTable, HasActions
                             ->required(),
                     ]),
                 
-                // Fieldset::make('Banner')
+                // Handle Banner Section
+                Fieldset::make('banner')
+                    ->label('Banner Section')
+                    ->columns(1)
+                    ->schema([
+                        Grid::make()
+                            ->columns(1)
+                            ->schema([
+                                SpatieMediaLibraryFileUpload::make('tentang_kami_banner')
+                                    ->label('Banner Tentang Kami (Jika tidak diisi, maka banner tidak akan berubah, Minimal 2 foto)')
+                                    ->image()
+                                    ->required()
+                                    ->multiple()
+                                    ->minFiles(2)
+                                    ->collection('banner-tentang-kami'),
+                                SpatieMediaLibraryFileUpload::make('mentoring_banner')
+                                    ->label('Banner Mentoring')
+                                    ->image()
+                                    ->required()
+                                    ->maxFiles(1)
+                                    ->collection('banner-mentoring'),
+                                SpatieMediaLibraryFileUpload::make('kelas_banner')
+                                    ->label('Banner Kelas')
+                                    ->image()
+                                    ->required()
+                                    ->maxFiles(1)
+                                    ->collection('banner-kelas'),
+                                SpatieMediaLibraryFileUpload::make('proofreading_banner')
+                                    ->label('Banner Proofreading')
+                                    ->image()
+                                    ->required()
+                                    ->maxFiles(1)
+                                    ->collection('banner-proofreading'),
+                                SpatieMediaLibraryFileUpload::make('produk_banner')
+                                    ->label('Banner Produk Digital')
+                                    ->image()
+                                    ->required()
+                                    ->maxFiles(1)
+                                    ->collection('banner-produk'),
+                                SpatieMediaLibraryFileUpload::make('event_banner')
+                                    ->label('Banner Event')
+                                    ->image()
+                                    ->required()
+                                    ->maxFiles(1)
+                                    ->collection('banner-event'),
+                                SpatieMediaLibraryFileUpload::make('lomba_banner')
+                                    ->label('Banner Lomba')
+                                    ->image()
+                                    ->required()
+                                    ->maxFiles(1)
+                                    ->collection('banner-lomba'),
+                                SpatieMediaLibraryFileUpload::make('blog_banner')
+                                    ->label('Banner Blog')
+                                    ->image()
+                                    ->required()
+                                    ->maxFiles(1)
+                                    ->collection('banner-blog'),
+                                SpatieMediaLibraryFileUpload::make('karir_banner')
+                                    ->label('Banner Karir')
+                                    ->image()
+                                    ->required()
+                                    ->maxFiles(1)
+                                    ->collection('banner-karir'),
+                            ])
+                    ]),
                 
                 Fieldset::make('FAQs')
                     ->columns(1)
@@ -232,6 +297,36 @@ class WebResourcePage extends Page implements HasForms, HasTable, HasActions
                             ->usingFileName($file->getClientOriginalName())
                             ->usingName(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME))
                             ->toMediaCollection('logo-website');
+                    }
+                }
+            }
+
+            // Handle banner upload
+            $bannerFields = [
+                'tentang_kami_banner',
+                'mentoring_banner',
+                'kelas_banner',
+                'proofreading_banner',
+                'produk_banner',
+                'event_banner',
+                'lomba_banner',
+                'blog_banner',
+                'karir_banner',
+            ];
+
+            foreach ($bannerFields as $field) {
+                if (isset($this->data[$field]) && count($this->data[$field]) > 0) {
+                    $sumberDaya->clearMediaCollection($field);
+                    
+                    // Get the temporary file
+                    foreach ($this->data[$field] as $uuid => $file) {
+                        if ($file instanceof \Livewire\Features\SupportFileUploads\TemporaryUploadedFile) {
+                            // Add the file to the media collection
+                            $sumberDaya->addMediaFromString($file->get())
+                                ->usingFileName($file->getClientOriginalName())
+                                ->usingName(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME))
+                                ->toMediaCollection($field);
+                        }
                     }
                 }
             }

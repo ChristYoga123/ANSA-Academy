@@ -3,6 +3,7 @@
 @section('content')
     @PageHeader([
     'pageTitle' => 'Artikel',
+    'pageHeaderImg' => $webResource->getFirstMediaUrl('blog_banner'),
     'breadcrumb' => [
     [
     'name' => 'Artikel',

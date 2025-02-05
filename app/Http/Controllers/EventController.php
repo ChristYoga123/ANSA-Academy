@@ -10,6 +10,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Contracts\PaymentServiceInterface;
+use App\Models\WebResource;
 
 class EventController extends Controller
 {
@@ -23,7 +24,8 @@ class EventController extends Controller
     {
         return view('pages.event.index', [
             'title' => $this->title,
-            'events' => Event::with(['media', 'eventJadwals'])->withCount('eventJadwals')->latest()->paginate(6)
+            'events' => Event::with(['media', 'eventJadwals'])->withCount('eventJadwals')->latest()->paginate(6),
+            'webResource' => WebResource::with('media')->first()
         ]);
     }
 

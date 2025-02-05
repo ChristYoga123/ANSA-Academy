@@ -3,6 +3,7 @@
 @section('content')
     @PageHeader([
     'pageTitle' => 'Mentoring',
+    'pageHeaderImg' => $webResource->getFirstMediaUrl('mentoring_banner'),
     'breadcrumb' => [
     [
     'name' => 'Mentoring',

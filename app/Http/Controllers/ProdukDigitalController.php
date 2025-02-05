@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Models\ProdukDigital;
 use Illuminate\Support\Facades\DB;
 use App\Contracts\PaymentServiceInterface;
+use App\Models\WebResource;
 
 class ProdukDigitalController extends Controller
 {
@@ -22,7 +23,8 @@ class ProdukDigitalController extends Controller
     {
         return view('pages.produk-digital.index', [
             'title' => $this->title,
-            'produkDigitals' => ProdukDigital::latest()->paginate(6)
+            'produkDigitals' => ProdukDigital::latest()->paginate(6),
+            'webResource' => WebResource::with('media')->first()
         ]);
     }
 

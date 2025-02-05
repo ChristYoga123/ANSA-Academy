@@ -6,6 +6,7 @@ use Exception;
 use Carbon\Carbon;
 use App\Models\Program;
 use App\Models\Transaksi;
+use App\Models\WebResource;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\ProgramMentee;
@@ -27,7 +28,8 @@ class KelasAnsaController extends Controller
     {
         return view('pages.kelas-ansa.index', [
             'title' => $this->title,
-            'kelas' => Program::with(['media', 'kelasAnsaPakets', 'kelasAnsaDetail'])->withCount(['kelasAnsaPakets', 'mentors'])->whereProgram('Kelas Ansa')->latest()->paginate(6)
+            'kelas' => Program::with(['media', 'kelasAnsaPakets', 'kelasAnsaDetail'])->withCount(['kelasAnsaPakets', 'mentors'])->whereProgram('Kelas Ansa')->latest()->paginate(6),
+            'webResource' => WebResource::with('media')->first()
         ]);
     }
 

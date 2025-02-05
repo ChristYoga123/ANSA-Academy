@@ -3,6 +3,7 @@
 @section('content')
     @PageHeader([
     'pageTitle' => 'Kelas ANSA',
+    'pageHeaderImg' => $webResource->getFirstMediaUrl('kelas_banner'),
     'breadcrumb' => [
     [
     'name' => 'Kelas ANSA',

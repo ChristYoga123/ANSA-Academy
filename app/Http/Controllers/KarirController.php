@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\LokerMentor;
+use App\Models\WebResource;
 use Illuminate\Http\Request;
 use App\Models\LokerMentorBidang;
 use Illuminate\Support\Facades\DB;
@@ -29,7 +30,8 @@ class KarirController extends Controller
         }
         return view('pages.karir.show', [
             'title' => $this->title,
-            'lokerMentorBidang' => $lokerMentorBidang
+            'lokerMentorBidang' => $lokerMentorBidang,
+            'webResource' => WebResource::with('media')->first()
         ]);
     }
 
