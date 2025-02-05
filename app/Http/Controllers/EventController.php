@@ -101,7 +101,7 @@ class EventController extends Controller
                 return response()->json([
                     'status' => 'success',
                     'message' => 'Berhasil mendaftar event ini'
-                ]);
+                ], 200);
             }
             
             $snapToken = $this->paymentService->processPayment($transaksi);

@@ -304,21 +304,24 @@
             success: function(response) {
                 $('button[onclick="beli()"]').attr('disabled', false);
 
-                if (response.status === 'success' && response.snap_token) {
-                    snap.pay(response.snap_token, {
-                        onSuccess: function(result) {
-                            console.log('success');
-                            console.log(result);
-                        },
-                        onPending: function(result) {
-                            console.log('pending');
-                            console.log(result);
-                        },
-                        onError: function(result) {
-                            console.log('error');
-                            console.log(result);
-                        }
-                    });
+                if (response.status === 'success') {
+                    if (response.snap_token) {
+                        snap.pay(response.snap_token, {
+                            onSuccess: function(result) {
+                                console.log('success');
+                                console.log(result);
+                            },
+                            onPending: function(result) {
+                                console.log('pending');
+                                console.log(result);
+                            },
+                            onError: function(result) {
+                                console.log('error');
+                                console.log(result);
+                            }
+                        });
+                    }
+                    toastr.success(response.message);
                 } else {
                     toastr.error(response.message);
                 }
