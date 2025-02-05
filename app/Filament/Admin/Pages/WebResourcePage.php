@@ -154,6 +154,8 @@ class WebResourcePage extends Page implements HasForms, HasTable, HasActions
                             ->required(),
                     ]),
                 
+                // Fieldset::make('Banner')
+                
                 Fieldset::make('FAQs')
                     ->columns(1)
                     ->schema([
@@ -219,7 +221,7 @@ class WebResourcePage extends Page implements HasForms, HasTable, HasActions
             $sumberDaya = WebResource::updateOrCreate(['id' => WebResource::first()?->id], $data);
 
             // Handle logo website upload
-            if (isset($this->data['logo-website'])) {
+            if (isset($this->data['logo-website']) && count($this->data['logo-website']) > 0) {
                 $sumberDaya->clearMediaCollection('logo-website');
                 
                 // Get the temporary file
