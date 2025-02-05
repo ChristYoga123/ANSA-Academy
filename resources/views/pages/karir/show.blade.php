@@ -135,7 +135,8 @@
                                         <h4 class="contact-three__input-title">No. HP (Mulai dari 628xxxxxx)*</h4>
                                         <div class="contact-three__input-box">
                                             <input type="text" name="no_hp" value="{{ old('no_hp') }}" required
-                                                class="@error('no_hp') is-invalid @enderror" placeholder="628xxxxxx">
+                                                class="@error('no_hp') is-invalid @enderror" placeholder="628xxxxxx"
+                                                inputmode="numeric">
                                             @error('no_hp')
                                                 <span class="invalid-feedback">{{ $message }}</span>
                                             @enderror
@@ -153,9 +154,9 @@
                                     </div>
                                     <div class="col-xl-6 col-lg-6">
                                         <h4 class="contact-three__input-title">Semester*</h4>
-                                        <div class="contact-three__input-box">
+                                        <div class="select-box">
                                             <select name="semester" required
-                                                class="form-select @error('semester') is-invalid @enderror">
+                                                class="form-select wide @error('semester') is-invalid @enderror">
                                                 <option value="">Pilih Semester</option>
                                                 @foreach (['6', '7', '8', '9', 'Fresh Graduate'] as $semester)
                                                     <option value="{{ $semester }}"
@@ -171,9 +172,9 @@
                                     </div>
                                     <div class="col-xl-6 col-lg-6">
                                         <h4 class="contact-three__input-title">Mahasiswa Berprestasi</h4>
-                                        <div class="contact-three__input-box">
+                                        <div class="select_box">
                                             <select name="mahasiswa_berprestrasi"
-                                                class="form-select @error('mahasiswa_berprestrasi') is-invalid @enderror">
+                                                class="form-select wide @error('mahasiswa_berprestrasi') is-invalid @enderror">
                                                 <option value="">Pilih Level Prestasi</option>
                                                 @foreach (['Fakultas', 'Universitas', 'Wilayah', 'Nasional'] as $level)
                                                     <option value="{{ $level }}"
@@ -328,7 +329,7 @@
 
                 // Disable form and show loading state
                 submitBtn.prop('disabled', true);
-                submitBtn.html('<span>Processing...</span> <i class="fas fa-spinner fa-spin"></i>');
+                submitBtn.html('<span>Tunggu Sebentar...</span> <i class="fas fa-spinner fa-spin"></i>');
 
                 const formData = new FormData(this);
                 const url = $(this).attr('action');
@@ -343,6 +344,7 @@
                         if (response.status === 'success') {
                             toastr.success(response.message, 'Success');
                             form[0].reset();
+                            $('select[name="semester"]').val('');
                             // reset select input
                             form.find('select').val('');
                             // Clear validation states
@@ -353,6 +355,7 @@
                         }
                     },
                     error: function(xhr) {
+                        form[0].reset();
                         if (xhr.status === 422) {
                             const errors = xhr.responseJSON.errors;
 

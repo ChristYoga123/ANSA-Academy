@@ -77,6 +77,13 @@ class KarirController extends Controller
             ], 422);
         }
 
+        if(count($request->pencapaian) < 5) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Pencapaian minimal 5'
+            ], 422);
+        }
+
         DB::beginTransaction();
         try {
             LokerMentor::create([
