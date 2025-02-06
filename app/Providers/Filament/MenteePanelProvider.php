@@ -22,6 +22,7 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use App\Filament\Mentee\Resources\KelasAnsaMenteeResource;
+use App\Filament\Mentee\Resources\MentoringMenteeResource;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
@@ -96,6 +97,7 @@ class MenteePanelProvider extends PanelProvider
                         ]),
                     NavigationGroup::make('Program Terdaftar')
                         ->items([
+                            ...MentoringMenteeResource::getNavigationItems(),
                             ...KelasAnsaMenteeResource::getNavigationItems(),
                             ...ProofreadingMenteeResource::getNavigationItems(),
                         ]),

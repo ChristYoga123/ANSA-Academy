@@ -3,8 +3,8 @@
 @section('content')
     @PageHeader([
     'pageTitle' => $produkDigital->judul,
-    'pageHeaderImg' => $produkDigital->getFirstMediaUrl('produk-digital-thumbnail'),
-    // 'bgImage' => $produkDigital->getFirstMediaUrl('produk-digital-thumbnail'),
+    // 'pageHeaderImg' => $produkDigital->getFirstMediaUrl('produk-digital-thumbnail'),
+    'bgImage' => $produkDigital->getFirstMediaUrl('produk-digital-thumbnail'),
     'breadcrumb' => [
     [
     'name' => 'Produk Digital',
@@ -61,6 +61,129 @@
         </div>
     </section>
     <!--End Product Details-->
+
+    <section class="review-one">
+        <div class="container">
+            <div class="comments-area">
+                <div class="review-one__title">
+                    <h3>2 reviews</h3>
+                </div>
+                <!--Start Comment Box-->
+                <div class="comment-box">
+                    <div class="comment">
+                        <div class="author-thumb">
+                            <figure class="thumb"><img src="assets/images/shop/review-1-1.jpg" alt="">
+                            </figure>
+                        </div>
+
+                        <div class="review-one__content">
+                            <div class="review-one__content-top">
+                                <div class="info">
+                                    <h2>Kevin martin <span>20 july 2025 . 4:00 pm</span></h2>
+                                </div>
+                                <div class="reply-btn">
+                                    <i class="icon-star"></i>
+                                    <i class="icon-star"></i>
+                                    <i class="icon-star"></i>
+                                    <i class="icon-star"></i>
+                                    <i class="icon-star"></i>
+                                </div>
+                            </div>
+
+                            <div class="review-one__content-bottom">
+                                <p>It has survived not only five centuries, but also the leap into electronic
+                                    typesetting unchanged. It was popularised in the sheets containing lorem ipsum
+                                    is simply free text. Class aptent taciti sociosqu ad litora torquent per conubia
+                                    nostra, per inceptos himenaeos. Vestibulum sollicitudin varius mauris non
+                                    dignissim.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--End Comment Box-->
+
+                <!--Start Comment Box-->
+                <div class="comment-box">
+                    <div class="comment">
+                        <div class="author-thumb">
+                            <figure class="thumb"><img src="assets/images/shop/review-1-2.jpg" alt="">
+                            </figure>
+                        </div>
+
+                        <div class="review-one__content">
+                            <div class="review-one__content-top">
+                                <div class="info">
+                                    <h2>Sarah albert <span>20 july 2025 . 4:00 pm</span></h2>
+                                </div>
+                                <div class="reply-btn">
+                                    <i class="icon-star"></i>
+                                    <i class="icon-star"></i>
+                                    <i class="icon-star"></i>
+                                    <i class="icon-star"></i>
+                                    <i class="icon-star"></i>
+                                </div>
+                            </div>
+
+                            <div class="review-one__content-bottom">
+                                <p>It has survived not only five centuries, but also the leap into electronic
+                                    typesetting unchanged. It was popularised in the sheets containing lorem ipsum
+                                    is simply free text. Class aptent taciti sociosqu ad litora torquent per conubia
+                                    nostra, per inceptos himenaeos. Vestibulum sollicitudin varius mauris non
+                                    dignissim.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--End Comment Box-->
+            </div>
+        </div>
+    </section>
+
+    <section class="review-form-one">
+        <div class="container">
+            <div class="review-form-one__inner">
+                <h3 class="review-form-one__title">Add a review</h3>
+                <div class="review-form-one__rate-box">
+                    <p class="review-form-one__rate-text">Rate this product?</p>
+                    <div class="review-form-one__rate">
+                        <i class="icon-star"></i>
+                        <i class="icon-star"></i>
+                        <i class="icon-star"></i>
+                        <i class="icon-star"></i>
+                        <i class="icon-star"></i>
+                    </div>
+                </div>
+                <form action="assets/inc/sendemail.php" class="review-form-one__form contact-form-validated"
+                    novalidate="novalidate">
+                    <div class="row">
+                        <div class="col-xl-12">
+                            <div class="review-form-one__input-box text-message-box">
+                                <textarea name="message" placeholder="Write comment"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xl-6 col-lg-6">
+                            <div class="review-form-one__input-box">
+                                <input type="text" placeholder="Your name" name="name">
+                            </div>
+                        </div>
+                        <div class="col-xl-6 col-lg-6">
+                            <div class="review-form-one__input-box">
+                                <input type="email" placeholder="Email address" name="email">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xl-12">
+                            <button type="submit" class="thm-btn review-form-one__btn"> <span class="icon-right"></span>
+                                Submit comment</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
 @endsection
 
 @push('scripts')

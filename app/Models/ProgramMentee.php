@@ -44,4 +44,9 @@ class ProgramMentee extends Model implements HasMedia
     {
         return $this->hasOne(ProofreadingMenteeSubmission::class, 'proofreading_mentee_id');
     }
+
+    public function mentoringMenteeJadwal()
+    {
+        return $this->hasMany(MentoringJadwal::class, 'mentoring_mentee_id');
+    }
 }
