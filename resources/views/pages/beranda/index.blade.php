@@ -345,11 +345,11 @@
                                         </div>
                                     </div>
                                     <h3 class="courses-two__title">
-                                        <a href="#">{{ $program->judul }}</a>
+                                        <a href="{{ route('mentoring.show', $program->slug) }}">{{ $program->judul }}</a>
                                     </h3>
                                     <div class="courses-two__btn-and-client-box">
                                         <div class="courses-two__btn-box">
-                                            <a href="#" class="thm-btn-two">
+                                            <a href="{{ route('mentoring.show', $program->slug) }}" class="thm-btn-two">
                                                 <span>Daftar Sekarang</span>
                                                 <i class="icon-angles-right"></i>
                                             </a>
@@ -401,11 +401,12 @@
                                         </div>
                                     </div>
                                     <h3 class="courses-two__title">
-                                        <a href="#">{{ $program->judul }}</a>
+                                        <a
+                                            href="{{ route('kelas-ansa.show', $program->slug) }}">{{ $program->judul }}</a>
                                     </h3>
                                     <div class="courses-two__btn-and-client-box">
                                         <div class="courses-two__btn-box">
-                                            <a href="#" class="thm-btn-two">
+                                            <a href="{{ route('kelas-ansa.show', $program->slug) }}" class="thm-btn-two">
                                                 <span>Daftar Sekarang</span>
                                                 <i class="icon-angles-right"></i>
                                             </a>
@@ -470,11 +471,13 @@
                                         </div>
                                     </div>
                                     <h3 class="courses-two__title">
-                                        <a href="#">{{ $program->judul }}</a>
+                                        <a
+                                            href="{{ route('proofreading.show', $program->slug) }}">{{ $program->judul }}</a>
                                     </h3>
                                     <div class="courses-two__btn-and-client-box">
                                         <div class="courses-two__btn-box">
-                                            <a href="#" class="thm-btn-two">
+                                            <a href="{{ route('proofreading.show', $program->slug) }}"
+                                                class="thm-btn-two">
                                                 <span>Daftar Sekarang</span>
                                                 <i class="icon-angles-right"></i>
                                             </a>
