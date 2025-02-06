@@ -40,7 +40,9 @@ class KelasAnsaController extends Controller
 
         return view('pages.kelas-ansa.index', [
             'title' => $this->title,
-            'kelas' => $kelas
+            'kelas' => $kelas,
+            'webResource' => WebResource::with('media')->first()
+
         ]);
     }
 

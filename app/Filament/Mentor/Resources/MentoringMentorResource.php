@@ -48,7 +48,7 @@ class MentoringMentorResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->query(ProgramMentee::query()->with(['media', 'mentee', 'paketable'])->whereHas('program', function (Builder $query) {
+            ->query(ProgramMentee::query()->with(['media', 'mentee', 'paketable', 'program.media'])->whereHas('program', function (Builder $query) {
                 $query->where('program', 'Mentoring');
             })
             ->whereMentorId(auth()->user()->id)
@@ -59,6 +59,8 @@ class MentoringMentorResource extends Resource
                     ->searchable()
                     ->sortable()
                     ->getStateUsing(fn(ProgramMentee $programMentee) => $programMentee->program->judul . ' - ' . $programMentee->paketable->label),
+                Tables\Columns\ImageColumn::make('thumbnail')
+                    ->getStateUsing(fn(ProgramMentee $programMentee) => $programMentee->program->getFirstMediaUrl('program-thumbnail')),
                 Tables\Columns\TextColumn::make('mentee.name')
                     ->label('Mentee')
                     ->searchable()
@@ -125,8 +127,8 @@ class MentoringMentorResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\Action::make('lihatFileLanjutan')
-                    ->label('Lihat File Lanjutan')
+                Tables\Actions\Action::make('downloadFileLanjutan')
+                    ->label('Download File Lanjutan')
                     ->icon('heroicon-o-eye')
                     ->url(fn(ProgramMentee $programMentee) => $programMentee->getFirstMediaUrl('file-paket-lanjutan'))
                     ->visible(fn(ProgramMentee $programMentee) => $programMentee->hasMedia('file-paket-lanjutan') && $programMentee->paketable->jenis === 'Lanjutan')

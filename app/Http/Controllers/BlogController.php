@@ -25,7 +25,9 @@ class BlogController extends Controller
 
         return view('pages.blog.index', [
             'title' => $this->title,
-            'artikels' => Artikel::where('judul', 'like', '%' . $search . '%')->latest()->paginate()
+            'artikels' => Artikel::where('judul', 'like', '%' . $search . '%')->latest()->paginate(),
+            'webResource' => WebResource::with('media')->first()
+
         ]);
     }
 

@@ -44,7 +44,8 @@ class ProdukDigitalController extends Controller
 
         return view('pages.produk-digital.index', [
             'title' => $this->title,
-            'produkDigitals' => $produkDigitals
+            'produkDigitals' => $produkDigitals,
+            'webResource' => WebResource::with('media')->first()
         ]);
     }
 

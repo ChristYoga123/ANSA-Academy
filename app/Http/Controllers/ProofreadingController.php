@@ -37,7 +37,9 @@ class ProofreadingController extends Controller
         $proofreadings = Program::with(['media', 'proofreadingPakets'])->whereProgram('Proofreading')->where('judul', 'like', '%' . $search . '%')->latest()->paginate(6);
         return view('pages.proofreading.index', [
             'title' => $this->title,
-            'proofreadings' => $proofreadings
+            'proofreadings' => $proofreadings,
+            'webResource' => WebResource::with('media')->first()
+
         ]);
     }
 
