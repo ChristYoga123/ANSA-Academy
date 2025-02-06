@@ -71,7 +71,7 @@
 
         <div class="logo-box">
             <a href="{{ route('index') }}" aria-label="logo image"><img
-                    src="{{ $webResource->getFirstMediaUrl('logo-website') }}" alt="Logo" /></a>
+                    src="{{ $webResource->getFirstMediaUrl('logo-website') }}" alt="Logo" width="100px" /></a>
         </div>
         <!-- /.logo-box -->
         <div class="mobile-nav__container"></div>
