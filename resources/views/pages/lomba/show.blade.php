@@ -3,7 +3,7 @@
 @section('content')
     @PageHeader([
     'bgImage' => $lomba->getFirstMediaUrl('lomba-thumbnail'),
-    'pageHeaderImg' => $lomba->getFirstMediaUrl('lomba-thumbnail'),
+    // 'pageHeaderImg' => $lomba->getFirstMediaUrl('lomba-thumbnail'),
     'pageTitle' => $lomba->judul,
     'breadcrumb' => [
     [

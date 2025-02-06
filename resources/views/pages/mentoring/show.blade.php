@@ -4,7 +4,7 @@
     @PageHeader([
     'pageTitle' => $mentoring->judul,
     'bgImage' => $mentoring->getFirstMediaUrl('program-thumbnail'),
-    'pageHeaderImg' => $mentoring->getFirstMediaUrl('program-thumbnail'),
+    // 'pageHeaderImg' => $mentoring->getFirstMediaUrl('program-thumbnail'),
     'breadcrumb' => [
     [
     'name' => 'Mentoring',

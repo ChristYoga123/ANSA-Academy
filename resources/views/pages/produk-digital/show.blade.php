@@ -4,7 +4,7 @@
     @PageHeader([
     'pageTitle' => $produkDigital->judul,
     'pageHeaderImg' => $produkDigital->getFirstMediaUrl('produk-digital-thumbnail'),
-    'bgImage' => $produkDigital->getFirstMediaUrl('produk-digital-thumbnail'),
+    // 'bgImage' => $produkDigital->getFirstMediaUrl('produk-digital-thumbnail'),
     'breadcrumb' => [
     [
     'name' => 'Produk Digital',

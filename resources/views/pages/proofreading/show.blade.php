@@ -4,7 +4,7 @@
     @PageHeader([
     'pageTitle' => $proofreading->judul,
     'bgImage' => $proofreading->getFirstMediaUrl('program-thumbnail'),
-    'pageHeaderImg' => $proofreading->getFirstMediaUrl('program-thumbnail'),
+    // 'pageHeaderImg' => $proofreading->getFirstMediaUrl('program-thumbnail'),
     'breadcrumb' => [
     [
     'name' => 'Proofreading',

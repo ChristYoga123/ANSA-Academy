@@ -1,6 +1,6 @@
 @props([
     'bgImage' => asset('assets/images/shapes/page-header-bg-shape.png'),
-    'pageHeaderImg' => asset('assets/images/resources/page-header-img-1.png'),
+    'pageHeaderImg' => null,
     'pageTitle' => 'Blog List',
     'breadcrumb' => [['name' => 'Home', 'url' => 'index.html'], ['name' => 'Blog List']],
 ])
@@ -17,7 +17,9 @@
     <div class="container">
         <div class="page-header__inner">
             <div class="page-header__img">
-                {{-- <img src="{{ $pageHeaderImg }}" alt="" width="450px" height="378px"> --}}
+                @if ($pageHeaderImg)
+                    <img src="{{ $pageHeaderImg }}" alt="" width="450px" height="378px">
+                @endif
                 <div class="page-header__shape-1">
                     <img src="{{ asset('assets/images/shapes/page-header-shape-1.png') }}" alt="">
                 </div>

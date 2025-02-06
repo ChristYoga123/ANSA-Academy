@@ -3,7 +3,7 @@
 @section('content')
     @PageHeader([
     'bgImage' => $event->getFirstMediaUrl('event-thumbnail'),
-    'pageHeaderImg' => $event->getFirstMediaUrl('event-thumbnail'),
+    // 'pageHeaderImg' => $event->getFirstMediaUrl('event-thumbnail'),
     'pageTitle' => $event->judul,
     'breadcrumb' => [
     [

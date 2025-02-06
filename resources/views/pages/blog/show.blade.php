@@ -4,7 +4,7 @@
     @PageHeader([
     'bgImage' => $artikel->getFirstMediaUrl('artikel-thumbnail'),
     'pageTitle' => $artikel->judul,
-    'pageHeaderImg' => $artikel->getFirstMediaUrl('artikel-thumbnail'),
+    // 'pageHeaderImg' => $artikel->getFirstMediaUrl('artikel-thumbnail'),
     'breadcrumb' => [
     [
     'name' => 'Artikel',

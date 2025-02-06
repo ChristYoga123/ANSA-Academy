@@ -4,7 +4,7 @@
     @PageHeader([
     'pageTitle' => $kelasAnsa->judul,
     'bgImage' => $kelasAnsa->getFirstMediaUrl('program-thumbnail'),
-    'pageHeaderImg' => $kelasAnsa->getFirstMediaUrl('program-thumbnail'),
+    // 'pageHeaderImg' => $kelasAnsa->getFirstMediaUrl('program-thumbnail'),
     'breadcrumb' => [
     [
     'name' => 'Kelas ANSA',
