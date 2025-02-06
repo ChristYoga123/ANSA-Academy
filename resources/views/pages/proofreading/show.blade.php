@@ -7,8 +7,8 @@
     'pageHeaderImg' => $proofreading->getFirstMediaUrl('program-thumbnail'),
     'breadcrumb' => [
     [
-    'name' => $proofreading->judul,
-    'url' => route('proofreading.show', $proofreading->slug)
+    'name' => 'Proofreading',
+    'url' => '#'
     ]
     ]
     ])

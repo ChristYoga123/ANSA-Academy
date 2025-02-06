@@ -7,8 +7,8 @@
     'pageTitle' => $lomba->judul,
     'breadcrumb' => [
     [
-    'name' => $lomba->judul,
-    'url' => route('lomba.show', $lomba->slug)
+    'name' => 'Lomba',
+    'url' => '#'
     ]
     ]
     ])

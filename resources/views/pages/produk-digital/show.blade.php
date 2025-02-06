@@ -7,8 +7,8 @@
     'bgImage' => $produkDigital->getFirstMediaUrl('produk-digital-thumbnail'),
     'breadcrumb' => [
     [
-    'name' => $produkDigital->judul,
-    'url' => route('produk-digital.show', $produkDigital->slug)
+    'name' => 'Produk Digital',
+    'url' => '#'
     ]
     ]
     ])

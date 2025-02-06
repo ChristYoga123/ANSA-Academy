@@ -7,8 +7,8 @@
     'pageHeaderImg' => $kelasAnsa->getFirstMediaUrl('program-thumbnail'),
     'breadcrumb' => [
     [
-    'name' => $kelasAnsa->judul,
-    'url' => route('kelas-ansa.show', $kelasAnsa->slug)
+    'name' => 'Kelas ANSA',
+    'url' => '#'
     ]
     ]
     ])

@@ -7,8 +7,8 @@
     'pageHeaderImg' => $mentoring->getFirstMediaUrl('program-thumbnail'),
     'breadcrumb' => [
     [
-    'name' => $mentoring->judul,
-    'url' => route('mentoring.show', $mentoring->slug)
+    'name' => 'Mentoring',
+    'url' => '#'
     ]
     ]
     ])

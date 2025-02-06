@@ -10,10 +10,6 @@
     'name' => 'Event',
     'url' => route('event.index')
     ],
-    [
-    'name' => $event->judul,
-    'url' => route('event.show', $event->slug)
-    ]
     ],
     ])
 

@@ -7,8 +7,8 @@
     'pageHeaderImg' => $artikel->getFirstMediaUrl('artikel-thumbnail'),
     'breadcrumb' => [
     [
-    'name' => $artikel->judul,
-    'url' => route('blog.show', $artikel->slug)
+    'name' => 'Artikel',
+    'url' => '#'
     ]
     ]
     ])
