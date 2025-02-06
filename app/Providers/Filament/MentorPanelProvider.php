@@ -3,6 +3,7 @@
 namespace App\Providers\Filament;
 
 use App\Filament\Mentor\Resources\KelasAnsaMentorResource;
+use App\Filament\Mentor\Resources\MentoringMentorResource;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\Widgets;
@@ -89,6 +90,7 @@ class MentorPanelProvider extends PanelProvider
                         ]),
                     NavigationGroup::make('Program')
                         ->items([
+                            ...MentoringMentorResource::getNavigationItems(),
                             ...KelasAnsaMentorResource::getNavigationItems(),
                             NavigationItem::make()
                                 ->label(fn() => "Proofreading")
