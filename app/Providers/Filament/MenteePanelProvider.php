@@ -27,6 +27,7 @@ use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use App\Filament\Mentee\Resources\ProofreadingMenteeResource;
+use App\Filament\Mentee\Resources\TestimoniMentorResource;
 use Joaopaulolndev\FilamentEditProfile\Pages\EditProfilePage;
 use Joaopaulolndev\FilamentEditProfile\FilamentEditProfilePlugin;
 
@@ -100,6 +101,7 @@ class MenteePanelProvider extends PanelProvider
                             ...MentoringMenteeResource::getNavigationItems(),
                             ...KelasAnsaMenteeResource::getNavigationItems(),
                             ...ProofreadingMenteeResource::getNavigationItems(),
+                            ...TestimoniMentorResource::getNavigationItems(),
                         ]),
                 ]);
             });

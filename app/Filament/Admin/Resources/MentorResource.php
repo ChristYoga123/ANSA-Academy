@@ -80,7 +80,11 @@ class MentorResource extends Resource
                             ->required()
                             ->image()
                     ]),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\Action::make('lihatTestimoni')
+                    ->label('Lihat Testimoni')
+                    ->icon('heroicon-o-star')
+                    ->url(fn (User $record) => Pages\TestimoniMentor::getUrl(['record' => $record])),
+                // Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -93,6 +97,7 @@ class MentorResource extends Resource
     {
         return [
             'index' => Pages\ManageMentors::route('/'),
+            'jadwal' => Pages\TestimoniMentor::route('/{record}/jadwal'),
         ];
     }
 }
