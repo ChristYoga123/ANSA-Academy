@@ -121,7 +121,11 @@ class AturJadwalPage extends Page implements HasForms, HasTable, HasActions
 
                 $jadwal_sudah_ada = MentoringJadwal::where(function($query) use ($waktu_mulai, $waktu_selesai) {
                     $query->whereBetween('waktu_mulai', [$waktu_mulai, $waktu_selesai])
-                        ->orWhereBetween('waktu_selesai', [$waktu_mulai, $waktu_selesai]);
+                        ->orWhereBetween('waktu_selesai', [$waktu_mulai, $waktu_selesai])
+                        ->orWhere(function($q) use ($waktu_mulai, $waktu_selesai) {
+                            $q->where('waktu_mulai', '<=', $waktu_mulai)
+                              ->where('waktu_selesai', '>=', $waktu_selesai);
+                        });
                 })
                 ->where('id', '!=', $this->jadwal->id)
                 ->whereStatus('Disetujui')
@@ -309,10 +313,13 @@ class AturJadwalPage extends Page implements HasForms, HasTable, HasActions
 
                         $jadwal_sudah_ada = MentoringJadwal::where(function($query) use ($waktu_mulai, $waktu_selesai) {
                             $query->whereBetween('waktu_mulai', [$waktu_mulai, $waktu_selesai])
-                                ->orWhereBetween('waktu_selesai', [$waktu_mulai, $waktu_selesai]);
+                                ->orWhereBetween('waktu_selesai', [$waktu_mulai, $waktu_selesai])
+                                ->orWhere(function($q) use ($waktu_mulai, $waktu_selesai) {
+                                    $q->where('waktu_mulai', '<=', $waktu_mulai)
+                                    ->where('waktu_selesai', '>=', $waktu_selesai);
+                                });
                         })
-
-                        ->where('id', '!=', $jadwal->id)
+                        ->where('id', '!=', $this->jadwal->id)
                         ->whereStatus('Disetujui')
                         ->exists();
 

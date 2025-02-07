@@ -4,7 +4,6 @@ namespace App\Providers\Filament;
 
 use Filament\Pages;
 use Filament\Panel;
-use Filament\Widgets;
 use Filament\PanelProvider;
 use Filament\Pages\Dashboard;
 use Filament\Navigation\MenuItem;
@@ -13,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Filament\Navigation\NavigationGroup;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Navigation\NavigationBuilder;
+use App\Filament\Mentee\Widgets\CalendarWidget;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Filament\Http\Middleware\AuthenticateSession;
@@ -23,11 +23,12 @@ use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use App\Filament\Mentee\Resources\KelasAnsaMenteeResource;
 use App\Filament\Mentee\Resources\MentoringMenteeResource;
+use App\Filament\Mentee\Resources\TestimoniMentorResource;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
+use Saade\FilamentFullCalendar\FilamentFullCalendarPlugin;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use App\Filament\Mentee\Resources\ProofreadingMenteeResource;
-use App\Filament\Mentee\Resources\TestimoniMentorResource;
 use Joaopaulolndev\FilamentEditProfile\Pages\EditProfilePage;
 use Joaopaulolndev\FilamentEditProfile\FilamentEditProfilePlugin;
 
@@ -51,8 +52,7 @@ class MenteePanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Filament/Mentee/Widgets'), for: 'App\\Filament\\Mentee\\Widgets')
             ->widgets([
-                Widgets\AccountWidget::class,
-                Widgets\FilamentInfoWidget::class,
+                CalendarWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,
@@ -76,6 +76,7 @@ class MenteePanelProvider extends PanelProvider
                         directory: 'avatars', // image will be stored in 'storage/app/public/avatars
                         rules: 'mimes:jpeg,png,jpg|max:1024' //only accept jpeg and png files with a maximum size of 1MB
                     ),
+                FilamentFullCalendarPlugin::make()
             ])
             ->userMenuItems([
                 MenuItem::make()
