@@ -31,10 +31,7 @@ class ProdukDigitalController extends Controller
 
     public function show($slug)
     {
-        $produkDigital = ProdukDigital::withCount(['testimoni'])->with(['testimoni', 'testimoni.mentee'])->whereHas('testimoni', function($query)
-        {
-            $query->whereTestimoniableType(ProdukDigital::class);
-        })->where('slug', $slug)->first();
+        $produkDigital = ProdukDigital::withCount(['testimoni'])->with(['testimoni', 'testimoni.mentee.media'])->where('slug', $slug)->first();
 
         return view('pages.produk-digital.show', [
             'title' => $this->title,
