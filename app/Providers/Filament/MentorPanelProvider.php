@@ -2,8 +2,6 @@
 
 namespace App\Providers\Filament;
 
-use App\Filament\Mentor\Resources\KelasAnsaMentorResource;
-use App\Filament\Mentor\Resources\MentoringMentorResource;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\Widgets;
@@ -15,14 +13,18 @@ use Filament\Navigation\NavigationItem;
 use Filament\Navigation\NavigationGroup;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Navigation\NavigationBuilder;
+use App\Filament\Mentor\Widgets\CalendarWidget;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Filament\Http\Middleware\AuthenticateSession;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
+use App\Filament\Mentor\Resources\KelasAnsaMentorResource;
+use App\Filament\Mentor\Resources\MentoringMentorResource;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
+use Saade\FilamentFullCalendar\FilamentFullCalendarPlugin;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use App\Filament\Mentor\Resources\ProofreadingMentorResource;
 use Joaopaulolndev\FilamentEditProfile\Pages\EditProfilePage;
@@ -46,8 +48,7 @@ class MentorPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Filament/Mentor/Widgets'), for: 'App\\Filament\\Mentor\\Widgets')
             ->widgets([
-                Widgets\AccountWidget::class,
-                Widgets\FilamentInfoWidget::class,
+                CalendarWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,
@@ -71,6 +72,7 @@ class MentorPanelProvider extends PanelProvider
                         directory: 'avatars', // image will be stored in 'storage/app/public/avatars
                         rules: 'mimes:jpeg,png,jpg|max:1024' //only accept jpeg and png files with a maximum size of 1MB
                     ),
+                FilamentFullCalendarPlugin::make(),
             ])
             ->userMenuItems([
                 MenuItem::make()
