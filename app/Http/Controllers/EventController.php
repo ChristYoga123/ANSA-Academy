@@ -38,8 +38,22 @@ class EventController extends Controller
         ]);
     }
 
-    public function beli($slug)
+    public function beli(Request $request, $slug)
     {
+        $request->validate([
+            'referral_code' => 'nullable|exists:users,referral_code'
+        ], [
+            'referral_code.exists' => 'Kode referral tidak ditemukan'
+        ]);
+
+        if(!validateReferralCode($request->referral_code))
+        {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Kode referral tidak valid'
+            ], 403);
+        }
+        
         if(!validateUserToBuy())
         {
             return response()->json([

@@ -267,6 +267,14 @@
                                     </div>
                                 </li>
                             </ul>
+                            <div class="course-details__cuppon-box">
+                                <label class="form-label d-flex align-items-center">
+                                    <i class="icon-graduation-cap me-2"></i>Refferal Code
+                                </label>
+                                <div class="course-details__search-form" style="margin-top: -2px">
+                                    <input type="text" placeholder="Masukkan referral code" name="referral_code">
+                                </div>
+                            </div>
                             <div class="event-details__btn-box">
                                 <button class="thm-btn" onclick="beli()" style="border: 0"><span
                                         class="icon-angles-right"></span>Daftar
@@ -293,6 +301,7 @@
             method: 'POST',
             data: {
                 _token: `{{ csrf_token() }}`,
+                referral_code: $('input[name="referral_code"]').val()
             },
             beforeSend: function() {
                 $('button[onclick="beli()"]').attr('disabled', true);
