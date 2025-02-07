@@ -54,11 +54,16 @@ class MentoringMentorResource extends Resource
             ->whereMentorId(auth()->user()->id)
             ->latest())
             ->columns([
-                Tables\Columns\TextColumn::make('program')
+                Tables\Columns\TextColumn::make('program.judul')
                     ->label('Program')
                     ->searchable()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('paket')
+                    ->label('Paket')
+                    ->searchable()
                     ->sortable()
-                    ->getStateUsing(fn(ProgramMentee $programMentee) => $programMentee->program->judul . ' - ' . $programMentee->paketable->label),
+                    ->badge()
+                    ->getStateUsing(fn(ProgramMentee $programMentee) => $programMentee->paketable->jenis . ' - ' . $programMentee->paketable->label),
                 Tables\Columns\ImageColumn::make('thumbnail')
                     ->getStateUsing(fn(ProgramMentee $programMentee) => $programMentee->program->getFirstMediaUrl('program-thumbnail')),
                 Tables\Columns\TextColumn::make('mentee.name')

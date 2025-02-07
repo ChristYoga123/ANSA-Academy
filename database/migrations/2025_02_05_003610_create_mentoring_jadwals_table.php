@@ -16,7 +16,8 @@ return new class extends Migration
             $table->foreignId('mentoring_mentee_id')->nullable()->constrained('program_mentees')->cascadeOnDelete();
             $table->foreignId('assigned_by')->constrained('users')->cascadeOnDelete();
             $table->string('jadwal');
-            $table->dateTime('waktu');
+            $table->dateTime('waktu_mulai');
+            $table->dateTime('waktu_selesai');
             $table->text('link_meet')->nullable();
             $table->enum('status', ['Menunggu', 'Disetujui', 'Ditolak'])->default('Menunggu');
             $table->boolean('is_selesai')->default(false);

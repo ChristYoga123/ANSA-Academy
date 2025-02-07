@@ -48,17 +48,24 @@ class MentoringMenteeResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->query(ProgramMentee::query()->with(['media', 'mentor', 'paketable'])->whereHas('program', function (Builder $query) {
+            ->query(ProgramMentee::query()->with(['media', 'mentor', 'paketable', 'program.media'])->whereHas('program', function (Builder $query) {
                 $query->where('program', 'Mentoring');
             })
             ->whereMenteeId(auth()->user()->id)
             ->latest())
             ->columns([
-                Tables\Columns\TextColumn::make('program')
+                Tables\Columns\TextColumn::make('program.judul')
                     ->label('Program')
                     ->searchable()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('paket')
+                    ->label('Paket')
+                    ->searchable()
                     ->sortable()
-                    ->getStateUsing(fn(ProgramMentee $programMentee) => $programMentee->program->judul . ' - ' . $programMentee->paketable->label),
+                    ->badge()
+                    ->getStateUsing(fn(ProgramMentee $programMentee) => $programMentee->paketable->jenis . ' - ' . $programMentee->paketable->label),
+                Tables\Columns\ImageColumn::make('thumbnail')
+                    ->getStateUsing(fn(ProgramMentee $programMentee) => $programMentee->program->getFirstMediaUrl('program-thumbnail')),
                 Tables\Columns\TextColumn::make('mentor.name')
                     ->label('Mentor')
                     ->searchable()

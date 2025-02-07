@@ -6,7 +6,7 @@ return [
         'no_hp' => [
             'type' => 'text',
             'label' => 'Nomor HP',
-            'placeholder' => 'Masukkan Nomor HP',
+            'placeholder' => 'Masukkan Nomor HP (62xxxxxxx)',
             'required' => true,
             'rules' => 'required|numeric',
         ],
