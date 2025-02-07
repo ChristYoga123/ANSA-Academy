@@ -39,6 +39,7 @@ Route::prefix('produk-digital')->name('produk-digital.')->group(function()
     Route::get('/{slug}', [ProdukDigitalController::class, 'show'])->name('show');
     Route::post('/search', [ProdukDigitalController::class, 'search'])->name('search');
     Route::post('/beli/{slug}', [ProdukDigitalController::class, 'beli'])->name('beli');
+    Route::post('/testimoni/{slug}', [ProdukDigitalController::class, 'storeTestimoni'])->name('testimoni');
 });
 
 Route::prefix('event')->name('event.')->group(function()
@@ -63,6 +64,7 @@ Route::prefix('program')->group(function()
         Route::get('/{slug}', [MentoringController::class, 'show'])->name('show');
         Route::post('/search', [MentoringController::class, 'search'])->name('search');
         Route::post('/beli/{slug}', [MentoringController::class, 'beli'])->name('beli');
+        Route::post('/testimoni/{slug}', [MentoringController::class, 'storeTestimoni'])->name('testimoni');
     });
 
     Route::prefix('proofreading')->name('proofreading.')->group(function()
@@ -71,6 +73,7 @@ Route::prefix('program')->group(function()
         Route::post('/search', [ProofreadingController::class, 'search'])->name('search');
         Route::get('/{slug}', [ProofreadingController::class, 'show'])->name('show');
         Route::post('/beli/{slug}', [ProofreadingController::class, 'beli'])->name('beli');
+        Route::post('/testimoni/{slug}', [ProofreadingController::class, 'storeTestimoni'])->name('testimoni');
     });
 
     Route::prefix('kelas-ansa')->name('kelas-ansa.')->group(function()
@@ -79,6 +82,7 @@ Route::prefix('program')->group(function()
         Route::post('/search', [KelasAnsaController::class, 'search'])->name('search');
         Route::get('/{slug}', [KelasAnsaController::class, 'show'])->name('show');
         Route::post('/beli/{slug}', [KelasAnsaController::class, 'beli'])->name('beli');
+        Route::post('/testimoni/{slug}', [KelasAnsaController::class, 'storeTestimoni'])->name('testimoni');
     });
 });
 

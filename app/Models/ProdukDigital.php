@@ -23,4 +23,9 @@ class ProdukDigital extends Model implements HasMedia
     {
         return $this->morphMany(Transaksi::class, 'transaksiable');
     }
+
+    public function testimoni()
+    {
+        return $this->morphMany(Testimoni::class, 'testimoniable');
+    }
 }

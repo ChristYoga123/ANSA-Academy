@@ -577,23 +577,20 @@
                     <li>
                         <div class="testimonial-three__single">
                             <div class="testimonial-three__rating">
-                                <span class="icon-star"></span>
-                                <span class="icon-star"></span>
-                                <span class="icon-star"></span>
-                                <span class="icon-star"></span>
-                                <span class="icon-star"></span>
+                                @for ($i = 0; $i < $testimoni->rating; $i++)
+                                    <span class="icon-star"></span>
+                                @endfor
                             </div>
-                            <p class="testimonial-three__text">It has survived not only five centuries,
-                                but also <br> the leap into electronic typesetting, remaining <br> essentially
-                                unchanged. It was popularised in <br> the 1960s with the release.</p>
+                            <p class="testimonial-three__text">{{ $testimoni->ulasan }}</p>
                             <div class="testimonial-three__client-info">
                                 <div class="testimonial-three__client-img">
-                                    <img src="assets/images/testimonial/testimonial-3-1.jpg" alt="">
+                                    <img src="{{ $testimoni->mentee->getFirstMediaUrl('avatar_url') !== '' ? $testimoni->getFirstMediaUrl('avatar_url') : 'https://ui-avatars.com/api/?name=' . $testimoni->mentee->name }}"
+                                        alt="mentee">
                                 </div>
                                 <div class="testimonial-three__client-content">
-                                    <h4 class="testimonial-three__client-name"><a href="testimonials.html">Mitchel
-                                            Watson</a></h4>
-                                    <p class="testimonial-three__client-sub-title">UI/UX Design</p>
+                                    <h4 class="testimonial-three__client-name"><a
+                                            href="testimonials.html">{{ $testimoni->mentee->name }}</a></h4>
+                                    <p class="testimonial-three__client-sub-title">Mentee</p>
                                 </div>
                             </div>
                         </div>

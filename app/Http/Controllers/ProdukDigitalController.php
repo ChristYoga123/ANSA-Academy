@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Models\ProdukDigital;
 use Illuminate\Support\Facades\DB;
 use App\Contracts\PaymentServiceInterface;
+use App\Models\Testimoni;
 use App\Models\WebResource;
 
 class ProdukDigitalController extends Controller
@@ -30,7 +31,10 @@ class ProdukDigitalController extends Controller
 
     public function show($slug)
     {
-        $produkDigital = ProdukDigital::where('slug', $slug)->first();
+        $produkDigital = ProdukDigital::withCount(['testimoni'])->with(['testimoni', 'testimoni.mentee'])->whereHas('testimoni', function($query)
+        {
+            $query->whereTestimoniableType(ProdukDigital::class);
+        })->where('slug', $slug)->first();
 
         return view('pages.produk-digital.show', [
             'title' => $this->title,
@@ -119,6 +123,54 @@ class ProdukDigitalController extends Controller
             ]);
         }
         catch(Exception $e)
+        {
+            DB::rollBack();
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function storeTestimoni(Request $request, $slug)
+    {
+        $request->validate([
+            'rating' => 'required|numeric|min:1|max:5',
+            'comment' => 'required',
+        ], [
+            'rating.min' => 'Rating minimal 1',
+            'rating.max' => 'Rating maksimal 5',
+            'rating.numeric' => 'Rating harus berupa angka',
+            'comment.required' => 'Komentar harus diisi'
+        ]);
+
+        if(!validateTestimoni(ProdukDigital::class, ProdukDigital::where('slug', $slug)->first()->id))
+        {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Anda sudah memberikan testimoni'
+            ], 403);
+        }
+
+        DB::beginTransaction();
+        
+        try
+        {
+            $produkDigital = ProdukDigital::where('slug', $slug)->firstOrFail();
+            Testimoni::create([
+                'mentee_id' => auth()->id(),
+                'rating' => $request->rating,
+                'ulasan' => $request->comment,
+                'testimoniable_id' => $produkDigital->id,
+                'testimoniable_type' => ProdukDigital::class
+            ]);
+
+            DB::commit();
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Testimoni berhasil ditambahkan'
+            ]);
+        }catch(Exception $e)
         {
             DB::rollBack();
             return response()->json([

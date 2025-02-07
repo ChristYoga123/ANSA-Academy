@@ -4,6 +4,8 @@ use App\Models\MentoringPaket;
 use App\Models\Transaksi;
 use App\Models\ProgramMentee;
 use App\Models\ProofreadingPaket;
+use App\Models\Testimoni;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
 if(!function_exists('deleteUnpaidTransaction'))
@@ -56,6 +58,24 @@ if(!function_exists('validateReferralCode'))
 
         // jika referral code yang dimasukkan adalah referral code dari diri sendiri
         if(Auth::user()->referral_code === $referralCode)
+        {
+            return false;
+        }
+
+        return true;
+    }
+}
+
+if(!function_exists('validateTestimoni'))
+{
+    function validateTestimoni($programType, $programId)
+    {
+        $testimoniExist = Testimoni::whereTestimoniableType($programType)
+            ->whereTestimoniableId($programId)
+            ->whereMenteeId(auth()->id())
+            ->exists();
+
+        if($testimoniExist)
         {
             return false;
         }

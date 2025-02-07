@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\WebAd;
 use App\Models\Program;
+use App\Models\Testimoni;
 use App\Models\WebResource;
 use Illuminate\Http\Request;
 
@@ -29,7 +30,8 @@ class BerandaController extends Controller
             'kelasAnsaPrograms' => $programs->get('Kelas ANSA', collect()),
             'proofreadingPrograms' => $programs->get('Proofreading', collect()),
             'webAds' => WebAd::latest()->limit(5)->get(),
-            'webResource' => WebResource::first(), 
+            'webResource' => WebResource::first(),
+            'testimonies' => Testimoni::with(['mentee.media'])->whereTestimoniableType(Program::class)->whereRating(5)->latest()->limit(10)->get(), 
         ]);
     }
 }

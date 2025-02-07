@@ -13,6 +13,7 @@ use App\Models\ProgramMentee;
 use App\Models\MentoringPaket;
 use Illuminate\Support\Facades\DB;
 use App\Contracts\PaymentServiceInterface;
+use App\Models\Testimoni;
 
 class MentoringController extends Controller
 {
@@ -38,7 +39,10 @@ class MentoringController extends Controller
 
         return view('pages.mentoring.index', [
             'title' => $this->title,
-            'mentorings' => Program::with(['media', 'mentoringPakets'])->withCount(['mentors', 'mentoringPakets'])->whereProgram('Mentoring')->where('judul', 'like', '%' . $search . '%')->latest()->paginate(6),
+            'mentorings' => Program::with(['media', 'mentoringPakets'])->withCount(['mentors', 'mentoringPakets', 'testimoni'])->whereHas('testimoni', function($query)
+            {
+                $query->whereTestimoniableType(Program::class);
+            })->whereProgram('Mentoring')->where('judul', 'like', '%' . $search . '%')->latest()->paginate(6),
             'webResource' => WebResource::with('media')->first()
         ]);
     }
@@ -47,7 +51,12 @@ class MentoringController extends Controller
     {
         return view('pages.mentoring.show', [
             'title' => $this->title,
-            'mentoring' => Program::with(['media', 'mentoringPakets', 'mentors'])->withCount(['mentoringPakets', 'mentors'])->whereProgram('Mentoring')->where('slug', $slug)->first(),
+            'mentoring' => Program::with(['media', 'mentoringPakets', 'mentors.media', 'testimoni.mentee.media', 'testimoni'])
+                ->withCount(['mentoringPakets', 'mentors', 'testimoni'])
+                ->withAvg('testimoni', 'rating')
+                ->whereProgram('Mentoring')
+                ->where('slug', $slug)
+                ->first(),
         ]);
     }
 
@@ -146,6 +155,55 @@ class MentoringController extends Controller
                 'snap_token' => $snapToken
             ]);
         } catch (Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function storeTestimoni(Request $request, $slug)
+    {
+        $request->validate([
+            'rating' => 'required|integer|between:1,5',
+            'comment' => 'required|string',
+        ], [
+            'rating.required' => 'Rating harus dipilih',
+            'rating.integer' => 'Rating harus dipilih',
+            'rating.between' => 'Rating harus diantara 1 sampai 5',
+            'comment.required' => 'Testimoni harus diisi',
+            'comment.string' => 'Testimoni harus diisi',
+        ]);
+
+        if(!validateTestimoni(Program::class, Program::where('slug', $slug)->first()->id))
+        {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Anda sudah memberikan testimoni'
+            ], 422);
+        }
+
+        DB::beginTransaction();
+
+        try
+        {
+            Testimoni::create([
+                'rating' => $request->rating,
+                'ulasan' => $request->comment,
+                'testimoniable_type' => Program::class,
+                'testimoniable_id' => Program::where('slug', $slug)->first()->id,
+                'mentee_id' => auth()->id(),
+            ]);
+
+            DB::commit();
+            
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Testimoni berhasil dikirim'
+            ]);
+        }catch(Exception $e)
+        {
             DB::rollBack();
             return response()->json([
                 'status' => 'error',

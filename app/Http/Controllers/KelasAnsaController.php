@@ -14,6 +14,7 @@ use App\Models\KelasAnsaPaket;
 use App\Models\KelasAnsaDetail;
 use Illuminate\Support\Facades\DB;
 use App\Contracts\PaymentServiceInterface;
+use App\Models\Testimoni;
 
 class KelasAnsaController extends Controller
 {
@@ -48,7 +49,7 @@ class KelasAnsaController extends Controller
 
     public function show($slug)
     {
-        $kelas = Program::with(['media', 'kelasAnsaPakets', 'kelasAnsaDetail', 'mentors'])->whereProgram('Kelas Ansa')->where('slug', $slug)->first();
+        $kelas = Program::with(['media', 'kelasAnsaPakets', 'kelasAnsaDetail', 'mentors.media', 'testimoni.mentee.media', 'testimoni'])->withCount(['testimoni'])->withAvg('testimoni', 'rating')->whereProgram('Kelas Ansa')->where('slug', $slug)->first();
 
         return view('pages.kelas-ansa.show', [
             'title' => $this->title,
@@ -177,5 +178,54 @@ class KelasAnsaController extends Controller
                 'message' => $e->getMessage()
             ], 500);
         }    
+    }
+
+    public function storeTestimoni(Request $request, $slug)
+    {
+        $request->validate([
+            'rating' => 'required|integer|between:1,5',
+            'comment' => 'required|string',
+        ], [
+            'rating.required' => 'Rating harus dipilih',
+            'rating.integer' => 'Rating harus dipilih',
+            'rating.between' => 'Rating harus diantara 1 sampai 5',
+            'comment.required' => 'Testimoni harus diisi',
+            'comment.string' => 'Testimoni harus diisi',
+        ]);
+
+        if(!validateTestimoni(Program::class, Program::where('slug', $slug)->first()->id))
+        {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Anda sudah memberikan testimoni'
+            ], 422);
+        }
+
+        DB::beginTransaction();
+
+        try
+        {
+            Testimoni::create([
+                'rating' => $request->rating,
+                'ulasan' => $request->comment,
+                'testimoniable_type' => Program::class,
+                'testimoniable_id' => Program::where('slug', $slug)->first()->id,
+                'mentee_id' => auth()->id(),
+            ]);
+
+            DB::commit();
+            
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Testimoni berhasil dikirim'
+            ]);
+        }catch(Exception $e)
+        {
+            DB::rollBack();
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ], 500);
+        }
     }
 }

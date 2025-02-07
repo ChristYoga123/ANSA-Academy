@@ -89,6 +89,11 @@ class User extends Authenticatable implements HasAvatar, FilamentUser, HasMedia
         return $this->belongsToMany(Program::class, 'program_mentees', 'mentor_id', 'program_id');
     }
 
+    public function testimoni()
+    {
+        return $this->morphMany(Testimoni::class, 'testimoniable');
+    }
+
     public function canAccessPanel(Panel $panel): bool
     {
         if($panel->getId() === 'admin')

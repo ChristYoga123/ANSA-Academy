@@ -48,4 +48,9 @@ class Program extends Model implements HasMedia
     {
         return $this->hasMany(ProofreadingPaket::class, 'proofreading_id');
     }
+
+    public function testimoni()
+    {
+        return $this->morphMany(Testimoni::class, 'testimoniable');
+    }
 }
