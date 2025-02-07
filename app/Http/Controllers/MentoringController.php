@@ -51,7 +51,7 @@ class MentoringController extends Controller
     {
         return view('pages.mentoring.show', [
             'title' => $this->title,
-            'mentoring' => Program::with(['media', 'mentoringPakets', 'mentors.media', 'testimoni.mentee.media', 'testimoni'])
+            'mentoring' => Program::with(['media', 'mentoringPakets', 'mentors.media', 'mentors.testimoni', 'testimoni.mentee.media', 'testimoni'])
                 ->withCount(['mentoringPakets', 'mentors', 'testimoni'])
                 ->withAvg('testimoni', 'rating')
                 ->whereProgram('Mentoring')
