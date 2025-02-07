@@ -20,7 +20,8 @@
                     <div class="col-xl-4 col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="100ms">
                         <div class="event-one__single">
                             <div class="event-one__img">
-                                <img src="{{ $event->getFirstMediaUrl('event-thumbnail') }}" alt="">
+                                <img src="{{ $event->getFirstMediaUrl('event-thumbnail') }}" alt="{{ $event->judul }}"
+                                    width="414px" height="275px">
                                 <div class="event-one__date">
                                     <p>
                                         {{ $event->event_jadwals_count }}
