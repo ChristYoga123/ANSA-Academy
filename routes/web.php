@@ -86,6 +86,23 @@ Route::prefix('program')->group(function()
     });
 });
 
+Route::prefix('pembayaran')->name('pembayaran.')->group(function()
+{
+    Route::get('/sukses', function()
+    {
+        return view('pages.pembayaran.sukses', [
+            'title' => 'Pembayaran Sukses'
+        ]);
+    })->name('sukses');
+
+    Route::get('/gagal', function()
+    {
+        return view('pages.pembayaran.gagal', [
+            'title' => 'Pembayaran Gagal'
+        ]);
+    })->name('gagal');
+});
+
 Route::get('/symlink', function()
 {
     Artisan::call('storage:link');

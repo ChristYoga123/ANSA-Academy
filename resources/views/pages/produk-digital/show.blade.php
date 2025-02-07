@@ -294,16 +294,13 @@
                 if (response.status === 'success' && response.snap_token) {
                     snap.pay(response.snap_token, {
                         onSuccess: function(result) {
-                            console.log('success');
-                            console.log(result);
+                            window.location.href = '{{ route('pembayaran.sukses') }}';
                         },
                         onPending: function(result) {
-                            console.log('pending');
-                            console.log(result);
+                            window.location.href = '{{ route('pembayaran.gagal') }}';
                         },
                         onError: function(result) {
-                            console.log('error');
-                            console.log(result);
+                            window.location.href = '{{ route('pembayaran.gagal') }}';
                         }
                     });
                 } else {
