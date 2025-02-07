@@ -275,7 +275,7 @@
 
         function beli() {
             @guest
-            window.location.href = `{{ route('filament.mentee.auth.login') }}`
+            toastr.error('Silahkan login terlebih dahulu untuk membeli produk.');
             return;
         @endguest
         $.ajax({

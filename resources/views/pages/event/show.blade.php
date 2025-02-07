@@ -293,7 +293,7 @@
     <script>
         function beli() {
             @guest
-            window.location.href = `{{ route('filament.mentee.auth.login') }}`
+            toastr.error('Silahkan login terlebih dahulu untuk mendaftar event.');
             return;
         @endguest
         $.ajax({
