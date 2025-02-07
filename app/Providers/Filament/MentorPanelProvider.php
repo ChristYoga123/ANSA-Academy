@@ -98,7 +98,7 @@ class MentorPanelProvider extends PanelProvider
                                 ->label(fn() => "Proofreading")
                                 ->url(fn (): string => ProofreadingMentorResource::getUrl())
                                 ->icon('heroicon-o-rectangle-stack')
-                                ->visible(fn() => auth()->user()->hasRole(['super_admin', 'mentor']))
+                                ->visible(fn() => auth()->user()->hasRole(['super_admin', 'mentor']) || auth()->user()->email === 'saydiroyhan@gmail.com')
                                 ->isActiveWhen(fn() => request()->routeIs('filament.mentor.resources.proofreading-mentors.index')),
                         ]),
                 ]);
