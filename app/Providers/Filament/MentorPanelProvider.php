@@ -72,7 +72,8 @@ class MentorPanelProvider extends PanelProvider
                         directory: 'avatars', // image will be stored in 'storage/app/public/avatars
                         rules: 'mimes:jpeg,png,jpg|max:1024' //only accept jpeg and png files with a maximum size of 1MB
                     ),
-                FilamentFullCalendarPlugin::make(),
+                FilamentFullCalendarPlugin::make()
+                    ->locale('id'),
             ])
             ->userMenuItems([
                 MenuItem::make()

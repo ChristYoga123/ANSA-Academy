@@ -77,6 +77,7 @@ class MenteePanelProvider extends PanelProvider
                         rules: 'mimes:jpeg,png,jpg|max:1024' //only accept jpeg and png files with a maximum size of 1MB
                     ),
                 FilamentFullCalendarPlugin::make()
+                    ->locale('id')
             ])
             ->userMenuItems([
                 MenuItem::make()
