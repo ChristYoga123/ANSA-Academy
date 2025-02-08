@@ -22,6 +22,7 @@ use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use App\Filament\Mentor\Resources\KelasAnsaMentorResource;
 use App\Filament\Mentor\Resources\MentoringMentorResource;
+use App\Filament\Mentor\Resources\ProdukDigitalResource;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Saade\FilamentFullCalendar\FilamentFullCalendarPlugin;
@@ -86,6 +87,7 @@ class MentorPanelProvider extends PanelProvider
                     NavigationGroup::make('')
                         ->items([
                             ...Dashboard::getNavigationItems(),
+                            ...ProdukDigitalResource::getNavigationItems(),
                             // ...TransaksiResource::getNavigationItems(),
                             // ...PageResource::getNavigationItems(),
                             // ...CategoryResource::getNavigationItems(),

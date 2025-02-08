@@ -47,23 +47,25 @@
                 <div class="col-lg-6 col-xl-6">
                     <div class="product-details__top">
                         <h3 class="product-details__title">
-                            {{ $produkDigital->judul }} <span>
+                            {{ $produkDigital->judul }}
+                            <span>
                                 Rp. {{ number_format($produkDigital->harga, 0, ',', '.') }}
                             </span>
                         </h3>
                     </div>
+                    (Dipublish oleh {{ $produkDigital->mentor->name }})
                     <div class="product-details__reveiw">
                         <span class="p-1 rounded bg-primary text-white">Platform: {{ $produkDigital->platform }}</span>
                     </div>
                     <div class="product-details__content">
                         <p class="product-details__content-text1">{!! $produkDigital->deskripsi !!}</p>
-                        <p class="product-details__content-text2">Stok:
+                        <strong class="product-details__content-text2">Stok:
                             {{ $produkDigital->is_unlimited ? 'Tidak Terbatas' : $produkDigital->qty }} <br>
                             <span
                                 class="text-{{ $produkDigital->is_unlimited || $produkDigital->qty > 0 ? 'success' : 'danger' }}">
                                 {{ $produkDigital->is_unlimited || $produkDigital->qty > 0 ? 'Tersedia' : 'Tidak Tersedia' }}
                             </span>
-                        </p>
+                        </strong>
                     </div>
                     <!-- Add Referral Code Input -->
                     <div class="product-details__buttons mt-4" style="margin-bottom: -40px; width: 100%;">

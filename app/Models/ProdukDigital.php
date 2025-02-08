@@ -28,4 +28,9 @@ class ProdukDigital extends Model implements HasMedia
     {
         return $this->morphMany(Testimoni::class, 'testimoniable');
     }
+
+    public function mentor()
+    {
+        return $this->belongsTo(User::class, 'mentor_id');
+    }
 }
