@@ -62,6 +62,9 @@ class MenteeResource extends Resource
                     ->label('Email')
                     ->searchable()
                     ->sortable(),
+                TextColumn::make('no_hp')
+                    ->label('No. HP')
+                    ->getStateUsing(fn(User $user) => $user->custom_fields['no_hp']),
                 ImageColumn::make('avatar_url')
                     ->label('Foto Profil')
             ])
@@ -69,6 +72,11 @@ class MenteeResource extends Resource
                 //
             ])
             ->actions([
+                Tables\Actions\Action::make('waMentee')
+                    ->label('Hubungi')
+                    ->icon('heroicon-o-phone')
+                    ->url(fn(User $user) => 'https://wa.me/' . trim($user->custom_fields['no_hp'], '+'))
+                    ->openUrlInNewTab(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])

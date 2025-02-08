@@ -82,7 +82,7 @@ class TestimoniMentorPage extends Page implements HasTable, HasForms, HasActions
     public function table(Table $table): Table
     {
         return $table
-            ->query(Testimoni::query()->whereTestimoniableType(User::class)->whereTestimoniableId($this->mentor->id))
+            ->query(Testimoni::query()->whereTestimoniableType(User::class)->whereTestimoniableId($this->mentor->id)->whereMenteeId(auth()->id))
             ->columns([
                 TableRatingStar::make('rating')
                     ->sortable(),
