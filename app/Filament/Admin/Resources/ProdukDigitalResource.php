@@ -28,6 +28,8 @@ class ProdukDigitalResource extends Resource
     {
         return $form
             ->schema([
+                Forms\Components\Hidden::make('mentor_id')
+                    ->default(auth()->id()),
                 Forms\Components\Fieldset::make('Detail Produk')
                     ->columns(1)
                     ->schema([
@@ -93,6 +95,7 @@ class ProdukDigitalResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->query(ProdukDigital::with(['media', 'mentor'])->whereHas('mentor', fn($query) => $query->where('mentor_id', auth()->id())))
             ->columns([
                 Tables\Columns\TextColumn::make('judul')
                     ->searchable(),
