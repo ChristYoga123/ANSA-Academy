@@ -2,22 +2,23 @@
 
 namespace App\Filament\Mentee\Resources;
 
-use App\Filament\Mentee\Resources\TestimoniMentorResource\Pages;
-use App\Filament\Mentee\Resources\TestimoniMentorResource\RelationManagers;
-use App\Models\ProgramMentee;
-use App\Models\Testimoni;
-use App\Models\TestimoniMentor;
-use App\Models\User;
 use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Resources\Resource;
+use App\Models\User;
 use Filament\Tables;
+use Filament\Forms\Form;
+use App\Models\Testimoni;
 use Filament\Tables\Table;
-use IbrahimBougaoua\FilamentRatingStar\Columns\Components\RatingStar as ComponentsRatingStar;
-use IbrahimBougaoua\FilamentRatingStar\Forms\Components\RatingStar;
-use Illuminate\Database\Eloquent\Builder;
+use App\Models\ProgramMentee;
+use App\Models\TestimoniMentor;
+use Filament\Resources\Resource;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Mentee\Resources\TestimoniMentorResource\Pages;
+use IbrahimBougaoua\FilamentRatingStar\Forms\Components\RatingStar;
+use App\Filament\Mentee\Resources\TestimoniMentorResource\RelationManagers;
+use IbrahimBougaoua\FilamentRatingStar\Columns\Components\RatingStar as ComponentsRatingStar;
 
 class TestimoniMentorResource extends Resource
 {
@@ -64,14 +65,36 @@ class TestimoniMentorResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->query(User::with('testimoni')->whereHas('roles', fn (Builder $query) => $query->where('name', 'mentor')))
+            ->query(
+                User::query()
+                    ->select([
+                        'users.*',
+                        // Subquery untuk rating
+                        DB::raw('(
+                            SELECT AVG(testimonis.rating)
+                            FROM testimonis
+                            WHERE testimonis.testimoniable_id = users.id
+                            AND testimonis.testimoniable_type = ?
+                        ) as rating')
+                    ])
+                    ->whereHas('roles', fn (Builder $query) => $query->where('name', 'mentor'))
+                    ->addBinding('App\\Models\\User', 'select')
+                    // Pre-load exists check untuk program mentee
+                    ->when(auth()->check(), function ($query) {
+                        return $query->withExists([
+                            'programMentees' => fn ($query) => 
+                                $query->where('mentee_id', auth()->id())
+                        ]);
+                    })
+            )
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->label('Nama Mentor')
                     ->searchable(),
                 ComponentsRatingStar::make('rating')
                     ->label('Rating Keseluruhan')
-                    ->getStateUsing(fn(User $user) => User::withAvg('testimoni', 'rating')->find($user->id)->testimoni_avg_rating)
+                    // Langsung menggunakan rating dari subquery
+                    ->getStateUsing(fn ($record) => $record->rating),
             ])
             ->filters([
                 //
@@ -80,7 +103,9 @@ class TestimoniMentorResource extends Resource
                 Tables\Actions\Action::make('buatTestimoni')
                     ->label('Beri Testimoni')
                     ->icon('heroicon-o-star')
-                    ->url(fn(User $user) => Pages\TestimoniMentorPage::getUrl(['record' => $user->id])),
+                    ->url(fn(User $user) => Pages\TestimoniMentorPage::getUrl(['record' => $user->id]))
+                    // Menggunakan exists yang sudah di-preload
+                    ->visible(fn(User $user) => $user->program_mentees_exists),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
