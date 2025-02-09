@@ -67,9 +67,19 @@ class TestimoniMentorResource extends Resource
         return $table
             ->query(
                 User::query()
-                    ->select('users.*')
-                    ->withAvg('testimoni as rating', 'rating')
+                    ->select([
+                        'users.*',
+                        // Subquery untuk rating
+                        DB::raw('(
+                            SELECT AVG(testimonis.rating)
+                            FROM testimonis
+                            WHERE testimonis.testimoniable_id = users.id
+                            AND testimonis.testimoniable_type = ?
+                        ) as rating')
+                    ])
                     ->whereHas('roles', fn (Builder $query) => $query->where('name', 'mentor'))
+                    ->addBinding('App\\Models\\User', 'select')
+                    // Pre-load exists check untuk program mentee
                     ->when(auth()->check(), function ($query) {
                         return $query->withExists([
                             'programMentees' => fn ($query) => 
@@ -83,6 +93,7 @@ class TestimoniMentorResource extends Resource
                     ->searchable(),
                 ComponentsRatingStar::make('rating')
                     ->label('Rating Keseluruhan')
+                    // Langsung menggunakan rating dari subquery
                     ->getStateUsing(fn ($record) => $record->rating),
             ])
             ->filters([
@@ -93,7 +104,8 @@ class TestimoniMentorResource extends Resource
                     ->label('Beri Testimoni')
                     ->icon('heroicon-o-star')
                     ->url(fn(User $user) => Pages\TestimoniMentorPage::getUrl(['record' => $user->id]))
-                    ->visible(fn(User $user) => $user->program_mentees_exists),
+                    // Menggunakan exists yang sudah di-preload
+                    ->visible(fn(User $user) => ProgramMentee::whereMentorId($user->id)->whereMenteeId(auth()->id())->exists()),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
