@@ -23,6 +23,7 @@ use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Actions\Concerns\InteractsWithActions;
 use App\Filament\Mentee\Resources\TestimoniMentorResource;
+use App\Models\ProgramMentee;
 use IbrahimBougaoua\FilamentRatingStar\Forms\Components\RatingStar;
 use IbrahimBougaoua\FilamentRatingStar\Columns\Components\RatingStar as TableRatingStar;
 
@@ -38,6 +39,7 @@ class TestimoniMentorPage extends Page implements HasTable, HasForms, HasActions
 
     public function mount()
     {
+        // cek ketersediaan mentor
         $mentor = User::whereHas('roles', fn ($query) => $query->where('name', 'mentor'))->whereId(request()->route('record'))->first();
 
         if(!$mentor)
@@ -51,7 +53,22 @@ class TestimoniMentorPage extends Page implements HasTable, HasForms, HasActions
             return redirect()->route('filament.mentee.resources.testimoni-mentors.index');
         }
 
-        $this->mentor = $mentor;
+        // cek apakah mentor yang dipilih sudah pernah mengajar dia atau belum
+        $mentorHasTeachedUse = ProgramMentee::whereMentorId($mentor->id)->whereMenteeId(auth()->id())->exists();
+
+        if(!$mentorHasTeachedUse)
+        {
+            Notification::make()
+                ->title('Error')
+                ->body('Mentor yang dipilih belum pernah mengajar anda')
+                ->danger()
+                ->send();
+
+            return redirect()->route('filament.mentee.resources.testimoni-mentors.index');
+        } else {
+            $this->mentor = $mentor;
+        }
+
     }
 
     public function getTitle(): string|Htmlable
@@ -82,7 +99,7 @@ class TestimoniMentorPage extends Page implements HasTable, HasForms, HasActions
     public function table(Table $table): Table
     {
         return $table
-            ->query(Testimoni::query()->whereTestimoniableType(User::class)->whereTestimoniableId($this->mentor->id)->whereMenteeId(auth()->id()))
+            ->query(fn() => $this->mentor ? Testimoni::query()->whereTestimoniableType(User::class)->whereTestimoniableId($this->mentor->id)->whereMenteeId(auth()->id()) : Testimoni::query())
             ->columns([
                 TableRatingStar::make('rating')
                     ->sortable(),
