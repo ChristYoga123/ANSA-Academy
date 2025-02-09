@@ -46,10 +46,14 @@ class ProofreadingController extends Controller
 
     public function show($slug)
     {
+        $proofreading = Program::with(['media', 'proofreadingPakets', 'testimoni.mentee.media', 'testimoni'])->withAvg('testimoni', 'rating')->withCount(['proofreadingPakets', 'testimoni'])->whereProgram('Proofreading')->where('slug', $slug)->first();
+
+        $canGiveTestimoni = validateUserToGiveTestimoni(Program::class, $proofreading->id);
         return view('pages.proofreading.show', [
             'title' => $this->title,
-            'proofreading' => Program::with(['media', 'proofreadingPakets', 'testimoni.mentee.media', 'testimoni'])->withAvg('testimoni', 'rating')->withCount(['proofreadingPakets', 'testimoni'])->whereProgram('Proofreading')->where('slug', $slug)->first(),
+            'proofreading' => $proofreading, 
             'admin' => User::with('media')->role('super_admin')->first(),
+            'canGiveTestimoni' => $canGiveTestimoni
         ]);
     }
 

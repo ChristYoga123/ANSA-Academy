@@ -167,43 +167,45 @@
                                                     </div>
                                                 </div>
                                             </section>
-                                            <section class="review-form-one">
-                                                <div class="container">
-                                                    <div class="review-form-one__inner">
-                                                        <h3 class="review-form-one__title">Ulasan</h3>
-                                                        <div class="review-form-one__rate-box">
-                                                            <p class="review-form-one__rate-text">Masukkan rating</p>
-                                                            <div class="review-form-one__rate">
-                                                                <i class="icon-star"></i>
-                                                                <i class="icon-star"></i>
-                                                                <i class="icon-star"></i>
-                                                                <i class="icon-star"></i>
-                                                                <i class="icon-star"></i>
+                                            @if ($canGiveTestimoni)
+                                                <section class="review-form-one">
+                                                    <div class="container">
+                                                        <div class="review-form-one__inner">
+                                                            <h3 class="review-form-one__title">Ulasan</h3>
+                                                            <div class="review-form-one__rate-box">
+                                                                <p class="review-form-one__rate-text">Masukkan rating</p>
+                                                                <div class="review-form-one__rate">
+                                                                    <i class="icon-star"></i>
+                                                                    <i class="icon-star"></i>
+                                                                    <i class="icon-star"></i>
+                                                                    <i class="icon-star"></i>
+                                                                    <i class="icon-star"></i>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                        <form action="assets/inc/sendemail.php"
-                                                            class="review-form-one__form contact-form-validated"
-                                                            novalidate="novalidate">
-                                                            <div class="row">
-                                                                <div class="col-xl-12">
-                                                                    <div
-                                                                        class="review-form-one__input-box text-message-box">
-                                                                        <textarea name="message" placeholder="Ulasan"></textarea>
+                                                            <form action="assets/inc/sendemail.php"
+                                                                class="review-form-one__form contact-form-validated"
+                                                                novalidate="novalidate">
+                                                                <div class="row">
+                                                                    <div class="col-xl-12">
+                                                                        <div
+                                                                            class="review-form-one__input-box text-message-box">
+                                                                            <textarea name="message" placeholder="Ulasan"></textarea>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
-                                                            </div>
-                                                            <div class="row">
-                                                                <div class="col-xl-12">
-                                                                    <button type="submit"
-                                                                        class="thm-btn review-form-one__btn"> <span
-                                                                            class="icon-right"></span>
-                                                                        Kirim Ulasan</button>
+                                                                <div class="row">
+                                                                    <div class="col-xl-12">
+                                                                        <button type="submit"
+                                                                            class="thm-btn review-form-one__btn"> <span
+                                                                                class="icon-right"></span>
+                                                                            Kirim Ulasan</button>
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                        </form>
+                                                            </form>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </section>
+                                                </section>
+                                            @endif
                                         </div>
                                     </div>
                                 </div>

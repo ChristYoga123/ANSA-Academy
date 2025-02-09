@@ -15,7 +15,7 @@ class BerandaController extends Controller
     public function index()
     {
         // Satu query dengan eager loading, latest, dan grouping
-        $programs = Program::with(['media', 'mentoringPakets', 'kelasAnsaPakets', 'proofreadingPakets', 'mentors'])
+        $programs = Program::with(['media', 'mentoringPakets', 'kelasAnsaPakets', 'proofreadingPakets', 'mentors', 'kelasAnsaDetail'])
             ->withCount(['mentors', 'proofreadingPakets', 'mentoringPakets'])
             ->latest()
             ->get()
@@ -29,8 +29,8 @@ class BerandaController extends Controller
             'mentoringPrograms' => $programs->get('Mentoring', collect()),
             'kelasAnsaPrograms' => $programs->get('Kelas ANSA', collect()),
             'proofreadingPrograms' => $programs->get('Proofreading', collect()),
-            'webAds' => WebAd::latest()->limit(5)->get(),
-            'webResource' => WebResource::first(),
+            'webAds' => WebAd::with('media')->latest()->limit(5)->get(),
+            'webResource' => WebResource::with('media')->first(),
             'testimonies' => Testimoni::with(['mentee.media'])->whereTestimoniableType(Program::class)->whereRating(5)->latest()->limit(10)->get(), 
         ]);
     }

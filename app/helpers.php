@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\MentoringPaket;
+use App\Models\Program;
 use App\Models\Transaksi;
 use App\Models\ProgramMentee;
 use App\Models\ProofreadingPaket;
@@ -78,6 +79,39 @@ if(!function_exists('validateTestimoni'))
         if($testimoniExist)
         {
             return false;
+        }
+
+        return true;
+    }
+}
+
+if(!function_exists('validateUserToGiveTestimoni'))
+{
+    function validateUserToGiveTestimoni($programType, $programId)
+    {
+        if($programType === Program::class)
+        {
+            $programMentee = ProgramMentee::whereProgramId($programId)
+                ->whereMenteeId(auth()->id())
+                ->where('is_aktif', true)
+                ->first();
+    
+            if(!$programMentee)
+            {
+                return false;
+            }
+        } else
+        {
+            $transaksiMentee = Transaksi::whereTransaksiableId($programId)
+                ->whereTransaksiableType($programType)
+                ->whereStatus('Sukses')
+                ->whereMenteeId(auth()->id())
+                ->first();
+
+            if(!$transaksiMentee)
+            {
+                return false;
+            }
         }
 
         return true;

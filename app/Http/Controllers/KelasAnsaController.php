@@ -51,9 +51,11 @@ class KelasAnsaController extends Controller
     {
         $kelas = Program::with(['media', 'kelasAnsaPakets', 'kelasAnsaDetail', 'mentors.media', 'testimoni.mentee.media', 'testimoni'])->withCount(['testimoni'])->withAvg('testimoni', 'rating')->whereProgram('Kelas Ansa')->where('slug', $slug)->first();
 
+        $canGiveTestimoni = validateUserToGiveTestimoni(Program::class, $kelas->id);
         return view('pages.kelas-ansa.show', [
             'title' => $this->title,
-            'kelasAnsa' => $kelas
+            'kelasAnsa' => $kelas,
+            'canGiveTestimoni' => $canGiveTestimoni
         ]);
     }
 

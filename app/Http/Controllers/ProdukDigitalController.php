@@ -32,10 +32,11 @@ class ProdukDigitalController extends Controller
     public function show($slug)
     {
         $produkDigital = ProdukDigital::withCount(['testimoni'])->with(['testimoni', 'testimoni.mentee.media', 'mentor'])->where('slug', $slug)->first();
-
+        $canGiveTestimoni = validateUserToGiveTestimoni(ProdukDigital::class, $produkDigital->id);
         return view('pages.produk-digital.show', [
             'title' => $this->title,
-            'produkDigital' => $produkDigital
+            'produkDigital' => $produkDigital,
+            'canGiveTestimoni' => $canGiveTestimoni,
         ]);
     }
 

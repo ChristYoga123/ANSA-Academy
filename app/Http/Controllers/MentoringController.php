@@ -49,14 +49,19 @@ class MentoringController extends Controller
 
     public function show($slug)
     {
+        $mentoring = Program::with(['media', 'mentoringPakets', 'mentors.media', 'mentors.testimoni', 'testimoni.mentee.media', 'testimoni'])
+            ->withCount(['mentoringPakets', 'mentors', 'testimoni'])
+            ->withAvg('testimoni', 'rating')
+            ->whereProgram('Mentoring')
+            ->where('slug', $slug)
+            ->first();
+
+        $canGiveTestimoni = validateUserToGiveTestimoni(Program::class, $mentoring->id);
+        
         return view('pages.mentoring.show', [
             'title' => $this->title,
-            'mentoring' => Program::with(['media', 'mentoringPakets', 'mentors.media', 'mentors.testimoni', 'testimoni.mentee.media', 'testimoni'])
-                ->withCount(['mentoringPakets', 'mentors', 'testimoni'])
-                ->withAvg('testimoni', 'rating')
-                ->whereProgram('Mentoring')
-                ->where('slug', $slug)
-                ->first(),
+            'mentoring' => $mentoring,
+            'canGiveTestimoni' => $canGiveTestimoni,
         ]);
     }
 
