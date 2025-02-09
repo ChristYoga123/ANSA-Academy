@@ -53,7 +53,7 @@
                             </span>
                         </h3>
                     </div>
-                    (Dipublish oleh {{ $produkDigital->mentor->name }})
+                    (Dipublish oleh {{ $produkDigital?->mentor?->name ?? 'Mentor' }})
                     <div class="product-details__reveiw">
                         <span class="p-1 rounded bg-primary text-white">Platform: {{ $produkDigital->platform }}</span>
                     </div>
