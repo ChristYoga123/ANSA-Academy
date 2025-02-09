@@ -105,7 +105,7 @@ class TestimoniMentorResource extends Resource
                     ->icon('heroicon-o-star')
                     ->url(fn(User $user) => Pages\TestimoniMentorPage::getUrl(['record' => $user->id]))
                     // Menggunakan exists yang sudah di-preload
-                    ->visible(fn(User $user) => $user->program_mentees_exists),
+                    ->visible(fn(User $user) => ProgramMentee::whereMentorId($user->id)->whereMenteeId(auth()->id())->exists()),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
