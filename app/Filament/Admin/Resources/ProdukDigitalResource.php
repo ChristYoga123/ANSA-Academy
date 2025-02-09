@@ -95,7 +95,6 @@ class ProdukDigitalResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->query(ProdukDigital::with(['media', 'mentor'])->whereHas('mentor', fn($query) => $query->where('mentor_id', auth()->id())))
             ->columns([
                 Tables\Columns\TextColumn::make('judul')
                     ->searchable(),
