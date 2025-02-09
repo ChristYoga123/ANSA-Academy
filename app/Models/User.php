@@ -4,18 +4,17 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
-use Filament\Panel;
-use Spatie\MediaLibrary\HasMedia;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Auth;
-use Spatie\Permission\Traits\HasRoles;
-use Illuminate\Support\Facades\Storage;
-use Filament\Models\Contracts\HasAvatar;
-use Illuminate\Notifications\Notifiable;
 use Filament\Models\Contracts\FilamentUser;
-use Spatie\MediaLibrary\InteractsWithMedia;
+use Filament\Models\Contracts\HasAvatar;
+use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements HasAvatar, FilamentUser, HasMedia
 {
@@ -95,17 +94,9 @@ class User extends Authenticatable implements HasAvatar, FilamentUser, HasMedia
         return $this->morphMany(Testimoni::class, 'testimoniable');
     }
 
-    public function scopeWithMentorRating($query)
+    public function scopeWithTestimoniRating($query)
     {
-        return $query->select([
-            'users.*',
-            DB::raw('(
-                SELECT AVG(testimonis.rating)
-                FROM testimonis
-                WHERE testimonis.testimoniable_id = users.id
-                AND testimonis.testimoniable_type = ?
-            ) as rating')
-        ])->addBinding('App\\Models\\User', 'select');
+        return $query->withAvg('testimoni', 'rating');
     }
 
     public function canAccessPanel(Panel $panel): bool
