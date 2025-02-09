@@ -4,6 +4,7 @@ namespace App\Filament\Admin\Resources;
 
 use App\Filament\Admin\Resources\ProofreadingMenteeResourcResource\Pages;
 use App\Filament\Admin\Resources\ProofreadingMenteeResourcResource\RelationManagers;
+use App\Models\ProgramMentee;
 use App\Models\ProofreadingMenteeResourc;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -15,7 +16,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class ProofreadingMenteeResourcResource extends Resource
 {
-    protected static ?string $model = ProofreadingMenteeResourc::class;
+    protected static ?string $model = ProgramMentee::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
