@@ -3,6 +3,13 @@
 return [
     'show_custom_fields' => true,
     'custom_fields' => [
+        'alamat' => [
+            'type' => 'text',
+            'label' => 'Alamat',
+            'placeholder' => 'Masukkan Alamat',
+            'required' => true,
+            'rules' => 'required|string|max:255',
+        ],
         'no_hp' => [
             'type' => 'text',
             'label' => 'Nomor HP',

@@ -182,6 +182,11 @@ class EventResource extends Resource
                 //
             ])
             ->actions([
+                Tables\Actions\Action::make('lihatPeserta')
+                    ->label('Lihat Peserta')
+                    ->icon('heroicon-o-user-group')
+                    ->color('info')
+                    ->url(fn(Event $event) => Pages\LihatPesertaEventPage::getUrl(['record' => $event->id])),
                 Tables\Actions\EditAction::make()
                     ->mutateFormDataUsing(function(array $data)
                     {
@@ -213,6 +218,7 @@ class EventResource extends Resource
     {
         return [
             'index' => Pages\ManageEvents::route('/'),
+            'peserta' => Pages\LihatPesertaEventPage::route('/{record}/peserta'),
         ];
     }
 }

@@ -65,6 +65,9 @@ class MenteeResource extends Resource
                 TextColumn::make('no_hp')
                     ->label('No. HP')
                     ->getStateUsing(fn(User $user) => $user->custom_fields['no_hp']),
+                TextColumn::make('alamat')
+                    ->label('Alamat')
+                    ->getStateUsing(fn(User $user) => $user?->custom_fields['alamat'] ?? '-'),
                 ImageColumn::make('avatar_url')
                     ->label('Foto Profil')
             ])
