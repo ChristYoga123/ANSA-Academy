@@ -51,7 +51,7 @@ class LihatPesertaEventPage extends Page implements HasTable
     public function table(Table $table): Table
     {
         return $table
-            ->query(Transaksi::with('mentee')->whereTransaksiableType(Event::class)->whereTransaksiableId($this->event->id))
+            ->query(Transaksi::with('mentee')->whereTransaksiableType(Event::class)->whereTransaksiableId($this->event->id)->whereStatus('Sukses'))
             ->columns([
                 TextColumn::make('mentee.name')
                     ->label('Nama Mentee')
