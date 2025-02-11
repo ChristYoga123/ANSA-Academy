@@ -12,11 +12,26 @@
                         <div class="payment-status__content">
                             <h2 class="payment-status__title">Pembayaran Berhasil!</h2>
                             <p class="payment-status__text mt-3">
-                                Terima kasih atas pembayaran Anda. Transaksi telah berhasil diproses.
+                                Terima kasih atas pembayaran Anda. Transaksi telah berhasil diproses. Harap mengonfirmasi
+                                akun Admin untuk memverifikasi pembayaran Anda.
                             </p>
                             <div class="payment-status__btn-box mt-4">
-                                <a href="{{ route('filament.mentee.resources.transaksis.index') }}" class="thm-btn">
-                                    <span class="icon-angles-right"></span>Masuk ke Dashboard
+                                <a href="https://wa.me/6283191260587?text={{ urlencode(
+                                    "Halo Admin,\n\n" .
+                                        "Saya ingin mengonfirmasi pembayaran untuk:\n\n" .
+                                        'No. Order: *' .
+                                        $transaksi->order_id .
+                                        "*\n" .
+                                        'Nama: *' .
+                                        $transaksi->mentee->name .
+                                        "*\n" .
+                                        'Total Pembayaran: *Rp ' .
+                                        number_format($transaksi->total_harga, 0, ',', '.') .
+                                        "*\n\n" .
+                                        'Mohon verifikasi pembayaran saya. Terima kasih 🙏',
+                                ) }}"
+                                    class="thm-btn btn-success">
+                                    <span class="icon-angles-right"></span>Konfirmasi Admin Via Whatsapp
                                 </a>
                             </div>
                         </div>

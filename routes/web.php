@@ -11,6 +11,7 @@ use App\Http\Controllers\KelasAnsaController;
 use App\Http\Controllers\MentoringController;
 use App\Http\Controllers\ProofreadingController;
 use App\Http\Controllers\ProdukDigitalController;
+use App\Models\Transaksi;
 use Illuminate\Support\Facades\Artisan;
 
 // Route::get('/', function () {
@@ -88,10 +89,17 @@ Route::prefix('program')->group(function()
 
 Route::prefix('pembayaran')->name('pembayaran.')->group(function()
 {
-    Route::get('/sukses', function()
+    Route::get('/sukses/{transaksiId}', function($transaksiId)
     {
+        if(!$transaksiId)
+        {
+            abort(404);
+        }
+        $transaksi = Transaksi::with(['mentee'])->whereOrderId($transaksiId)->first();
         return view('pages.pembayaran.sukses', [
-            'title' => 'Pembayaran Sukses'
+            'title' => 'Pembayaran Sukses',
+            'transaksi' => $transaksi,
+
         ]);
     })->name('sukses');
 

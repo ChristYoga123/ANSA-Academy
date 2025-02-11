@@ -157,13 +157,14 @@ class MentoringController extends Controller
 
             return response()->json([
                 'status' => 'success',
-                'snap_token' => $snapToken
+                'snap_token' => $snapToken,
+                'transaksi_id' => $transaksi->order_id,
             ]);
         } catch (Exception $e) {
             DB::rollBack();
             return response()->json([
                 'status' => 'error',
-                'message' => $e->getMessage()
+                'message' => 'Terjadi kesalahan. Harap coba lagi nanti atau hubungi Admin'
             ], 500);
         }
     }
