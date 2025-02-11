@@ -169,7 +169,8 @@ class KelasAnsaController extends Controller
 
             return response()->json([
                 'status' => 'success',
-                'snap_token' => $snapToken
+                'snap_token' => $snapToken,
+                'transaksi_id' => $transaksi->order_id
             ]);
         }catch(Exception $e)
         {
@@ -177,7 +178,7 @@ class KelasAnsaController extends Controller
 
             return response()->json([
                 'status' => 'error',
-                'message' => $e->getMessage()
+                'message' => 'Terjadi kesalahan. Silahkan coba lagi.'
             ], 500);
         }    
     }

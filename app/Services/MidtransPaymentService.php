@@ -102,8 +102,10 @@ class MidtransPaymentService implements PaymentServiceInterface
                     $mentoringMentee = ProgramMentee::find($checkout->transaksiable_id);
                     $mentoringMentee->is_aktif = true;
                     $mentoringMentee->save();
-
-                    Mail::to($mentoringMentee->mentor->email)->queue(new MentorNotificationMail($checkout));
+                    if($mentoringMentee->mentor_id)
+                    {
+                        Mail::to($mentoringMentee->mentor->email)->queue(new MentorNotificationMail($checkout));
+                    }
                 }
 
                 // Only send email when status is successful
