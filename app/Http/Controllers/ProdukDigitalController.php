@@ -117,7 +117,8 @@ class ProdukDigitalController extends Controller
             DB::commit();
             return response()->json([
                 'status' => 'success',
-                'snap_token' => $snapToken
+                'snap_token' => $snapToken,
+                'transaksi_id' => $transaksi->order_id
             ]);
         }
         catch(Exception $e)
@@ -125,7 +126,7 @@ class ProdukDigitalController extends Controller
             DB::rollBack();
             return response()->json([
                 'status' => 'error',
-                'message' => $e->getMessage()
+                'message' => 'Terjadi kesalahan, silahkan coba beberapa saat lagi'
             ], 500);
         }
     }

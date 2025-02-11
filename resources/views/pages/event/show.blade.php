@@ -288,7 +288,8 @@
                     if (response.snap_token) {
                         snap.pay(response.snap_token, {
                             onSuccess: function(result) {
-                                window.location.href = '{{ route('pembayaran.sukses') }}';
+                                window.location.href = '{{ route('pembayaran.sukses', '') }}/' +
+                                    response.transaksi_id;
                             },
                             onPending: function(result) {
                                 window.location.href = '{{ route('pembayaran.gagal') }}';
@@ -297,8 +298,9 @@
                                 window.location.href = '{{ route('pembayaran.gagal') }}';
                             }
                         });
+                    } else {
+                        window.location.href = '{{ route('pembayaran.sukses', '') }}/' + response.transaksi_id;
                     }
-                    toastr.success(response.message);
                 } else {
                     toastr.error(response.message);
                 }

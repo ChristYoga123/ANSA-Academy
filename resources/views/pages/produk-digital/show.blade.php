@@ -299,7 +299,8 @@
                 if (response.status === 'success' && response.snap_token) {
                     snap.pay(response.snap_token, {
                         onSuccess: function(result) {
-                            window.location.href = '{{ route('pembayaran.sukses') }}';
+                            window.location.href = '{{ route('pembayaran.sukses', '') }}/' +
+                                response.transaksi_id;
                         },
                         onPending: function(result) {
                             window.location.href = '{{ route('pembayaran.gagal') }}';
