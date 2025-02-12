@@ -1,5 +1,30 @@
 @extends('layouts.app')
 
+@push('styles')
+    <style>
+        .course-grid__radio-label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            padding: 8px 0;
+            width: 100%;
+        }
+
+        .course-grid__radio {
+            margin-right: 10px;
+        }
+
+        .course-grid__radio-text {
+            font-size: 15px;
+            color: #878e9c;
+        }
+
+        .course-grid__radio:checked+.course-grid__radio-text {
+            color: #0d6efd;
+            font-weight: 500;
+        }
+    </style>
+@endpush
 @section('content')
     @PageHeader([
     'pageTitle' => 'Mentoring',
@@ -33,6 +58,34 @@
                                     <input type="search" placeholder="Cari Mentoring" name="search">
                                     <button type="submit"><i class="icon-search"></i>Search</button>
                                 </form>
+                            </div>
+                            <div class="course-grid__skill course-grid__single">
+                                <div class="course-grid__title-box">
+                                    <h3 class="course-grid__title">Kategori</h3>
+                                    <div class="course-grid__title-shape-1">
+                                        <img src="{{ asset('assets/images/shapes/course-grid-title-shape-1.png') }}"
+                                            alt="">
+                                    </div>
+                                </div>
+                                <!-- Update the category list to use radio buttons -->
+                                <ul class="list-unstyled course-grid__list-item">
+                                    <li>
+                                        <label class="course-grid__radio-label">
+                                            <input type="radio" name="category" value="" checked
+                                                class="course-grid__radio">
+                                            <span class="course-grid__radio-text">Semua Kategori</span>
+                                        </label>
+                                    </li>
+                                    @foreach ($kategories as $kategori)
+                                        <li>
+                                            <label class="course-grid__radio-label">
+                                                <input type="radio" name="category" value="{{ $kategori->id }}"
+                                                    class="course-grid__radio">
+                                                <span class="course-grid__radio-text">{{ $kategori->nama }}</span>
+                                            </label>
+                                        </li>
+                                    @endforeach
+                                </ul>
                             </div>
                         </div>
                     </div>
@@ -180,3 +233,37 @@
         </div>
     </section>
 @endsection
+
+@push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const radioButtons = document.querySelectorAll('.course-grid__radio');
+
+            radioButtons.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    const categoryId = this.value;
+
+                    // Make AJAX request
+                    fetch(`{{ route('mentoring.search.category') }}?category=${categoryId}`, {
+                            headers: {
+                                'X-Requested-With': 'XMLHttpRequest'
+                            }
+                        })
+                        .then(response => response.text())
+                        .then(html => {
+                            // Update only the mentoring grid section
+                            const parser = new DOMParser();
+                            const doc = parser.parseFromString(html, 'text/html');
+                            const newContent = doc.querySelector(
+                                '.course-grid__right-content-box');
+                            document.querySelector('.course-grid__right-content-box')
+                                .innerHTML = newContent.innerHTML;
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                        });
+                });
+            });
+        });
+    </script>
+@endpush

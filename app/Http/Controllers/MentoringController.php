@@ -13,6 +13,7 @@ use App\Models\ProgramMentee;
 use App\Models\MentoringPaket;
 use Illuminate\Support\Facades\DB;
 use App\Contracts\PaymentServiceInterface;
+use App\Models\ProgramKategori;
 use App\Models\Testimoni;
 
 class MentoringController extends Controller
@@ -29,21 +30,33 @@ class MentoringController extends Controller
         return view('pages.mentoring.index', [
             'title' => $this->title,
             'mentorings' => Program::with(['media', 'mentoringPakets'])->withCount(['mentors', 'mentoringPakets'])->whereProgram('Mentoring')->latest()->paginate(6),
-            'webResource' => WebResource::with('media')->first()
+            'webResource' => WebResource::with('media')->first(),
+            'kategories' => ProgramKategori::all(),
         ]);
     }
 
     public function search(Request $request)
     {
         $search = $request->search;
+        $categoryId = $request->category;
+        $query = Program::with(['media', 'mentoringPakets'])
+            ->withCount(['mentors', 'mentoringPakets'])
+            ->whereProgram('Mentoring');
 
+        if ($search) {
+            $query->where('judul', 'like', '%' . $search . '%');
+        }
+
+        if ($categoryId) {
+            $query->whereHas('programKategori', function ($q) use ($categoryId) {
+                $q->where('id', $categoryId);
+            });
+        }
         return view('pages.mentoring.index', [
             'title' => $this->title,
-            'mentorings' => Program::with(['media', 'mentoringPakets'])->withCount(['mentors', 'mentoringPakets', 'testimoni'])->whereHas('testimoni', function($query)
-            {
-                $query->whereTestimoniableType(Program::class);
-            })->whereProgram('Mentoring')->where('judul', 'like', '%' . $search . '%')->latest()->paginate(6),
-            'webResource' => WebResource::with('media')->first()
+            'mentorings' => $query->latest()->paginate(6),
+            'webResource' => WebResource::with('media')->first(),
+            'kategories' => ProgramKategori::all(),
         ]);
     }
 

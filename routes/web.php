@@ -62,8 +62,9 @@ Route::prefix('program')->group(function()
     Route::prefix('mentoring')->name('mentoring.')->group(function()
     {
         Route::get('/', [MentoringController::class, 'index'])->name('index');
-        Route::get('/{slug}', [MentoringController::class, 'show'])->name('show');
+        Route::get('/search', [MentoringController::class, 'search'])->name('search.category');
         Route::post('/search', [MentoringController::class, 'search'])->name('search');
+        Route::get('/{slug}', [MentoringController::class, 'show'])->name('show');
         Route::post('/beli/{slug}', [MentoringController::class, 'beli'])->name('beli');
         Route::post('/testimoni/{slug}', [MentoringController::class, 'storeTestimoni'])->name('testimoni');
     });

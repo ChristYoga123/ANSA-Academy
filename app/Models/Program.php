@@ -56,6 +56,6 @@ class Program extends Model implements HasMedia
 
     public function programKategori()
     {
-        return $this->belongsTo(ProgramKategori::class, 'program_kategori_id');
+        return $this->belongsTo(ProgramKategori::class);
     }
 }
