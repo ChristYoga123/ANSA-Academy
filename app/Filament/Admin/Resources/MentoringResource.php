@@ -29,6 +29,17 @@ class MentoringResource extends Resource
                 Forms\Components\Fieldset::make('Detail Kelas')
                     ->columns(1)
                     ->schema([
+                        Forms\Components\Select::make('program_kategori_id')
+                            ->relationship('programKategori', 'nama')
+                            ->required()
+                            ->preload()
+                            ->searchable()
+                            ->createOptionForm([
+                                Forms\Components\TextInput::make('nama')
+                                    ->required()
+                                    ->unique(ignoreRecord: true)
+                                    ->maxLength(191),
+                            ]),
                         Forms\Components\TextInput::make('judul')
                             ->required()
                             ->unique(ignoreRecord: true)
@@ -89,6 +100,10 @@ class MentoringResource extends Resource
             ->query(Program::query()->with(['media', 'mentors', 'mentoringPakets'])->whereProgram('Mentoring'))
             ->columns([
                 Tables\Columns\TextColumn::make('judul')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('programKategori.nama')
+                    ->label('Kategori')
+                    ->badge()
                     ->searchable(),
                 Tables\Columns\SpatieMediaLibraryImageColumn::make('thumbnail')
                     ->collection('program-thumbnail'),

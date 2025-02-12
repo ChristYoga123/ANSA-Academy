@@ -53,4 +53,9 @@ class Program extends Model implements HasMedia
     {
         return $this->morphMany(Testimoni::class, 'testimoniable');
     }
+
+    public function programKategori()
+    {
+        return $this->belongsTo(ProgramKategori::class, 'program_kategori_id');
+    }
 }

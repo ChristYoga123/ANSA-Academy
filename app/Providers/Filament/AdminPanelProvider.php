@@ -34,6 +34,7 @@ use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use App\Filament\Admin\Resources\ProdukDigitalResource;
 use Filament\Http\Middleware\DisableBladeIconComponents;
+use App\Filament\Admin\Resources\ProgramKategoriResource;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use App\Filament\Admin\Resources\LokerMentorBidangResource;
@@ -140,6 +141,7 @@ class AdminPanelProvider extends PanelProvider
                         ->items([
                             ...MentorResource::getNavigationItems(),
                             ...MenteeResource::getNavigationItems(),
+                            ...ProgramKategoriResource::getNavigationItems(),
                             ...WebResourcePage::getNavigationItems(),
                         ]),
                     NavigationGroup::make('Settings')
