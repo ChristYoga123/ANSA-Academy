@@ -88,16 +88,21 @@ class TransaksiResource extends Resource
                 Tables\Columns\TextColumn::make('mentee.name')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('transaksiable_id')
+                Tables\Columns\TextColumn::make('program')
                     ->searchable()
-                    ->label('Judul')
                     ->getStateUsing(fn(Transaksi $transaksi) => match($transaksi->transaksiable_type) {
                         Event::class => $transaksi->transaksiable->judul,
                         ProdukDigital::class => $transaksi->transaksiable->judul,
-                        ProgramMentee::class => $transaksi->transaksiable->program->judul . ' - ' . $transaksi->transaksiable->paketable->label,
-                        // KelasAnsaMentee::class => $transaksi->transaksiable->kelasAnsa->judul,
-                        // ProofreadingMentee::class => $transaksi->transaksiable->proofreadingPaket->proofreading->judul,
+                        ProgramMentee::class => $transaksi?->transaksiable?->program?->judul,
                     }),
+                Tables\Columns\TextColumn::make('paket')
+                    ->searchable()
+                    ->getStateUsing(fn(Transaksi $transaksi) => match($transaksi->transaksiable_type) {
+                        ProgramMentee::class => $transaksi?->transaksiable?->paketable?->label,
+                        Event::class => '-',
+                        ProdukDigital::class => '-',
+                    })
+                    ->badge(),
                 Tables\Columns\TextColumn::make('referral_code')
                     ->searchable()
                     ->getStateUsing(fn(Transaksi $transaksi) => $transaksi->referral_code ?? 'N/A'),
