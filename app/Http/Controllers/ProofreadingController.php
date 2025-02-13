@@ -104,13 +104,20 @@ class ProofreadingController extends Controller
                 'mentee_id' => auth()->id(),
             ]);
 
+            $currentPrice = $program->proofreadingPakets->find($request->paket)->harga;
+
+            if(validateReferralCode($request->referral_code))
+            {
+                $currentPrice = (int) floor($currentPrice - ($currentPrice * 0.05));
+            }
+
             $transaksi = Transaksi::create([
                 'order_id' => "ANSA-PR-" . Str::random(6),
                 'mentee_id' => auth()->id(),
                 'transaksiable_type' => ProgramMentee::class,
                 'transaksiable_id' => $programMentee->id,
                 'referral_code' => $request->referral_code ?? null,
-                'total_harga' => $program->proofreadingPakets->find($request->paket)->harga,
+                'total_harga' => $currentPrice,
             ]);
 
             DB::commit();

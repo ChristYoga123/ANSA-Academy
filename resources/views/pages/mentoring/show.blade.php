@@ -416,6 +416,9 @@
         }
 
         if (!referralCode) {
+            // kembalikan harga ke harga awal
+            const harga = $('select[name="paket"] option:selected').data('harga');
+            $('#total-harga').text(`Rp ${harga}`);
             toastr.error('Silahkan masukkan referral code.');
             return;
         }
@@ -424,7 +427,8 @@
             method: 'POST',
             data: {
                 _token: `{{ csrf_token() }}`,
-                referral_code: referralCode
+                referral_code: referralCode,
+                paket: paket
             },
             success: function(response) {
                 if (response.status === 'success') {

@@ -268,6 +268,8 @@
                                 </label>
                                 <div class="course-details__search-form" style="margin-top: -2px">
                                     <input type="text" placeholder="Masukkan referral code" name="referral_code">
+                                    <button type="submit" onclick="applyReferralCode()">Terapkan</button>
+
                                 </div>
 
                                 <div class="d-flex justify-content-between align-items-center mb-4">
@@ -407,6 +409,69 @@
                 });
             });
         });
+
+        function applyReferralCode() {
+            @guest
+            toastr.error('Silahkan login terlebih dahulu untuk memasukkan referral code.');
+            return;
+        @endguest
+        const referralCode = $('input[name="referral_code"]').val();
+        const paket = $('select[name="paket"]').val();
+        if ($('#total-harga').text() === 'Rp 0') {
+            toastr.error('Silahkan pilih paket terlebih dahulu.');
+            return;
+        }
+
+        if (!referralCode) {
+            // kembalikan harga ke harga awal
+            const harga = $('select[name="paket"] option:selected').data('harga');
+            $('#total-harga').text(`Rp ${harga}`);
+            toastr.error('Silahkan masukkan referral code.');
+            return;
+        }
+        $.ajax({
+            url: `{{ route('check-referral-code') }}`,
+            method: 'POST',
+            data: {
+                _token: `{{ csrf_token() }}`,
+                referral_code: referralCode,
+                paket: paket
+            },
+            success: function(response) {
+                if (response.status === 'success') {
+                    toastr.success('Referral code berhasil diterapkan.');
+                    // coret harga dengan warna merah lalu tampilkan harga baru yaitu 5% dari harga awal
+                    const harga = $('select[name="paket"] option:selected').data('harga');
+                    const hargaDiskon = Math.floor(harga * 0.95);
+
+                    $('#total-harga').html(
+                        `<span style="text-decoration: line-through; color: red;">Rp ${harga}</span> Rp ${hargaDiskon}`
+                    );
+
+                } else {
+                    // kembalikan harga ke harga awal
+                    const harga = $('select[name="paket"] option:selected').data('harga');
+                    $('#total-harga').text(`Rp ${harga}`);
+                    toastr.error(response.message || 'Referral code tidak valid.');
+                }
+            },
+            error: function(xhr) {
+                let errorMessage = 'Terjadi kesalahan. Mohon coba lagi.';
+                try {
+                    const response = xhr.responseJSON;
+                    if (response && response.message) {
+                        errorMessage = response.message;
+                    }
+                } catch (e) {
+                    console.error('Error parsing response:', e);
+                }
+                // kembalikan harga ke harga awal
+                const harga = $('select[name="paket"] option:selected').data('harga');
+                $('#total-harga').text(`Rp ${harga}`);
+                toastr.error(errorMessage);
+            }
+        });
+        }
 
         function ubahHarga() {
             const selectedOption = $('select[name="paket"] option:selected');
