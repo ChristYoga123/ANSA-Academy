@@ -63,6 +63,13 @@ if(!function_exists('validateReferralCode'))
             return false;
         }
 
+        // jika referral code tidak ditemukan
+        $code = User::whereReferralCode($referralCode)->first();
+        if(!$code)
+        {
+            return false;
+        }
+
         return true;
     }
 }
@@ -117,4 +124,19 @@ if(!function_exists('validateUserToGiveTestimoni'))
         return true;
     }
 }
+
+// if(!function_exists('applyReferralCode'))
+// {
+//     function applyReferralCode($referralCode)
+//     {
+//         $code = User::whereReferralCode($referralCode)->first();
+
+//         if(!$code)
+//         {
+//             return false;
+//         }
+
+//         return true;
+//     }
+// }
 ?>

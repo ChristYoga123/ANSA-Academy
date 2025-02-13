@@ -11,6 +11,7 @@ use App\Http\Controllers\KelasAnsaController;
 use App\Http\Controllers\MentoringController;
 use App\Http\Controllers\ProofreadingController;
 use App\Http\Controllers\ProdukDigitalController;
+use App\Http\Controllers\ReferralCodeController;
 use App\Models\Transaksi;
 use Illuminate\Support\Facades\Artisan;
 
@@ -118,3 +119,6 @@ Route::get('/symlink', function()
 
     echo 'ok';
 });
+
+// Apply Referral Code
+Route::post('/check-referral-code', [ReferralCodeController::class, 'check'])->name('check-referral-code');

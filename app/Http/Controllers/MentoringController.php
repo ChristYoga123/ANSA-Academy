@@ -146,13 +146,24 @@ class MentoringController extends Controller
                 'mentee_id' => auth()->id(),
             ]);
 
+            // cek jika referral code valid, harga berkurang 5%
+            $currentPrice = $program->mentoringPakets->find($request->paket)->harga;
+
+            if(validateReferralCode($request->referral_code))
+            {
+                // pembulatan ke bawah
+                $currentPrice = (int) floor($currentPrice - ($currentPrice * 0.05));
+            }
+
+            // dd($currentPrice);
+
             $transaksi = Transaksi::create([
                 'order_id' => "ANSA-MNTR-" . Str::random(6),
                 'mentee_id' => auth()->id(),
                 'transaksiable_type' => ProgramMentee::class,
                 'transaksiable_id' => $programMentee->id,
                 'referral_code' => $request->referral_code ?? null,
-                'total_harga' => $program->mentoringPakets->find($request->paket)->harga,
+                'total_harga' => $currentPrice,
             ]);
 
             DB::commit();
