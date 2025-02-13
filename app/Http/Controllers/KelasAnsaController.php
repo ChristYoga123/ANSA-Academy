@@ -146,12 +146,19 @@ class KelasAnsaController extends Controller
             //     ], 403);
             // }
 
+            $currentPrice = $kelasAnsaPaket->harga;
+
+            if(validateReferralCode($request->referral_code))
+            {
+                $currentPrice = (int) floor($currentPrice - ($currentPrice * 0.05));
+            }
+
             $transaksi = Transaksi::create([
                 'order_id' => 'ANSA-KLS-' . Str::random(6),
                 'mentee_id' => auth()->id(),
                 'transaksiable_id' => $programMentee->id,
                 'transaksiable_type' => ProgramMentee::class,
-                'total_harga' => $kelasAnsaPaket->harga,
+                'total_harga' => $currentPrice,
                 'referral_code' => $request->referral_code ?? null,
             ]);
 
