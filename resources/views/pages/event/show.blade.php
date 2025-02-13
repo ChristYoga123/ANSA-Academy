@@ -197,7 +197,8 @@
                                         <p class="event-details__list-text">Harga:</p>
                                     </div>
                                     <div class="event-details__list-right">
-                                        <h2>Rp. {{ number_format($event->harga, 0, ',', '.') }}</h2>
+                                        <h2 id="total-harga" data-harga={{ $event->harga }}>Rp.
+                                            {{ number_format($event->harga, 0, ',', '.') }}</h2>
                                     </div>
                                 </li>
                                 <li>
@@ -242,14 +243,18 @@
                                     </div>
                                 </li>
                             </ul>
-                            <div class="course-details__cuppon-box">
-                                <label class="form-label d-flex align-items-center">
-                                    <i class="icon-graduation-cap me-2"></i>Refferal Code
-                                </label>
-                                <div class="course-details__search-form" style="margin-top: -2px">
-                                    <input type="text" placeholder="Masukkan referral code" name="referral_code">
+                            @if ($event->pricing === 'berbayar')
+                                <div class="course-details__cuppon-box">
+                                    <label class="form-label d-flex align-items-center">
+                                        <i class="icon-graduation-cap me-2"></i>Refferal Code
+                                    </label>
+                                    <div class="course-details__search-form" style="margin-top: -2px">
+                                        <input type="text" placeholder="Masukkan referral code" name="referral_code">
+                                        <button type="submit" onclick="applyReferralCode()">Terapkan</button>
+
+                                    </div>
                                 </div>
-                            </div>
+                            @endif
                             <div class="event-details__btn-box">
                                 <button class="thm-btn" onclick="beli()" style="border: 0"><span
                                         class="icon-angles-right"></span>Daftar
@@ -266,6 +271,63 @@
 @push('scripts')
     <script src="{{ env('MIDTRANS_SCRIPT_URL') }}" data-client-key="{{ env('MIDTRANS_CLIENTKEY') }}"></script>
     <script>
+        function applyReferralCode() {
+            @guest
+            toastr.error('Silahkan login terlebih dahulu untuk memasukkan referral code.');
+            return;
+        @endguest
+        const referralCode = $('input[name="referral_code"]').val();
+
+        if (!referralCode) {
+            // kembalikan harga ke harga awal
+            const harga = $('#total-harga').data('harga');
+            $('#total-harga').text(`Rp ${harga}`);
+            toastr.error('Silahkan masukkan referral code.');
+            return;
+        }
+        $.ajax({
+            url: `{{ route('check-referral-code') }}`,
+            method: 'POST',
+            data: {
+                _token: `{{ csrf_token() }}`,
+                referral_code: referralCode,
+            },
+            success: function(response) {
+                if (response.status === 'success') {
+                    toastr.success('Referral code berhasil diterapkan.');
+                    // coret harga dengan warna merah lalu tampilkan harga baru yaitu 5% dari harga awal
+                    const harga = $('#total-harga').data('harga');
+                    const hargaDiskon = Math.floor(harga * 0.95);
+
+                    $('#total-harga').html(
+                        `<span style="text-decoration: line-through; color: red;">Rp ${harga}</span> Rp ${hargaDiskon}`
+                    );
+
+                } else {
+                    // kembalikan harga ke harga awal
+                    const harga = $('#total-harga').data('harga');
+                    $('#total-harga').text(`Rp ${harga}`);
+                    toastr.error(response.message || 'Referral code tidak valid.');
+                }
+            },
+            error: function(xhr) {
+                let errorMessage = 'Terjadi kesalahan. Mohon coba lagi.';
+                try {
+                    const response = xhr.responseJSON;
+                    if (response && response.message) {
+                        errorMessage = response.message;
+                    }
+                } catch (e) {
+                    console.error('Error parsing response:', e);
+                }
+                // kembalikan harga ke harga awal
+                const harga = $('#total-harga').data('harga');
+                $('#total-harga').text(`Rp ${harga}`);
+                toastr.error(errorMessage);
+            }
+        });
+        }
+
         function beli() {
             @guest
             toastr.error('Silahkan login terlebih dahulu untuk mendaftar event.');

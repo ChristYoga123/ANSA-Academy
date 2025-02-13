@@ -98,14 +98,25 @@ class EventController extends Controller
                     'message' => 'Slot event ini sudah penuh'
                 ], 403);
             }
+
+            $currentPrice = $event->harga;
+
+            if($request->referral_code)
+            {
+                if(validateReferralCode($request->referral_code))
+                {
+                    $currentPrice = $currentPrice - ($currentPrice * 0.05);
+                }
+            }
             
             $transaksi = Transaksi::create([
                 'order_id' => 'ANSA-EVT-' . Str::random(6),
                 'mentee_id' => auth()->user()->id,
                 'transaksiable_id' => Event::where('slug', $slug)->first()->id,
                 'transaksiable_type' => Event::class,
-                'total_harga' => $event->harga,
-                'status' => $event->pricing == 'gratis' ? 'Sukses' : 'Menunggu'
+                'total_harga' => $currentPrice,
+                'status' => $event->pricing == 'gratis' ? 'Sukses' : 'Menunggu',
+                'referral_code' => $request->referral_code ?? null
             ]);
 
             DB::commit();
