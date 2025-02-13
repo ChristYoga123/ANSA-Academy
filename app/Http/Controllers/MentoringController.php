@@ -149,10 +149,12 @@ class MentoringController extends Controller
             // cek jika referral code valid, harga berkurang 5%
             $currentPrice = $program->mentoringPakets->find($request->paket)->harga;
 
-            if(validateReferralCode($request->referral_code))
+            if($request->referral_code)
             {
-                // pembulatan ke bawah
-                $currentPrice = (int) floor($currentPrice - ($currentPrice * 0.05));
+                if(validateReferralCode($request->referral_code))
+                {
+                    $currentPrice = $currentPrice - ($currentPrice * 0.05);
+                }
             }
 
             // dd($currentPrice);

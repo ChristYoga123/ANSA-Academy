@@ -95,12 +95,23 @@ class ProdukDigitalController extends Controller
                 ], 404);
             }
 
+            $currentPrice = $produkDigital->harga;
+
+            if($request->referral_code)
+            {
+                if(validateReferralCode($request->referral_code))
+                {
+                    $currentPrice = $currentPrice - ($currentPrice * 0.05);
+                }
+            }
+
             $transaksi = Transaksi::create([
                 'order_id' => 'ANSA-PD-' . Str::random(6),
                 'mentee_id' => auth()->id(),
                 'transaksiable_id' => $produkDigital->id,
                 'transaksiable_type' => ProdukDigital::class,
-                'total_harga' => $produkDigital->harga,
+                'total_harga' => $currentPrice,
+                'referral_code' => $request->referral_code ?? null,
             ]);
 
             $snapToken = $this->paymentServiceInterface->processPayment($transaksi);

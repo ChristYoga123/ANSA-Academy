@@ -148,9 +148,12 @@ class KelasAnsaController extends Controller
 
             $currentPrice = $kelasAnsaPaket->harga;
 
-            if(validateReferralCode($request->referral_code))
+            if($request->referral_code)
             {
-                $currentPrice = (int) floor($currentPrice - ($currentPrice * 0.05));
+                if(validateReferralCode($request->referral_code))
+                {
+                    $currentPrice = $currentPrice - ($currentPrice * 0.05);
+                }
             }
 
             $transaksi = Transaksi::create([
