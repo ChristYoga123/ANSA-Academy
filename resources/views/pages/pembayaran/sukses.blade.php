@@ -22,9 +22,10 @@
                                         'No. Order: *' .
                                         $transaksi->order_id .
                                         "*\n" .
-                                        'Nama: *' .
+                                        'Nama Mentee: *' .
                                         $transaksi->mentee->name .
                                         "*\n" .
+                                        ($transaksi->transaksiable->mentor ? 'Nama Mentor: *' . $transaksi->transaksiable->mentor->name . "*\n" : '') .
                                         'Total Pembayaran: *Rp ' .
                                         number_format($transaksi->total_harga, 0, ',', '.') .
                                         "*\n\n" .

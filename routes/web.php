@@ -97,7 +97,7 @@ Route::prefix('pembayaran')->name('pembayaran.')->group(function()
         {
             abort(404);
         }
-        $transaksi = Transaksi::with(['mentee'])->whereOrderId($transaksiId)->first();
+        $transaksi = Transaksi::with(['mentee', 'transaksiable', 'transaksiable.mentor'])->whereOrderId($transaksiId)->first();
         return view('pages.pembayaran.sukses', [
             'title' => 'Pembayaran Sukses',
             'transaksi' => $transaksi,
