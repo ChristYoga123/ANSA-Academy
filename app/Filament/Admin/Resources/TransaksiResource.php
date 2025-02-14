@@ -136,7 +136,7 @@ class TransaksiResource extends Resource
                     ->label('Hubungi Mentee')
                     ->icon('heroicon-o-phone')
                     ->color('info')
-                    ->url(fn(Transaksi $transaksi) => "https://wa.me/}" . $transaksi?->mentee?->custom_fields['no_hp'] ?? 'N/A'),
+                    ->url(fn(Transaksi $transaksi) => "https://wa.me/}" . trim($transaksi?->mentee?->custom_fields['no_hp'], '+') ?? 'N/A'),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])
