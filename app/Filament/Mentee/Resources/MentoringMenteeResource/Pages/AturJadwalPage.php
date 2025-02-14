@@ -25,6 +25,7 @@ use Filament\Actions\Contracts\HasActions;
 use Filament\Infolists\Components\Section;
 use Illuminate\Contracts\Support\Htmlable;
 use Filament\Infolists\Components\Fieldset;
+use Filament\Actions\Action as ActionAction;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Tables\Concerns\InteractsWithTable;
@@ -160,6 +161,13 @@ class AturJadwalPage extends Page implements HasForms, HasTable, HasActions
             )
             ->successNotification(null)
             ->createAnother(false);
+    }
+
+    public function hubungiMentorAction(): ActionAction
+    {
+        return ActionAction::make('hubungiMentor')
+            ->label('Hubungi Mentor')
+            ->url(fn() => "https://wa.me/" . trim($this->jadwal?->mentor?->custom_fields['no_hp'], '+') ?? '-');
     }
 
     public function table(Table $table): Table
