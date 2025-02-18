@@ -138,17 +138,17 @@ class ProofreadingMenteeResource extends Resource
                         DB::beginTransaction();
                         try {
                             $filePath = $programMentee->getFirstMedia('proofreading-mentee-submission-raw')->getPath();
-                        
+
                             if (!file_exists($filePath)) {
                                 throw new Exception('File tidak ditemukan');
                             }
-                        
+
                             $zip = new ZipArchive();
                             if (!$zip->open($filePath)) {
                                 $programMentee->clearMediaCollection('proofreading-mentee-submission-raw');
                                 throw new Exception('Gagal membuka file');
                             }
-                        
+
                             $content = $zip->getFromName('docProps/app.xml');
                             if (!$content || !preg_match('/<Pages>(\d+)<\/Pages>/', $content, $matches)) {
                                 $zip->close();
@@ -156,29 +156,29 @@ class ProofreadingMenteeResource extends Resource
                                 throw new Exception('Gagal membaca jumlah halaman');
                             }
                             $zip->close();
-                            
+
                             $docCount = intval($matches[1]);
-                            
+
                             // Cek halaman
                             $proofreadingPaket = ProofreadingPaket::find($programMentee->paketable_id);
-                            if ($docCount < $proofreadingPaket->lembar_minimum || $docCount > $proofreadingPaket->lembar_maksimum) {
+                            if ($docCount > $proofreadingPaket->lembar_maksimum) {
                                 $programMentee->clearMediaCollection('proofreading-mentee-submission-raw');
                                 throw new Exception('Jumlah lembar file tidak sesuai dengan ketentuan paket');
                             }
-                        
+
                             // Create submission
                             ProofreadingMenteeSubmission::create([
                                 'proofreading_mentee_id' => $programMentee->id,
                             ]);
-                        
+
                             DB::commit();
-                        
+
                             Notification::make()
                                 ->title('Berhasil')
                                 ->body('Berhasil mengirim file mentah')
                                 ->success()
                                 ->send();
-                        
+
                         } catch(Exception $e) {
                             DB::rollBack();
                             if (file_exists($filePath)) {
