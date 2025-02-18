@@ -120,7 +120,8 @@ class ProofreadingMenteeResource extends Resource
                 Tables\Actions\Action::make('lihatRawFile')
                     ->label('Lihat File Mentah')
                     ->icon('heroicon-o-eye')
-                    ->url(fn(ProgramMentee $programMentee) => $programMentee->getFirstMediaUrl('proofreading-mentee-submission-raw')),
+                    ->url(fn(ProgramMentee $programMentee) => $programMentee->getFirstMediaUrl('proofreading-mentee-submission-raw'))
+                    ->visible(fn(ProgramMentee $programMentee) => $programMentee->is_aktif && $programMentee->proofreadingMenteeSubmission),
                 Tables\Actions\Action::make('submitRawFile')
                     ->label('Kirim File Mentah')
                     ->icon('heroicon-o-arrow-up-tray')
@@ -191,7 +192,7 @@ class ProofreadingMenteeResource extends Resource
                                 ->send();
                         }
                     })
-                    ->hidden(fn(ProgramMentee $programMentee) => $programMentee->proofreadingMenteeSubmission),
+                    ->visible(fn(ProgramMentee $programMentee) => $programMentee->is_aktif && !$programMentee->proofreadingMenteeSubmission),
                 Tables\Actions\Action::make('lihatResultFile')
                     ->label('Lihat File Hasil Pemeriksaan')
                     ->icon('heroicon-o-eye')
