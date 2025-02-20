@@ -405,7 +405,8 @@
 
         function applyReferralCode() {
             @guest
-            toastr.error('Silahkan login terlebih dahulu untuk memasukkan referral code.');
+            window.location.href = '{{ route('filament.mentee.auth.register') }}';
+
             return;
         @endguest
         const referralCode = $('input[name="referral_code"]').val();
@@ -468,7 +469,7 @@
 
         function beli() {
             @guest
-            toastr.error('Silahkan login terlebih dahulu untuk membeli paket.');
+            window.location.href = '{{ route('filament.mentee.auth.register') }}';
             return;
         @endguest
         $.ajax({
