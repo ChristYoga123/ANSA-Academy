@@ -6,11 +6,12 @@ use Exception;
 use Carbon\Carbon;
 use App\Models\Event;
 use App\Models\Transaksi;
+use App\Models\WebResource;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use App\Contracts\PaymentServiceInterface;
-use App\Models\WebResource;
 
 class EventController extends Controller
 {
@@ -103,7 +104,7 @@ class EventController extends Controller
                 ], 403);
             }
 
-            $currentPrice = $event->harga;
+            $currentPrice = $event->harga ?? 0;
 
             if($request->referral_code)
             {
@@ -152,9 +153,10 @@ class EventController extends Controller
         }catch(Exception $e)
         {
             DB::rollBack();
+            Log::error($e->getMessage());
             return response()->json([
                 'status' => 'error',
-                'message' => 'Terjadi kesalahan saat mendaftar event ini'
+                'message' => $e->getMessage()
             ], 500);
         }
     }
