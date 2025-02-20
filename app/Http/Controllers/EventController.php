@@ -46,13 +46,17 @@ class EventController extends Controller
             'referral_code.exists' => 'Kode referral tidak ditemukan'
         ]);
 
-        if(!validateReferralCode($request->referral_code))
+        if($request->referral_code)
         {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Kode referral tidak valid'
-            ], 403);
+            if(!validateReferralCode($request->referral_code))
+            {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Kode referral tidak valid'
+                ], 403);
+            }
         }
+
         
         if(!validateUserToBuy())
         {
