@@ -128,6 +128,20 @@ class TransaksiResource extends Resource
                 //
             ])
             ->actions([
+                Tables\Actions\Action::make('lihatProduk')
+                    ->label('Download Produk')
+                    ->url(fn(Transaksi $transaksi) => match($transaksi->transaksiable->platform)
+                    {
+                        'url' => $transaksi->transaksiable->url,
+                        'file' => $transaksi->transaksiable->getFirstMediaUrl('produk-digital-file')
+                    })
+                    ->icon('heroicon-o-arrow-down-tray')
+                    ->visible(fn(Transaksi $transaksi) => $transaksi->transaksiable_type === ProdukDigital::class),
+                Tables\Actions\Action::make('lihatResourceEvent')
+                    ->label('Download Resource Event')
+                    ->url(fn(Transaksi $transaksi) => $transaksi->transaksiable->link_resource)
+                    ->icon('heroicon-o-arrow-down-tray')
+                    ->visible(fn(Transaksi $transaksi) => $transaksi->transaksiable_type === Event::class && $transaksi->transaksiable->link_resource),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])
