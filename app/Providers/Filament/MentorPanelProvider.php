@@ -11,6 +11,7 @@ use Filament\Navigation\MenuItem;
 use Filament\Support\Colors\Color;
 use Filament\Navigation\NavigationItem;
 use Filament\Navigation\NavigationGroup;
+use App\Filament\Mentor\Pages\ProfitPage;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Navigation\NavigationBuilder;
 use App\Filament\Mentor\Widgets\CalendarWidget;
@@ -19,10 +20,10 @@ use Illuminate\Cookie\Middleware\EncryptCookies;
 use Filament\Http\Middleware\AuthenticateSession;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use App\Filament\Mentor\Resources\ProdukDigitalResource;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use App\Filament\Mentor\Resources\KelasAnsaMentorResource;
 use App\Filament\Mentor\Resources\MentoringMentorResource;
-use App\Filament\Mentor\Resources\ProdukDigitalResource;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Saade\FilamentFullCalendar\FilamentFullCalendarPlugin;
@@ -88,6 +89,7 @@ class MentorPanelProvider extends PanelProvider
                         ->items([
                             ...Dashboard::getNavigationItems(),
                             ...ProdukDigitalResource::getNavigationItems(),
+                            ...ProfitPage::getNavigationItems(),
                             // ...TransaksiResource::getNavigationItems(),
                             // ...PageResource::getNavigationItems(),
                             // ...CategoryResource::getNavigationItems(),
