@@ -88,15 +88,16 @@ class TransaksiResource extends Resource
                 Tables\Columns\TextColumn::make('mentee.name')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('program')
-                    ->searchable()
+                Tables\Columns\TextColumn::make('transaksiable')
+                    ->label('Program')
+                    // ->searchable()
                     ->getStateUsing(fn(Transaksi $transaksi) => match($transaksi->transaksiable_type) {
                         Event::class => $transaksi->transaksiable->judul,
                         ProdukDigital::class => $transaksi->transaksiable->judul,
                         ProgramMentee::class => $transaksi?->transaksiable?->program?->judul,
                     }),
                 Tables\Columns\TextColumn::make('paket')
-                    ->searchable()
+                    // ->searchable()
                     ->getStateUsing(fn(Transaksi $transaksi) => match($transaksi->transaksiable_type) {
                         ProgramMentee::class => $transaksi?->transaksiable?->paketable?->label,
                         Event::class => '-',

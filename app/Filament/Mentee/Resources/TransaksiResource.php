@@ -90,7 +90,7 @@ class TransaksiResource extends Resource
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('transaksiable_id')
-                    ->searchable()
+                    // ->searchable()
                     ->label('Judul')
                     ->getStateUsing(fn(Transaksi $transaksi) => match($transaksi->transaksiable_type) {
                         Event::class => $transaksi->transaksiable->judul,
