@@ -10,6 +10,7 @@ use Filament\Navigation\MenuItem;
 use Filament\Support\Colors\Color;
 use Illuminate\Support\Facades\Auth;
 use Filament\Navigation\NavigationGroup;
+use App\Filament\Mentee\Pages\ProfitPage;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Navigation\NavigationBuilder;
 use App\Filament\Mentee\Widgets\CalendarWidget;
@@ -94,6 +95,7 @@ class MenteePanelProvider extends PanelProvider
                         ->items([
                             ...Dashboard::getNavigationItems(),
                             ...TransaksiResource::getNavigationItems(),
+                            ...ProfitPage::getNavigationItems(),
                             // ...PageResource::getNavigationItems(),
                             // ...CategoryResource::getNavigationItems(),
                             // ...HomePageSettings::getNavigationItems(),
