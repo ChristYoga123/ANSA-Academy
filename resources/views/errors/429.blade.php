@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>404 Server Error Page</title>
+    <title>429 Error</title>
     <link href="https://fonts.googleapis.com/css?family=Montserrat:700,900" rel="stylesheet">
     <style type="text/css">
         body {
