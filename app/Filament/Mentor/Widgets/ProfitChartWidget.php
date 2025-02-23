@@ -18,8 +18,14 @@ class ProfitChartWidget extends ChartWidget
     {
         // Filter transactions for the authenticated mentor
         $data = Trend::query(
-            Transaksi::query()->whereTransaksiableType(ProdukDigital::
-                class)->whereStatus('Sukses')
+            Transaksi::query()
+                    ->where('status', 'Sukses')
+                    ->where('transaksiable_type', ProdukDigital::class)
+                    ->whereIn('transaksiable_id', function($query) {
+                        $query->select('id')
+                            ->from('produk_digitals')
+                            ->where('mentor_id', auth()->id());
+                    })
         )
         ->between(
             start: now()->startOfYear(),
