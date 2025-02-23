@@ -90,15 +90,41 @@ class TransaksiResource extends Resource
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('transaksiable_id')
-                    // ->searchable()
+                    ->searchable(query: function (Builder $query, string $search): Builder {
+                        return $query->where(function (Builder $query) use ($search) {
+                            // Search in Event table
+                            $query->whereHasMorph('transaksiable', [Event::class], function (Builder $query) use ($search) {
+                                $query->where('judul', 'like', "%{$search}%");
+                            })
+                            // Search in ProdukDigital table
+                            ->orWhereHasMorph('transaksiable', [ProdukDigital::class], function (Builder $query) use ($search) {
+                                $query->where('judul', 'like', "%{$search}%");
+                            })
+                            // Search in ProgramMentee table (through program relation)
+                            ->orWhereHasMorph('transaksiable', [ProgramMentee::class], function (Builder $query) use ($search) {
+                                $query->whereHas('program', function (Builder $query) use ($search) {
+                                    $query->where('judul', 'like', "%{$search}%");
+                                })
+                                ->orWhereHas('paketable', function (Builder $query) use ($search) {
+                                    $query->where('label', 'like', "%{$search}%");
+                                });
+                            });
+                        });
+                    })
                     ->label('Judul')
                     ->getStateUsing(fn(Transaksi $transaksi) => match($transaksi->transaksiable_type) {
                         Event::class => $transaksi->transaksiable->judul,
                         ProdukDigital::class => $transaksi->transaksiable->judul,
-                        ProgramMentee::class => $transaksi->transaksiable->program->judul . ' - ' . $transaksi->transaksiable->paketable->label,
-                        // KelasAnsaMentee::class => $transaksi->transaksiable->kelasAnsa->judul,
-                        // ProofreadingMentee::class => $transaksi->transaksiable->proofreadingPaket->proofreading->judul,
+                        ProgramMentee::class => $transaksi->transaksiable->program->judul,
                     }),
+                Tables\Columns\TextColumn::make('paket')
+                    // ->searchable()
+                    ->getStateUsing(fn(Transaksi $transaksi) => match($transaksi->transaksiable_type) {
+                        ProgramMentee::class => $transaksi?->transaksiable?->paketable?->label,
+                        Event::class => '-',
+                        ProdukDigital::class => '-',
+                    })
+                    ->badge(),
                 Tables\Columns\TextColumn::make('referral_code')
                     ->searchable()
                     ->getStateUsing(fn(Transaksi $transaksi) => $transaksi->referral_code ?? 'N/A'),
