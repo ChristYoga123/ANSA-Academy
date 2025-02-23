@@ -90,6 +90,24 @@ class TransaksiResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('transaksiable')
                     ->label('Program')
+                    ->searchable(query: function (Builder $query, string $search): Builder {
+                        return $query->where(function (Builder $query) use ($search) {
+                            // Search in Event table
+                            $query->whereHasMorph('transaksiable', [Event::class], function (Builder $query) use ($search) {
+                                $query->where('judul', 'like', "%{$search}%");
+                            })
+                            // Search in ProdukDigital table
+                            ->orWhereHasMorph('transaksiable', [ProdukDigital::class], function (Builder $query) use ($search) {
+                                $query->where('judul', 'like', "%{$search}%");
+                            })
+                            // Search in ProgramMentee table (through program relation)
+                            ->orWhereHasMorph('transaksiable', [ProgramMentee::class], function (Builder $query) use ($search) {
+                                $query->whereHas('program', function (Builder $query) use ($search) {
+                                    $query->where('judul', 'like', "%{$search}%");
+                                });
+                            });
+                        });
+                    })
                     // ->searchable()
                     ->getStateUsing(fn(Transaksi $transaksi) => match($transaksi->transaksiable_type) {
                         Event::class => $transaksi->transaksiable->judul,
