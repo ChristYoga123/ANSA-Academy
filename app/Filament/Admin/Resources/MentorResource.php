@@ -2,18 +2,21 @@
 
 namespace App\Filament\Admin\Resources;
 
+use Filament\Forms;
+use App\Models\User;
+use Filament\Tables;
+use App\Models\Mentor;
+use Filament\Forms\Form;
+use App\Models\Transaksi;
+use Filament\Tables\Table;
+use App\Models\ProdukDigital;
+use Filament\Resources\Resource;
+use Filament\Support\Enums\FontWeight;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Admin\Resources\MentorResource\Pages;
 use App\Filament\Admin\Resources\MentorResource\RelationManagers;
-use App\Models\Mentor;
-use App\Models\User;
-use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Resources\Resource;
-use Filament\Tables;
-use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class MentorResource extends Resource
 {
@@ -65,6 +68,22 @@ class MentorResource extends Resource
                 Tables\Columns\SpatieMediaLibraryImageColumn::make('avatar')
                     ->label('Poster Mentor')
                     ->collection('mentor-poster'),
+                Tables\Columns\TextColumn::make('profit')
+                    ->label('Pendapatan Produk Digital')
+                    ->weight(FontWeight::Bold)
+                    ->getStateUsing(function(User $user)
+                    {
+                        $profit = Transaksi::where('status', 'Sukses')
+                            ->where('transaksiable_type', ProdukDigital::class)
+                            ->whereIn('transaksiable_id', function($query) use ($user) {
+                                $query->select('id')
+                                    ->from('produk_digitals')
+                                    ->where('mentor_id', $user->id);
+                            })
+                            ->sum('total_harga') * 0.6;
+
+                        return 'Rp' . number_format($profit, 0, ',', '.');
+                    })
             ])
             ->filters([
                 //

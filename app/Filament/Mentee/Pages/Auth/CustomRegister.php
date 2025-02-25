@@ -47,6 +47,9 @@ class CustomRegister extends Register
     protected function getCustomFormComponents(): array
     {
         return [
+            TextInput::make('custom_fields.alamat')
+                ->label('Alamat')
+                ->required(),
             PhoneInput::make('custom_fields.no_hp')
                 ->label('No. HP')
                 ->required()

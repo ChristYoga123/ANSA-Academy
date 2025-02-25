@@ -16,6 +16,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Admin\Resources\MenteeResource\Pages;
 use App\Filament\Admin\Resources\MenteeResource\RelationManagers;
+use App\Models\Transaksi;
+use Filament\Support\Enums\FontWeight;
 
 class MenteeResource extends Resource
 {
@@ -69,7 +71,18 @@ class MenteeResource extends Resource
                     ->label('Alamat')
                     ->getStateUsing(fn(User $user) => $user?->custom_fields['alamat'] ?? '-'),
                 ImageColumn::make('avatar_url')
-                    ->label('Foto Profil')
+                    ->label('Foto Profil'),
+                TextColumn::make('profit')
+                    ->label('Pendapatan Referral')
+                    ->weight(FontWeight::Bold)
+                    ->getStateUsing(function(User $user)
+                    {
+                        $profit = Transaksi::where('status', 'Sukses')
+                            ->where('referral_code', $user->referral_code)
+                            ->get()
+                            ->sum('total_harga') * 0.15;
+                        return 'Rp' . number_format($profit, 0, ',', '.');
+                    })
             ])
             ->filters([
                 //
