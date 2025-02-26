@@ -48,9 +48,24 @@
                     <div class="product-details__top">
                         <h3 class="product-details__title">
                             {{ $produkDigital->judul }}
-                            <span id="total-harga" data-harga={{ $produkDigital->harga }}>
-                                Rp. {{ number_format($produkDigital->harga, 0, ',', '.') }}
-                            </span>
+                            @if (isset($activePromo))
+                                <div class="d-flex align-items-center">
+                                    <del class="text-danger me-3">
+                                        Rp. {{ number_format($produkDigital->harga, 0, ',', '.') }}
+                                    </del>
+                                    <span id="total-harga"
+                                        data-harga="{{ $produkDigital->harga - ($produkDigital->harga * $activePromo->persentase) / 100 }}">
+                                        Rp.
+                                        {{ number_format($produkDigital->harga - ($produkDigital->harga * $activePromo->persentase) / 100, 0, ',', '.') }}
+                                    </span>
+                                    <span class="badge bg-danger ms-3 text-white">Diskon
+                                        {{ $activePromo->persentase }}%</span>
+                                </div>
+                            @else
+                                <span id="total-harga" data-harga="{{ $produkDigital->harga }}">
+                                    Rp. {{ number_format($produkDigital->harga, 0, ',', '.') }}
+                                </span>
+                            @endif
                         </h3>
                     </div>
                     (Dipublish oleh {{ $produkDigital?->mentor?->name ?? 'Mentor' }})
@@ -68,12 +83,14 @@
                         </strong>
                     </div>
                     <!-- Add Referral Code Input -->
-                    <div class="product-details__buttons mt-4" style="margin-bottom: -40px; width: 100%;">
-                        <div class="course-details__search-form">
-                            <input type="text" placeholder="Masukkan referral code/kupon" name="referral_code">
-                            <button type="submit" onclick="applyReferralCode()">Terapkan</button>
+                    @if (!isset($activePromo))
+                        <div class="product-details__buttons mt-4" style="margin-bottom: -40px; width: 100%;">
+                            <div class="course-details__search-form">
+                                <input type="text" placeholder="Masukkan referral code/kupon" name="referral_code">
+                                <button type="submit" onclick="applyReferralCode()">Terapkan</button>
+                            </div>
                         </div>
-                    </div>
+                    @endif
                     <div class="product-details__buttons">
                         <div class="product-details__buttons-1">
                             <button onclick="beli()" class="thm-btn">Beli Sekarang</button>
@@ -306,7 +323,8 @@
                     toastr.success('Referral code berhasil diterapkan.');
                     // coret harga dengan warna merah lalu tampilkan harga baru yaitu 5% dari harga awal
                     const harga = $('#total-harga').data('harga');
-                    const hargaDiskon = Math.floor(harga * 0.95);
+                    const hargaDiskon = response.tipe === 'referral' ? Math.floor(harga *
+                        0.95) : Math.floor(harga - (harga * response.persentase / 100));
 
                     $('#total-harga').html(
                         `<span style="text-decoration: line-through; color: red;">Rp ${harga}</span> Rp ${hargaDiskon}`

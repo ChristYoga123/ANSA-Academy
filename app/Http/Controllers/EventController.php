@@ -38,7 +38,7 @@ class EventController extends Controller
         
         // Ambil promosi produk untuk event
         $promoProducts = Promo::where('tipe', 'produk')
-                            ->where('promoable_type', 'App\Models\Event')
+                            ->where('promoable_type', Event::class)
                             ->where('aktif', true)
                             ->where(function($query) {
                                 $query->whereNull('tanggal_berakhir')

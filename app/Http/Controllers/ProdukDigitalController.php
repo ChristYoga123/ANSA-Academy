@@ -3,14 +3,15 @@
 namespace App\Http\Controllers;
 
 use Exception;
+use App\Models\Promo;
+use App\Models\Testimoni;
 use App\Models\Transaksi;
+use App\Models\WebResource;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\ProdukDigital;
 use Illuminate\Support\Facades\DB;
 use App\Contracts\PaymentServiceInterface;
-use App\Models\Testimoni;
-use App\Models\WebResource;
 
 class ProdukDigitalController extends Controller
 {
@@ -22,21 +23,65 @@ class ProdukDigitalController extends Controller
 
     public function index()
     {
+        // Ambil promosi kategori untuk event
+        $promoKategori = Promo::where('tipe', 'kategori')
+                            ->where('kategori', 'Produk Digital')
+                            ->where('aktif', true)
+                            ->where(function($query) {
+                                $query->whereNull('tanggal_berakhir')
+                                        ->orWhere('tanggal_berakhir', '>=', now());
+                            })
+                            ->first();
+        
+        // Ambil promosi produk untuk event
+        $promoProducts = Promo::where('tipe', 'produk')
+                            ->where('promoable_type', ProdukDigital::class)
+                            ->where('aktif', true)
+                            ->where(function($query) {
+                                $query->whereNull('tanggal_berakhir')
+                                        ->orWhere('tanggal_berakhir', '>=', now());
+                            })
+                            ->pluck('persentase', 'promoable_id');
         return view('pages.produk-digital.index', [
             'title' => $this->title,
             'produkDigitals' => ProdukDigital::latest()->paginate(6),
-            'webResource' => WebResource::with('media')->first()
+            'webResource' => WebResource::with('media')->first(),
+            'promoKategori' => $promoKategori,
+            'promoProducts' => $promoProducts
         ]);
     }
 
     public function show($slug)
     {
         $produkDigital = ProdukDigital::withCount(['testimoni'])->with(['testimoni', 'testimoni.mentee.media', 'mentor'])->where('slug', $slug)->first();
+
+        $promoProduct = Promo::where('tipe', 'produk')
+                            ->where('promoable_type', 'App\Models\ProdukDigital')
+                            ->where('promoable_id', $produkDigital->id)
+                            ->where('aktif', true)
+                            ->where(function($query) {
+                                $query->whereNull('tanggal_berakhir')
+                                        ->orWhere('tanggal_berakhir', '>=', now());
+                            })
+                            ->first();
+        $promoKategori = null;
+        $promoKategori = Promo::where('tipe', 'kategori')
+                        ->where('kategori', 'Produk Digital')
+                        ->where('aktif', true)
+                        ->where(function($query) {
+                            $query->whereNull('tanggal_berakhir')
+                                    ->orWhere('tanggal_berakhir', '>=', now());
+                        })
+                        ->first();
+
+        $activePromo = $promoProduct ?? $promoKategori;
+        // dd($activePromo);
         $canGiveTestimoni = validateUserToGiveTestimoni(ProdukDigital::class, $produkDigital->id);
         return view('pages.produk-digital.show', [
             'title' => $this->title,
             'produkDigital' => $produkDigital,
             'canGiveTestimoni' => $canGiveTestimoni,
+            'activePromo' => $activePromo,
         ]);
     }
 
@@ -54,9 +99,7 @@ class ProdukDigitalController extends Controller
     public function beli(Request $request, $slug)
     {
         $request->validate([
-            'referral_code' => 'nullable|exists:users,referral_code'
-        ], [
-            'referral_code.exists' => 'Referral code tidak valid'
+            'referral_code' => 'nullable'
         ]);
         // cek jika user admin/mentor
         if(!validateUserToBuy())
@@ -70,13 +113,16 @@ class ProdukDigitalController extends Controller
         // cek validasi referral code
         if($request->referral_code)
         {
-            if(!validateReferralCode($request->referral_code))
+            $isValidReferral = validateReferralCode($request->referral_code);
+            $isValidKupon = validateKupon($request->referral_code);
+
+            if(!$isValidReferral && !$isValidKupon)
             {
                 return response()->json([
                     'status' => 'error',
-                    'message' => 'Referral code tidak valid'
+                    'message' => 'Kode referral atau kupon tidak valid'
                 ], 422);
-            } 
+            }
         }
 
         // hapus transaksi yang belum dibayar
@@ -97,12 +143,52 @@ class ProdukDigitalController extends Controller
 
             $currentPrice = $produkDigital->harga;
 
-            if($request->referral_code)
+            if($request->referral_code && validateReferralCode($request->referral_code))
             {
-                if(validateReferralCode($request->referral_code))
+                $currentPrice = $currentPrice - ($currentPrice * 0.05);
+            } else if($request->referral_code && validateKupon($request->referral_code))
+            {
+                $kupon = Promo::where('kode', $request->referral_code)
+                    ->where('aktif', true)
+                    ->where('tipe', 'kupon')
+                    ->where(function($query) {
+                        $query->whereNull('tanggal_berakhir')
+                                ->orWhere('tanggal_berakhir', '>=', now());
+                    })
+                    ->first();
+
+                if($kupon)
                 {
-                    $currentPrice = $currentPrice - ($currentPrice * 0.05);
+                    $currentPrice = $currentPrice - ($currentPrice * ($kupon->persentase / 100));
                 }
+            }
+
+            // cek apakah ada promo yang berlaku
+            $promoProduct = Promo::where('tipe', 'produk')
+                            ->where('promoable_type', 'App\Models\ProdukDigital')
+                            ->where('promoable_id', $produkDigital->id)
+                            ->where('aktif', true)
+                            ->where(function($query) {
+                                $query->whereNull('tanggal_berakhir')
+                                        ->orWhere('tanggal_berakhir', '>=', now());
+                            })
+                            ->first();
+
+            $promoKategori = Promo::where('tipe', 'kategori')
+                            ->where('kategori', 'Produk Digital')
+                            ->where('aktif', true)
+                            ->where(function($query) {
+                                $query->whereNull('tanggal_berakhir')
+                                        ->orWhere('tanggal_berakhir', '>=', now());
+                            })
+                            ->first();
+
+            if($promoProduct)
+            {
+                $currentPrice = $currentPrice - ($currentPrice * ($promoProduct->persentase / 100));
+            } else if($promoKategori)
+            {
+                $currentPrice = $currentPrice - ($currentPrice * ($promoKategori->persentase / 100));
             }
 
             $transaksi = Transaksi::create([
