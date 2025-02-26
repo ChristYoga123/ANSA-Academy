@@ -264,10 +264,11 @@
                             </div>
                             <div class="course-details__cuppon-box">
                                 <label class="form-label d-flex align-items-center">
-                                    <i class="icon-graduation-cap me-2"></i>Refferal Code
+                                    <i class="icon-graduation-cap me-2"></i>Refferal Code/Kupon
                                 </label>
                                 <div class="course-details__search-form" style="margin-top: -2px">
-                                    <input type="text" placeholder="Masukkan referral code" name="referral_code">
+                                    <input type="text" placeholder="Masukkan referral code/kupon"
+                                        name="referral_code">
                                     <button type="submit" onclick="applyReferralCode()">Terapkan</button>
 
                                 </div>

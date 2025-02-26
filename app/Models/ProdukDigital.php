@@ -33,4 +33,9 @@ class ProdukDigital extends Model implements HasMedia
     {
         return $this->belongsTo(User::class, 'mentor_id');
     }
+
+    public function promos()
+    {
+        return $this->morphMany(Promo::class, 'promoable');
+    }
 }

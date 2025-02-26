@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Admin\Pages\PromoPage;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\Widgets;
@@ -115,6 +116,7 @@ class AdminPanelProvider extends PanelProvider
                             ...LombaResource::getNavigationItems(),
                             ...ProdukDigitalResource::getNavigationItems(),
                             ...EventResource::getNavigationItems(),
+                            ...PromoPage::getNavigationItems(),
                             ...TransaksiResource::getNavigationItems(),
                             // ...PageResource::getNavigationItems(),
                             // ...CategoryResource::getNavigationItems(),

@@ -43,4 +43,9 @@ class Event extends Model implements HasMedia
     {
         return $this->morphMany(Testimoni::class, 'testimoniable');
     }
+
+    public function promos()
+    {
+        return $this->morphMany(Promo::class, 'promoable');
+    }
 }

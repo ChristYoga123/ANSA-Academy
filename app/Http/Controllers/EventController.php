@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Exception;
 use Carbon\Carbon;
 use App\Models\Event;
+use App\Models\Promo;
 use App\Models\Transaksi;
 use App\Models\WebResource;
 use Illuminate\Support\Str;
@@ -23,42 +24,96 @@ class EventController extends Controller
 
     public function index()
     {
+        $events = Event::with(['media', 'eventJadwals'])->withCount('eventJadwals')->latest()->paginate(6);
+        
+        // Ambil promosi kategori untuk event
+        $promoKategori = Promo::where('tipe', 'kategori')
+                            ->where('kategori', 'Event')
+                            ->where('aktif', true)
+                            ->where(function($query) {
+                                $query->whereNull('tanggal_berakhir')
+                                        ->orWhere('tanggal_berakhir', '>=', now());
+                            })
+                            ->first();
+        
+        // Ambil promosi produk untuk event
+        $promoProducts = Promo::where('tipe', 'produk')
+                            ->where('promoable_type', 'App\Models\Event')
+                            ->where('aktif', true)
+                            ->where(function($query) {
+                                $query->whereNull('tanggal_berakhir')
+                                        ->orWhere('tanggal_berakhir', '>=', now());
+                            })
+                            ->pluck('persentase', 'promoable_id');
+                            
         return view('pages.event.index', [
             'title' => $this->title,
-            'events' => Event::with(['media', 'eventJadwals'])->withCount('eventJadwals')->latest()->paginate(6),
-            'webResource' => WebResource::with('media')->first()
+            'events' => $events,
+            'webResource' => WebResource::with('media')->first(),
+            'promoKategori' => $promoKategori,
+            'promoProducts' => $promoProducts
         ]);
     }
 
     public function show($slug)
     {
         $event = Event::with(['media', 'eventJadwals'])->withCount(['transaksi'])->where('slug', $slug)->first();
+    
+        // Cek promosi spesifik produk
+        $promoProduct = Promo::where('tipe', 'produk')
+                             ->where('promoable_type', 'App\Models\Event')
+                             ->where('promoable_id', $event->id)
+                             ->where('aktif', true)
+                             ->where(function($query) {
+                                 $query->whereNull('tanggal_berakhir')
+                                       ->orWhere('tanggal_berakhir', '>=', now());
+                             })
+                             ->first();
+        
+        // Cek promosi kategori jika tidak ada promosi produk
+        $promoKategori = null;
+        if (!$promoProduct) {
+            $promoKategori = Promo::where('tipe', 'kategori')
+                                 ->where('kategori', 'Event')
+                                 ->where('aktif', true)
+                                 ->where(function($query) {
+                                     $query->whereNull('tanggal_berakhir')
+                                           ->orWhere('tanggal_berakhir', '>=', now());
+                                 })
+                                 ->first();
+        }
+        
+        // Tentukan diskon yang berlaku
+        $activePromo = $promoProduct ?? $promoKategori;
+        
         return view('pages.event.show', [
             'title' => $this->title,
-            'event' => $event
+            'event' => $event,
+            'activePromo' => $activePromo
         ]);
     }
 
     public function beli(Request $request, $slug)
     {
         $request->validate([
-            'referral_code' => 'nullable|exists:users,referral_code'
-        ], [
-            'referral_code.exists' => 'Kode referral tidak ditemukan'
+            'referral_code' => 'nullable'
         ]);
 
+        // Perbaikan logika validasi referral/kupon
         if($request->referral_code)
         {
-            if(!validateReferralCode($request->referral_code))
+            $isValidReferral = validateReferralCode($request->referral_code);
+            $isValidKupon = validateKupon($request->referral_code);
+
+            if(!$isValidReferral && !$isValidKupon)
             {
                 return response()->json([
                     'status' => 'error',
-                    'message' => 'Kode referral tidak valid'
-                ], 403);
+                    'message' => 'Kode referral atau kupon tidak valid'
+                ], 422);
             }
         }
 
-        
         if(!validateUserToBuy())
         {
             return response()->json([
@@ -106,12 +161,54 @@ class EventController extends Controller
 
             $currentPrice = $event->harga ?? 0;
 
-            if($request->referral_code)
+            // Perbaikan logika penerapan diskon referral
+            if($request->referral_code && validateReferralCode($request->referral_code))
             {
-                if(validateReferralCode($request->referral_code))
-                {
-                    $currentPrice = $currentPrice - ($currentPrice * 0.05);
+                $currentPrice = $currentPrice - ($currentPrice * 0.05);
+            }
+            // Perbaikan: Penerapan diskon kupon jika kode adalah kupon
+            else if($request->referral_code && validateKupon($request->referral_code))
+            {
+                $kupon = Promo::where('kode', $request->referral_code)
+                    ->where('aktif', true)
+                    ->where('tipe', 'kupon')
+                    ->where(function($query) {
+                        $query->whereNull('tanggal_berakhir')
+                            ->orWhere('tanggal_berakhir', '>=', now());
+                    })
+                    ->first();
+                    
+                if($kupon) {
+                    $currentPrice = $currentPrice - ($currentPrice * ($kupon->persentase / 100));
                 }
+            }
+
+            // cek apakah ada promo yang berlaku
+            $promoProduct = Promo::where('tipe', 'produk')
+                                ->where('promoable_type', 'App\Models\Event')
+                                ->where('promoable_id', $event->id)
+                                ->where('aktif', true)
+                                ->where(function($query) {
+                                    $query->whereNull('tanggal_berakhir')
+                                        ->orWhere('tanggal_berakhir', '>=', now());
+                                })
+                                ->first();
+
+            $promoKategori = Promo::where('tipe', 'kategori')
+                                ->where('kategori', 'Event')
+                                ->where('aktif', true)
+                                ->where(function($query) {
+                                    $query->whereNull('tanggal_berakhir')
+                                        ->orWhere('tanggal_berakhir', '>=', now());
+                                })
+                                ->first();
+
+            if($promoProduct)
+            {
+                $currentPrice = $currentPrice - ($currentPrice * ($promoProduct->persentase / 100));
+            }else if($promoKategori)
+            {
+                $currentPrice = $currentPrice - ($currentPrice * ($promoKategori->persentase / 100));
             }
             
             $transaksi = Transaksi::create([
@@ -121,7 +218,8 @@ class EventController extends Controller
                 'transaksiable_type' => Event::class,
                 'total_harga' => $currentPrice,
                 'status' => $event->pricing == 'gratis' ? 'Sukses' : 'Menunggu',
-                'referral_code' => $request->referral_code ?? null
+                'referral_code' => $request->referral_code ?? null,
+                'promo_kode' => $request->referral_code ?? null
             ]);
 
             DB::commit();

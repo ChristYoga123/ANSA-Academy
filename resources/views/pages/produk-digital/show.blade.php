@@ -70,7 +70,7 @@
                     <!-- Add Referral Code Input -->
                     <div class="product-details__buttons mt-4" style="margin-bottom: -40px; width: 100%;">
                         <div class="course-details__search-form">
-                            <input type="text" placeholder="Masukkan referral code" name="referral_code">
+                            <input type="text" placeholder="Masukkan referral code/kupon" name="referral_code">
                             <button type="submit" onclick="applyReferralCode()">Terapkan</button>
                         </div>
                     </div>

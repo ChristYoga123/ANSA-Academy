@@ -58,4 +58,9 @@ class Program extends Model implements HasMedia
     {
         return $this->belongsTo(ProgramKategori::class);
     }
+
+    public function promos()
+    {
+        return $this->morphMany(Promo::class, 'promoable');
+    }
 }

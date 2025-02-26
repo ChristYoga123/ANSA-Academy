@@ -4,6 +4,7 @@ use App\Models\MentoringPaket;
 use App\Models\Program;
 use App\Models\Transaksi;
 use App\Models\ProgramMentee;
+use App\Models\Promo;
 use App\Models\ProofreadingPaket;
 use App\Models\Testimoni;
 use App\Models\User;
@@ -66,6 +67,29 @@ if(!function_exists('validateReferralCode'))
         // jika referral code tidak ditemukan
         $code = User::whereReferralCode($referralCode)->first();
         if(!$code)
+        {
+            return false;
+        }
+
+        return true;
+    }
+}
+
+
+if(!function_exists('validateKupon'))
+{
+    function validateKupon($kuponCode)
+    {
+        $kupon = Promo::where('kode', $kuponCode)
+            ->where('tipe', 'kupon')
+            ->where('aktif', true)
+            ->where(function($query) {
+                $query->whereNull('tanggal_berakhir')
+                    ->orWhere('tanggal_berakhir', '>=', now());
+            })
+            ->first();
+
+        if(!$kupon)
         {
             return false;
         }

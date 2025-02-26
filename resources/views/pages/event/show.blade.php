@@ -197,8 +197,31 @@
                                         <p class="event-details__list-text">Harga:</p>
                                     </div>
                                     <div class="event-details__list-right">
-                                        <h2 id="total-harga" data-harga={{ $event->harga }}>Rp.
-                                            {{ number_format($event->harga, 0, ',', '.') }}</h2>
+                                        @if (isset($activePromo))
+                                            {{-- Jika ada promosi aktif, tampilkan harga yang dicoret dan harga setelah diskon --}}
+                                            @php
+                                                $hargaAsli = $event->harga;
+                                                $persentaseDiskon = $activePromo->persentase;
+                                                $hargaDiskon = $hargaAsli - ($hargaAsli * $persentaseDiskon) / 100;
+                                            @endphp
+                                            <h2 id="total-harga" data-harga="{{ $hargaDiskon }}">
+                                                <span style="text-decoration: line-through; color: #999; font-size: 0.8em;">
+                                                    Rp. {{ number_format($hargaAsli, 0, ',', '.') }}
+                                                </span>
+                                                <span style="color: #e74c3c; margin-left: 10px;">
+                                                    Rp. {{ number_format($hargaDiskon, 0, ',', '.') }}
+                                                </span>
+                                                <span
+                                                    style="background: #e74c3c; color: white; padding: 2px 6px; border-radius: 4px; font-size: 16px; margin-left: 5px;">
+                                                    -{{ $persentaseDiskon }}%
+                                                </span>
+                                            </h2>
+                                        @else
+                                            {{-- Jika tidak ada promosi aktif, tampilkan harga normal --}}
+                                            <h2 id="total-harga" data-harga="{{ $event->harga }}">
+                                                Rp. {{ number_format($event->harga, 0, ',', '.') }}
+                                            </h2>
+                                        @endif
                                     </div>
                                 </li>
                                 <li>
@@ -243,16 +266,20 @@
                                     </div>
                                 </li>
                             </ul>
-                            @if ($event->pricing === 'berbayar')
+                            @if ($event->pricing === 'berbayar' && !isset($activePromo))
                                 <div class="course-details__cuppon-box">
                                     <label class="form-label d-flex align-items-center">
-                                        <i class="icon-graduation-cap me-2"></i>Refferal Code
+                                        <i class="icon-graduation-cap me-2"></i>Referral Code/Kupon
                                     </label>
                                     <div class="course-details__search-form" style="margin-top: -2px">
-                                        <input type="text" placeholder="Masukkan referral code" name="referral_code">
+                                        <input type="text" placeholder="Masukkan referral code/kupon"
+                                            name="referral_code">
                                         <button type="submit" onclick="applyReferralCode()">Terapkan</button>
-
                                     </div>
+                                </div>
+                            @elseif($event->pricing === 'berbayar' && isset($activePromo))
+                                <div class="alert alert-info mt-3">
+                                    <i class="icon-info-circle me-2"></i>Diskon spesial sudah diterapkan.
                                 </div>
                             @endif
                             <div class="event-details__btn-box">
@@ -297,7 +324,9 @@
                     toastr.success('Referral code berhasil diterapkan.');
                     // coret harga dengan warna merah lalu tampilkan harga baru yaitu 5% dari harga awal
                     const harga = $('#total-harga').data('harga');
-                    const hargaDiskon = Math.floor(harga * 0.95);
+                    // const hargaDiskon = Math.floor(harga * 0.95);
+                    const hargaDiskon = response.tipe === 'referral' ? Math.floor(harga *
+                        0.95) : Math.floor(harga - (harga * response.persentase / 100));
 
                     $('#total-harga').html(
                         `<span style="text-decoration: line-through; color: red;">Rp ${harga}</span> Rp ${hargaDiskon}`
