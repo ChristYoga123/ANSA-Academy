@@ -4,17 +4,18 @@ namespace App\Http\Controllers;
 
 use Exception;
 use App\Models\User;
+use App\Models\Promo;
 use App\Models\Program;
+use App\Models\Testimoni;
 use App\Models\Transaksi;
 use App\Models\WebResource;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\ProgramMentee;
 use App\Models\MentoringPaket;
+use App\Models\ProgramKategori;
 use Illuminate\Support\Facades\DB;
 use App\Contracts\PaymentServiceInterface;
-use App\Models\ProgramKategori;
-use App\Models\Testimoni;
 
 class MentoringController extends Controller
 {
@@ -27,11 +28,33 @@ class MentoringController extends Controller
 
     public function index()
     {
+        // Ambil promosi kategori untuk event
+        $promoKategori = Promo::where('tipe', 'kategori')
+                            ->where('kategori', 'Mentoring')
+                            ->where('aktif', true)
+                            ->where(function($query) {
+                                $query->whereNull('tanggal_berakhir')
+                                        ->orWhere('tanggal_berakhir', '>=', now());
+                            })
+                            ->first();
+        
+        // Ambil promosi produk untuk event
+        $promoProducts = Promo::where('tipe', 'produk')
+                            ->where('promoable_type', Program::class)
+                            ->where('kategori', 'Mentoring')
+                            ->where('aktif', true)
+                            ->where(function($query) {
+                                $query->whereNull('tanggal_berakhir')
+                                        ->orWhere('tanggal_berakhir', '>=', now());
+                            })
+                            ->pluck('persentase', 'promoable_id');
         return view('pages.mentoring.index', [
             'title' => $this->title,
             'mentorings' => Program::with(['media', 'mentoringPakets'])->withCount(['mentors', 'mentoringPakets'])->whereProgram('Mentoring')->latest()->paginate(6),
             'webResource' => WebResource::with('media')->first(),
             'kategories' => ProgramKategori::all(),
+            'promoKategori' => $promoKategori,
+            'promoProducts' => $promoProducts,
         ]);
     }
 
@@ -69,12 +92,36 @@ class MentoringController extends Controller
             ->where('slug', $slug)
             ->first();
 
+        $promoProduct = Promo::where('tipe', 'produk')
+                            ->where('promoable_type', 'App\Models\Program')
+                            ->where('promoable_id', $mentoring->id)
+                            ->where('kategori', 'Mentoring')
+                            ->where('aktif', true)
+                            ->where(function($query) {
+                                $query->whereNull('tanggal_berakhir')
+                                        ->orWhere('tanggal_berakhir', '>=', now());
+                            })
+                            ->first();
+        $promoKategori = null;
+        $promoKategori = Promo::where('tipe', 'kategori')
+                        ->where('kategori', 'Mentoring')
+                        ->where('aktif', true)
+                        ->where(function($query) {
+                            $query->whereNull('tanggal_berakhir')
+                                    ->orWhere('tanggal_berakhir', '>=', now());
+                        })
+                        ->first();
+
+        $activePromo = $promoProduct ?? $promoKategori;
+
         $canGiveTestimoni = validateUserToGiveTestimoni(Program::class, $mentoring->id);
         
         return view('pages.mentoring.show', [
             'title' => $this->title,
             'mentoring' => $mentoring,
             'canGiveTestimoni' => $canGiveTestimoni,
+            'activePromo' => $activePromo,
+            'webResource' => WebResource::with('media')->first(),
         ]);
     }
 
@@ -83,7 +130,7 @@ class MentoringController extends Controller
         $request->validate([
             'paket' => 'required|integer|exists:mentoring_pakets,id',
             'mentor' => 'required|integer|exists:users,id',
-            'referral_code' => 'nullable|exists:users,referral_code',
+            'referral_code' => 'nullable',
         ], [
             'paket.required' => 'Paket harus dipilih',
             'paket.integer' => 'Paket harus dipilih',
@@ -91,17 +138,19 @@ class MentoringController extends Controller
             'mentor.required' => 'Mentor harus dipilih',
             'mentor.integer' => 'Mentor harus dipilih',
             'mentor.exists' => 'Mentor tidak valid',
-            'referral_code.exists' => 'Referral code tidak valid',
         ]);
 
-        // cek referral bukan diri sendiri
+        // cek validasi referral code
         if($request->referral_code)
         {
-            if(!validateReferralCode($request->referral_code))
+            $isValidReferral = validateReferralCode($request->referral_code);
+            $isValidKupon = validateKupon($request->referral_code);
+
+            if(!$isValidReferral && !$isValidKupon)
             {
                 return response()->json([
                     'status' => 'error',
-                    'message' => 'Referral code tidak valid'
+                    'message' => 'Kode referral atau kupon tidak valid'
                 ], 422);
             }
         }
@@ -149,12 +198,52 @@ class MentoringController extends Controller
             // cek jika referral code valid, harga berkurang 5%
             $currentPrice = $program->mentoringPakets->find($request->paket)->harga;
 
-            if($request->referral_code)
+            if($request->referral_code && validateReferralCode($request->referral_code))
             {
-                if(validateReferralCode($request->referral_code))
+                $currentPrice = $currentPrice - ($currentPrice * 0.05);
+            } else if($request->referral_code && validateKupon($request->referral_code))
+            {
+                $kupon = Promo::where('kode', $request->referral_code)
+                    ->where('aktif', true)
+                    ->where('tipe', 'kupon')
+                    ->where(function($query) {
+                        $query->whereNull('tanggal_berakhir')
+                                ->orWhere('tanggal_berakhir', '>=', now());
+                    })
+                    ->first();
+
+                if($kupon)
                 {
-                    $currentPrice = $currentPrice - ($currentPrice * 0.05);
+                    $currentPrice = $currentPrice - ($currentPrice * ($kupon->persentase / 100));
                 }
+            }
+
+            // cek apakah ada promo yang berlaku
+            $promoProduct = Promo::where('tipe', 'produk')
+                            ->where('promoable_type', 'App\Models\Program')
+                            ->where('promoable_id', $program->id)
+                            ->where('aktif', true)
+                            ->where(function($query) {
+                                $query->whereNull('tanggal_berakhir')
+                                        ->orWhere('tanggal_berakhir', '>=', now());
+                            })
+                            ->first();
+
+            $promoKategori = Promo::where('tipe', 'kategori')
+                            ->where('kategori', 'Mentoring')
+                            ->where('aktif', true)
+                            ->where(function($query) {
+                                $query->whereNull('tanggal_berakhir')
+                                        ->orWhere('tanggal_berakhir', '>=', now());
+                            })
+                            ->first();
+
+            if($promoProduct)
+            {
+                $currentPrice = $currentPrice - ($currentPrice * ($promoProduct->persentase / 100));
+            } else if($promoKategori)
+            {
+                $currentPrice = $currentPrice - ($currentPrice * ($promoKategori->persentase / 100));
             }
 
             // dd($currentPrice);
@@ -165,12 +254,16 @@ class MentoringController extends Controller
                 'transaksiable_type' => ProgramMentee::class,
                 'transaksiable_id' => $programMentee->id,
                 'referral_code' => $request->referral_code ?? null,
-                'total_harga' => $currentPrice,
+                'total_harga' => floor($currentPrice),
             ]);
+
+            // dd($transaksi);
 
             DB::commit();
 
             $snapToken = $this->paymentService->processPayment($transaksi);
+
+            // dd($snapToken);
 
             if(!$snapToken)
             {
