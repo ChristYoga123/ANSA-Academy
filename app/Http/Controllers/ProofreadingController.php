@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Exception;
 use App\Models\User;
+use App\Models\Promo;
 use App\Models\Program;
 use App\Models\Testimoni;
 use App\Models\Transaksi;
@@ -25,10 +26,32 @@ class ProofreadingController extends Controller
 
     public function index()
     {
+        // Ambil promosi kategori untuk event
+        $promoKategori = Promo::where('tipe', 'kategori')
+                            ->where('kategori', 'Proofreading')
+                            ->where('aktif', true)
+                            ->where(function($query) {
+                                $query->whereNull('tanggal_berakhir')
+                                        ->orWhere('tanggal_berakhir', '>=', now());
+                            })
+                            ->first();
+        
+        // Ambil promosi produk untuk event
+        $promoProducts = Promo::where('tipe', 'produk')
+                            ->where('promoable_type', Program::class)
+                            ->where('kategori', 'Proofreading')
+                            ->where('aktif', true)
+                            ->where(function($query) {
+                                $query->whereNull('tanggal_berakhir')
+                                        ->orWhere('tanggal_berakhir', '>=', now());
+                            })
+                            ->pluck('persentase', 'promoable_id');
         return view('pages.proofreading.index', [
             'title' => $this->title,
             'proofreadings' => Program::with(['media', 'proofreadingPakets'])->withCount(['proofreadingPakets'])->whereProgram('Proofreading')->latest()->paginate(6),
             'webResource' => WebResource::with('media')->first(),
+            'promoKategori' => $promoKategori,
+            'promoProducts' => $promoProducts
         ]);
     }
 
@@ -47,13 +70,34 @@ class ProofreadingController extends Controller
     public function show($slug)
     {
         $proofreading = Program::with(['media', 'proofreadingPakets', 'testimoni.mentee.media', 'testimoni'])->withAvg('testimoni', 'rating')->withCount(['proofreadingPakets', 'testimoni'])->whereProgram('Proofreading')->where('slug', $slug)->first();
+        $promoProduct = Promo::where('tipe', 'produk')
+                            ->where('promoable_type', 'App\Models\Program')
+                            ->where('promoable_id', $proofreading->id)
+                            ->where('kategori', 'Proofreading')
+                            ->where('aktif', true)
+                            ->where(function($query) {
+                                $query->whereNull('tanggal_berakhir')
+                                        ->orWhere('tanggal_berakhir', '>=', now());
+                            })
+                            ->first();
+        $promoKategori = null;
+        $promoKategori = Promo::where('tipe', 'kategori')
+                        ->where('kategori', 'Proofreading')
+                        ->where('aktif', true)
+                        ->where(function($query) {
+                            $query->whereNull('tanggal_berakhir')
+                                    ->orWhere('tanggal_berakhir', '>=', now());
+                        })
+                        ->first();
 
+        $activePromo = $promoProduct ?? $promoKategori;
         $canGiveTestimoni = validateUserToGiveTestimoni(Program::class, $proofreading->id);
         return view('pages.proofreading.show', [
             'title' => $this->title,
             'proofreading' => $proofreading, 
             'admin' => User::with('media')->role('super_admin')->first(),
-            'canGiveTestimoni' => $canGiveTestimoni
+            'canGiveTestimoni' => $canGiveTestimoni,
+            'activePromo' => $activePromo
         ]);
     }
 
@@ -61,21 +105,23 @@ class ProofreadingController extends Controller
     {
         $request->validate([
             'paket' => 'required|exists:proofreading_pakets,id',
-            'referral_code' => 'nullable|exists:users,referral_code',
+            'referral_code' => 'nullable',
         ], [
             'paket.required' => 'Paket harus dipilih',
             'paket.exists' => 'Paket tidak valid',
-            'referral_code.exists' => 'Referral code tidak valid',
         ]);
 
         // cek referral bukan diri sendiri
         if($request->referral_code)
         {
-            if(!validateReferralCode($request->referral_code))
+            $isValidReferral = validateReferralCode($request->referral_code);
+            $isValidKupon = validateKupon($request->referral_code);
+
+            if(!$isValidReferral && !$isValidKupon)
             {
                 return response()->json([
                     'status' => 'error',
-                    'message' => 'Referral code tidak valid'
+                    'message' => 'Kode referral atau kupon tidak valid'
                 ], 422);
             }
         }
@@ -106,12 +152,53 @@ class ProofreadingController extends Controller
 
             $currentPrice = $program->proofreadingPakets->find($request->paket)->harga;
 
-            if($request->referral_code)
+            if($request->referral_code && validateReferralCode($request->referral_code))
             {
-                if(validateReferralCode($request->referral_code))
+                $currentPrice = $currentPrice - ($currentPrice * 0.05);
+            } else if($request->referral_code && validateKupon($request->referral_code))
+            {
+                $kupon = Promo::where('kode', $request->referral_code)
+                    ->where('aktif', true)
+                    ->where('tipe', 'kupon')
+                    ->where(function($query) {
+                        $query->whereNull('tanggal_berakhir')
+                                ->orWhere('tanggal_berakhir', '>=', now());
+                    })
+                    ->first();
+
+                if($kupon)
                 {
-                    $currentPrice = $currentPrice - ($currentPrice * 0.05);
+                    $currentPrice = $currentPrice - ($currentPrice * ($kupon->persentase / 100));
                 }
+            }
+
+            // cek apakah ada promo yang berlaku
+            $promoProduct = Promo::where('tipe', 'produk')
+                            ->where('promoable_type', 'App\Models\Program')
+                            ->where('promoable_id', $program->id)
+                            ->where('kategori', 'Proofreading')
+                            ->where('aktif', true)
+                            ->where(function($query) {
+                                $query->whereNull('tanggal_berakhir')
+                                        ->orWhere('tanggal_berakhir', '>=', now());
+                            })
+                            ->first();
+
+            $promoKategori = Promo::where('tipe', 'kategori')
+                            ->where('kategori', 'Proofreading')
+                            ->where('aktif', true)
+                            ->where(function($query) {
+                                $query->whereNull('tanggal_berakhir')
+                                        ->orWhere('tanggal_berakhir', '>=', now());
+                            })
+                            ->first();
+
+            if($promoProduct)
+            {
+                $currentPrice = $currentPrice - ($currentPrice * ($promoProduct->persentase / 100));
+            } else if($promoKategori)
+            {
+                $currentPrice = $currentPrice - ($currentPrice * ($promoKategori->persentase / 100));
             }
 
             $transaksi = Transaksi::create([

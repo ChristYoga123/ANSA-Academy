@@ -239,10 +239,19 @@
                                             <select class="wide" name="paket" onchange="ubahHarga()">
                                                 <option value="">Pilih Paket</option>
                                                 @foreach ($proofreading->proofreadingPakets as $paket)
+                                                    @php
+                                                        $hargaAsli = $paket->harga;
+                                                        if ($activePromo) {
+                                                            $persentaseDiskon = $activePromo->persentase;
+                                                            $hargaDiskon =
+                                                                $hargaAsli - ($hargaAsli * $persentaseDiskon) / 100;
+                                                        }
+                                                    @endphp
                                                     <option value="{{ $paket->id }}" data-harga="{{ $paket->harga }}"
                                                         data-min="{{ $paket->lembar_minimum }}"
                                                         data-max="{{ $paket->lembar_maksimum }}"
-                                                        data-hari="{{ $paket->hari_pengerjaan }}">
+                                                        data-hari="{{ $paket->hari_pengerjaan }}"
+                                                        @if (isset($hargaDiskon)) data-diskon="{{ $hargaDiskon }}" @endif>
                                                         {{ $paket->label }}
                                                         ({{ $paket->lembar_minimum }}-{{ $paket->lembar_maksimum }}
                                                         lembar, {{ $paket->hari_pengerjaan }} hari)
@@ -263,15 +272,19 @@
                                 </div>
                             </div>
                             <div class="course-details__cuppon-box">
-                                <label class="form-label d-flex align-items-center">
-                                    <i class="icon-graduation-cap me-2"></i>Refferal Code/Kupon
-                                </label>
-                                <div class="course-details__search-form" style="margin-top: -2px">
-                                    <input type="text" placeholder="Masukkan referral code/kupon"
-                                        name="referral_code">
-                                    <button type="submit" onclick="applyReferralCode()">Terapkan</button>
+                                @if (!$activePromo)
+                                    <div class="course-details__cuppon-box">
+                                        <label class="form-label d-flex align-items-center">
+                                            <i class="icon-graduation-cap me-2"></i>Refferal Code/Kupon
+                                        </label>
 
-                                </div>
+                                        <div class="course-details__search-form" style="margin-top: -2px">
+                                            <input type="text" placeholder="Masukkan referral code/kupon"
+                                                name="referral_code">
+                                            <button type="submit" onclick="applyReferralCode()">Terapkan</button>
+                                        </div>
+                                    </div>
+                                @endif
 
                                 <div class="d-flex justify-content-between align-items-center mb-4">
                                     <h5 class="mb-0">Total Harga:</h5>
@@ -444,7 +457,8 @@
                     toastr.success('Referral code berhasil diterapkan.');
                     // coret harga dengan warna merah lalu tampilkan harga baru yaitu 5% dari harga awal
                     const harga = $('select[name="paket"] option:selected').data('harga');
-                    const hargaDiskon = Math.floor(harga * 0.95);
+                    const hargaDiskon = response.tipe === 'referral' ? Math.floor(harga *
+                        0.95) : Math.floor(harga - (harga * response.persentase / 100));
 
                     $('#total-harga').html(
                         `<span style="text-decoration: line-through; color: red;">Rp ${harga}</span> Rp ${hargaDiskon}`
@@ -481,9 +495,17 @@
             const minLembar = selectedOption.data('min');
             const maxLembar = selectedOption.data('max');
             const hariPengerjaan = selectedOption.data('hari');
+            const diskon = $('select[name="paket"] option:selected').data('diskon');
 
             if (harga) {
-                $('#total-harga').text(`Rp ${harga}`);
+                if (diskon) {
+                    // If there's a discount, show both original and discounted price
+                    $('#total-harga').html(
+                        `<span class="text-decoration-line-through text-danger">Rp ${harga}</span> Rp ${diskon}`);
+                } else {
+                    // No discount, show regular price
+                    $('#total-harga').text(`Rp ${harga}`);
+                }
                 $('#lembar-range').text(`${minLembar}-${maxLembar} lembar`);
                 $('#hari-pengerjaan').text(hariPengerjaan);
                 $('#paket-info').show();
