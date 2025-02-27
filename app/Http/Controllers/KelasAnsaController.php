@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use Exception;
 use Carbon\Carbon;
+use App\Models\Promo;
 use App\Models\Program;
+use App\Models\Testimoni;
 use App\Models\Transaksi;
 use App\Models\WebResource;
 use Illuminate\Support\Str;
@@ -14,7 +16,6 @@ use App\Models\KelasAnsaPaket;
 use App\Models\KelasAnsaDetail;
 use Illuminate\Support\Facades\DB;
 use App\Contracts\PaymentServiceInterface;
-use App\Models\Testimoni;
 
 class KelasAnsaController extends Controller
 {
@@ -27,10 +28,32 @@ class KelasAnsaController extends Controller
 
     public function index()
     {
+        // Ambil promosi kategori untuk event
+        $promoKategori = Promo::where('tipe', 'kategori')
+                            ->where('kategori', 'Kelas ANSA')
+                            ->where('aktif', true)
+                            ->where(function($query) {
+                                $query->whereNull('tanggal_berakhir')
+                                        ->orWhere('tanggal_berakhir', '>=', now());
+                            })
+                            ->first();
+        
+        // Ambil promosi produk untuk event
+        $promoProducts = Promo::where('tipe', 'produk')
+                            ->where('promoable_type', Program::class)
+                            ->where('kategori', 'Kelas ANSA')
+                            ->where('aktif', true)
+                            ->where(function($query) {
+                                $query->whereNull('tanggal_berakhir')
+                                        ->orWhere('tanggal_berakhir', '>=', now());
+                            })
+                            ->pluck('persentase', 'promoable_id');
         return view('pages.kelas-ansa.index', [
             'title' => $this->title,
             'kelas' => Program::with(['media', 'kelasAnsaPakets', 'kelasAnsaDetail'])->withCount(['kelasAnsaPakets', 'mentors'])->whereProgram('Kelas Ansa')->latest()->paginate(6),
-            'webResource' => WebResource::with('media')->first()
+            'webResource' => WebResource::with('media')->first(),
+            'promoKategori' => $promoKategori,
+            'promoProducts' => $promoProducts
         ]);
     }
 
@@ -51,11 +74,34 @@ class KelasAnsaController extends Controller
     {
         $kelas = Program::with(['media', 'kelasAnsaPakets', 'kelasAnsaDetail', 'mentors.media', 'testimoni.mentee.media', 'testimoni'])->withCount(['testimoni'])->withAvg('testimoni', 'rating')->whereProgram('Kelas Ansa')->where('slug', $slug)->first();
 
+        $promoProduct = Promo::where('tipe', 'produk')
+                            ->where('promoable_type', 'App\Models\Program')
+                            ->where('promoable_id', $kelas->id)
+                            ->where('kategori', 'Kelas ANSA')
+                            ->where('aktif', true)
+                            ->where(function($query) {
+                                $query->whereNull('tanggal_berakhir')
+                                        ->orWhere('tanggal_berakhir', '>=', now());
+                            })
+                            ->first();
+        $promoKategori = null;
+        $promoKategori = Promo::where('tipe', 'kategori')
+                        ->where('kategori', 'Kelas ANSA')
+                        ->where('aktif', true)
+                        ->where(function($query) {
+                            $query->whereNull('tanggal_berakhir')
+                                    ->orWhere('tanggal_berakhir', '>=', now());
+                        })
+                        ->first();
+
+        $activePromo = $promoProduct ?? $promoKategori;
+
         $canGiveTestimoni = validateUserToGiveTestimoni(Program::class, $kelas->id);
         return view('pages.kelas-ansa.show', [
             'title' => $this->title,
             'kelasAnsa' => $kelas,
-            'canGiveTestimoni' => $canGiveTestimoni
+            'canGiveTestimoni' => $canGiveTestimoni,
+            'activePromo' => $activePromo
         ]);
     }
 
@@ -63,11 +109,10 @@ class KelasAnsaController extends Controller
     {
         $request->validate([
             'paket' => 'required|exists:kelas_ansa_pakets,id',
-            'referral_code' => 'nullable|exists:users,referral_code'
+            'referral_code' => 'nullable'
         ], [
             'paket.required' => 'Paket harus dipilih.',
             'paket.exists' => 'Paket tidak valid.',
-            'referral_code.exists' => 'Referral code tidak valid.'
         ]);
 
         if(!validateUserToBuy())
@@ -78,14 +123,18 @@ class KelasAnsaController extends Controller
             ], 403);
         }
 
+        // cek validasi referral code
         if($request->referral_code)
         {
-            if(!validateReferralCode($request->referral_code))
+            $isValidReferral = validateReferralCode($request->referral_code);
+            $isValidKupon = validateKupon($request->referral_code);
+
+            if(!$isValidReferral && !$isValidKupon)
             {
                 return response()->json([
                     'status' => 'error',
-                    'message' => 'Referral code tidak valid.'
-                ], 403);
+                    'message' => 'Kode referral atau kupon tidak valid'
+                ], 422);
             }
         }
 
@@ -148,12 +197,52 @@ class KelasAnsaController extends Controller
 
             $currentPrice = $kelasAnsaPaket->harga;
 
-            if($request->referral_code)
+            if($request->referral_code && validateReferralCode($request->referral_code))
             {
-                if(validateReferralCode($request->referral_code))
+                $currentPrice = $currentPrice - ($currentPrice * 0.05);
+            } else if($request->referral_code && validateKupon($request->referral_code))
+            {
+                $kupon = Promo::where('kode', $request->referral_code)
+                    ->where('aktif', true)
+                    ->where('tipe', 'kupon')
+                    ->where(function($query) {
+                        $query->whereNull('tanggal_berakhir')
+                                ->orWhere('tanggal_berakhir', '>=', now());
+                    })
+                    ->first();
+
+                if($kupon)
                 {
-                    $currentPrice = $currentPrice - ($currentPrice * 0.05);
+                    $currentPrice = $currentPrice - ($currentPrice * ($kupon->persentase / 100));
                 }
+            }
+
+            // cek apakah ada promo yang berlaku
+            $promoProduct = Promo::where('tipe', 'produk')
+                            ->where('promoable_type', 'App\Models\Program')
+                            ->where('promoable_id', $kelasAnsaPaket->kelas_ansa_id)
+                            ->where('aktif', true)
+                            ->where(function($query) {
+                                $query->whereNull('tanggal_berakhir')
+                                        ->orWhere('tanggal_berakhir', '>=', now());
+                            })
+                            ->first();
+
+            $promoKategori = Promo::where('tipe', 'kategori')
+                            ->where('kategori', 'Kelas ANSA')
+                            ->where('aktif', true)
+                            ->where(function($query) {
+                                $query->whereNull('tanggal_berakhir')
+                                        ->orWhere('tanggal_berakhir', '>=', now());
+                            })
+                            ->first();
+
+            if($promoProduct)
+            {
+                $currentPrice = $currentPrice - ($currentPrice * ($promoProduct->persentase / 100));
+            } else if($promoKategori)
+            {
+                $currentPrice = $currentPrice - ($currentPrice * ($promoKategori->persentase / 100));
             }
 
             $transaksi = Transaksi::create([
