@@ -151,6 +151,13 @@ class TransaksiResource extends Resource
                 //
             ])
             ->actions([
+                Tables\Actions\Action::make('approve')
+                    ->label('Approve')
+                    ->icon('heroicon-o-check-circle')
+                    ->color('success')
+                    ->action(fn(Transaksi $transaksi) => $transaksi->update(['status' => 'Sukses']))
+                    ->requiresConfirmation()
+                    ->visible(fn(Transaksi $transaksi) => $transaksi->status === 'Menunggu'),
                 Tables\Actions\Action::make('hubungiMentee')
                     ->label('Hubungi Mentee')
                     ->icon('heroicon-o-phone')
