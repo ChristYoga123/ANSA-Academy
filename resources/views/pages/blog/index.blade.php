@@ -34,7 +34,19 @@
                                 <h4 class="blog-two__title"><a
                                         href="{{ route('blog.show', $artikel->slug) }}">{{ $artikel->judul }}</a></h4>
                                 <p style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; max-height: 3.6em;"
-                                    class="blog-two__text">{!! $artikel->deskripsi !!}</p>
+                                    @php
+$string = strip_tags($artikel->deskripsi);
+
+                                        if (strlen($string) > 500) {
+                                            // truncate string
+                                            $stringCut = substr($string, 0, 500);
+                                            $endPoint = strrpos($stringCut, ' ');
+
+                                            //if the string doesn't contain any space then it will cut without word basis.
+                                            $string = $endPoint? substr($stringCut, 0, $endPoint) : substr($stringCut, 0);
+                                            $string .= '... <a href="'.route('blog.show', $artikel->slug).'">Baca Selengkapnya</a>';
+                                        } @endphp
+                                    class="blog-two__text">{{ $string }}</p>
                             </div>
                         </div>
                     </div>
