@@ -157,7 +157,7 @@ class TransaksiResource extends Resource
                     ->color('success')
                     ->action(fn(Transaksi $transaksi) => $transaksi->update(['status' => 'Sukses']))
                     ->requiresConfirmation()
-                    ->visible(fn(Transaksi $transaksi) => $transaksi->status === 'Menunggu'),
+                    ->visible(fn(Transaksi $transaksi) => $transaksi->status === 'Menunggu' || $transaksi->status === 'Dibatalkan'),
                 Tables\Actions\Action::make('hubungiMentee')
                     ->label('Hubungi Mentee')
                     ->icon('heroicon-o-phone')
