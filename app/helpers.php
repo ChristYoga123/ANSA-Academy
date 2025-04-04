@@ -19,7 +19,7 @@ if(!function_exists('deleteUnpaidTransaction'))
             ->where('status', '!=', 'Sukses')
             ->first();
         
-        if($transaksi) {
+        if($transaksi !== null) {
             if($transaksi->transaksiable_type === ProgramMentee::class) {
                 $programMentee = ProgramMentee::find($transaksi->transaksiable_id);
                 if($programMentee->paketable_type === ProofreadingPaket::class && !$programMentee->proofreadingMenteeSubmission) {
