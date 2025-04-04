@@ -9,6 +9,7 @@ use App\Models\ProofreadingPaket;
 use App\Models\Testimoni;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 if(!function_exists('deleteUnpaidTransaction'))
 {
@@ -18,7 +19,11 @@ if(!function_exists('deleteUnpaidTransaction'))
             ->whereMenteeId(auth()->id())
             ->where('status', '!=', 'Sukses')
             ->first();
-        
+        Log::info('deleteUnpaidTransaction', [
+            'transaksi' => $transaksi,
+            'menteeId' => auth()->id(),
+        ]);
+
         if($transaksi !== null) {
             if($transaksi->transaksiable_type === ProgramMentee::class) {
                 $programMentee = ProgramMentee::find($transaksi->transaksiable_id);
